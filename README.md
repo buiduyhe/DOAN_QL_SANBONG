@@ -23,17 +23,19 @@ pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 ----->>>> sau này khi có sẵn chạy như này
+```bash
 cd ql-sanbong-api
 env/Scripts/activate
 uvicorn main:app --reload
-
+```
 
 3. Navigate into the project directory:
 ```bash
 cd ql-sanbong-fe
-
+```
 3.1 Create virtual environment
 ```bash
 npm install
 npm install react-router-dom
 npm start
+```
