@@ -49,7 +49,7 @@ function RegisterForm() {
           <input
             type="text"
             value={fullname}
-            onChange={(e) => szetFullname(e.target.value)}
+            onChange={(e) => setFullname(e.target.value)}
             required
             style={{ width: '100%', padding: '8px' }}
           />
