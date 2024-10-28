@@ -16,9 +16,12 @@ function LoginForm() {
       const response = await fetch('http://localhost:8000/login', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: JSON.stringify({ email, password }),
+        body: new URLSearchParams({
+          username: email,
+          password: password,
+        }).toString(),
       });
 
       if (!response.ok) {

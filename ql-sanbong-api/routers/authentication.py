@@ -11,42 +11,64 @@ from datetime import datetime
 
 
 
-from auth.oauth2 import create_access_token, create_refresh_token
+from auth.oauth2 import create_access_token
 
 
 router = APIRouter(
     tags=['authentication']
 )
 
-@router.post("/login") #convert multiple languages DONE
-async def login(
-    request: LoginRequest,
-    db: Session = Depends(get_db),
-):
-    email = request.email.lower()
-    user_status =  db_user.get_user_by_email(db=db, email=email)
+# @router.post("/login") #convert multiple languages DONE
+# async def login(
+#     request: LoginRequest,
+#     db: Session = Depends(get_db),
+# ):
+#     email = request.email.lower()
+#     user_status =  db_user.get_user_by_email(db=db, email=email)
     
     
+#     user = db_user.check_active_user(
+#         db=db, 
+#         email=email,
+#         user_status= user_status.status
+#     )
+
+#     # if  user.hash_password and Hash.verify(request.password, user.hash_password): này bản gốc sau này dùng 
+#     if  user.hash_password :
+        
+#         access_token = create_access_token(data={"sub": user.email, "fresh": True})
+#         refresh_token = create_refresh_token(data={"sub": user.email})
+
+#         return {
+#             "access_token": access_token,
+#             "refresh_token": refresh_token,
+#         }
+    
+#     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+#             detail=f'login failed')
+@router.post('/login')
+def login(request: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    
+    email = request.username.lower()  # OAuth2PasswordRequestForm uses 'username' field for email
+    user_status = db_user.get_user_by_email(db=db, email=email)
     user = db_user.check_active_user(
         db=db, 
         email=email,
-        user_status= user_status.status
+        user_status=user_status.status
     )
-
-    # if  user.hash_password and Hash.verify(request.password, user.hash_password): này bản gốc sau này dùng 
-    if  user.hash_password :
-        
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail='Invalid credentials')
+    # if user.hash_password and Hash.verify(request.password, user.hash_password): này bản gốc sau này dùng 
+    if user.hash_password:
         access_token = create_access_token(data={"sub": user.email, "fresh": True})
-        refresh_token = create_refresh_token(data={"sub": user.email})
 
         return {
             "access_token": access_token,
-            "refresh_token": refresh_token,
+            'token_type': 'bearer'
         }
-    
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'login failed')
-    
+                        detail='login failed')
 @router.post('/register')
 async def register( 
     background_tasks: BackgroundTasks,
