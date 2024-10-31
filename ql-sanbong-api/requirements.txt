@@ -7,4 +7,3 @@ aiofiles
 passlib
 bcrypt
 python-jose
-PyJWT

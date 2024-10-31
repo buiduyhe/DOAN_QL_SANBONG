@@ -27,8 +27,3 @@ class SysUserRole(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey('SYS_USER.id'))
     role_id = Column(Integer, ForeignKey('SYS_ROLE.id'))
-    user = relationship("SysUser", back_populates="roles")
-    role = relationship("SysRole", back_populates="users")
-
-SysUser.roles = relationship("SysUserRole", back_populates="user")
-SysRole.users = relationship("SysUserRole", back_populates="role")

@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
-from typing import List ,Optional
+from typing import List
 
 class UserBase(BaseModel):
     username:str
@@ -65,19 +65,4 @@ class CreateUserDTO(BaseModel):
     phone: str 
     hashed_password: str | None
     avatar_id: int | None
-class UserRoleResponse(BaseModel):
-    id : int
-    name : str
-    description : Optional[str] = None
-    class Config:
-        from_attributes = True
-class UserResponseModel(BaseModel):
-    id: int
-    phone: Optional[str]
-    email: str
-    full_name: Optional[str]
-    status: Optional[int]
-    roles: List[UserRoleResponse] | None # List of role of the user in the system
-    class Config:
-        from_attributes = True
-        
+    
