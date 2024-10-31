@@ -47,25 +47,25 @@ router = APIRouter(
 #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
 #             detail=f'login failed')
 @router.post('/login')
-def login(request: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+def login(request: OAuth2PasswordRequestForm =Depends(), db: Session = Depends(get_db)):
+    email = request.username.lower()  # Sử dụng trường 'username' cho email
+    user = db_user.get_user_by_email(db=db, email=email)
     
-    email = request.username.lower()  # OAuth2PasswordRequestForm uses 'username' field for email
-    user_status = db_user.get_user_by_email(db=db, email=email)
     user = db_user.check_active_user(
         db=db, 
         email=email,
-        user_status=user_status.status
+        user_status=user.status
     )
     if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail='Invalid credentials')
-    # if user.hash_password and Hash.verify(request.password, user.hash_password): này bản gốc sau này dùng 
+          raise HTTPException(status_code=404, detail='Invalid credentials')
+    
+    # Kiểm tra mật khẩu (giả định đã có hàm xác thực)
+    # if user.hash_password and Hash.verify(request.password, user.hash_password):
     if user.hash_password:
-        access_token = create_access_token(data={"sub": user.email, "fresh": True})
+        access_token = create_access_token(data={"sub": user.email})
 
         return {
-            "access_token": access_token,
-            'token_type': 'bearer'
+            "access_token": access_token
         }
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                         detail='login failed')

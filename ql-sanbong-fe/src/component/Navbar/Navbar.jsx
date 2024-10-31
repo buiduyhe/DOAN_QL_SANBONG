@@ -2,6 +2,13 @@ import React from "react";
 import "./Navbar.scss";
 import logo from "../../assets/logo.jpg";
 const Navbar = () => {
+  const handleRegisterClick = () => {
+    window.location.href = "/register";
+  };
+
+  const handleLoginClick = () => {
+    window.location.href = "/login";
+  };
   return (
     <div className="NB fixed-top">
       <div className="logo">
@@ -24,10 +31,10 @@ const Navbar = () => {
             <a href="#connect-wallet">Liên Hệ</a>
           </li>
           <li className="menu-item">
-            <a href="#support">Đăng Ký</a>
+          <a onClick={handleRegisterClick}>Đăng Ký</a>
           </li>
           <li className="menu-item">
-            <a href="#channel">Đăng Nhập</a>
+          <a onClick={handleLoginClick}>Đăng Nhập</a>
           </li>
         </ul>
       </nav>
