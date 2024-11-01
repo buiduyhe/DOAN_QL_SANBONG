@@ -10,7 +10,7 @@ const Navbar = () => {
     window.location.href = "/login";
   };
   return (
-    <div className="NB fixed-top">
+    <div className="NB">
       <div className="logo">
         <img src={logo} alt="" />
       </div>
@@ -31,10 +31,10 @@ const Navbar = () => {
             <a href="#connect-wallet">Liên Hệ</a>
           </li>
           <li className="menu-item">
-          <a onClick={handleRegisterClick}>Đăng Ký</a>
+            <a onClick={handleRegisterClick}>Đăng Ký</a>
           </li>
           <li className="menu-item">
-          <a onClick={handleLoginClick}>Đăng Nhập</a>
+            <a onClick={handleLoginClick}>Đăng Nhập</a>
           </li>
         </ul>
       </nav>

@@ -1,0 +1,60 @@
+$primary-color: #4CAF50;
+$secondary-color: #333;
+$bg-color: #f9f9f9;
+$border-color: #ddd;
+$hover-color: #4CAF50;
+$padding: 8px;
+$border-radius: 8px;
+
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 100px;
+  justify-content: center;
+  padding: $padding;
+  background-color: $bg-color;
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+
+  select,
+  .react-datepicker-wrapper input {
+    padding: $padding;
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    font-size: 14px;
+    color: $secondary-color;
+    outline: none;
+    height: 32px;
+    transition: all 0.3s ease;
+
+    &:hover,
+    &:focus {
+      border-color: $primary-color;
+      box-shadow: 0px 0px 1px rgba(0, 153, 255, 0.3);
+    }
+  }
+
+  select {
+    background-color: #fff;
+    width: 20%;
+    height: 40px;
+  }
+
+  button {
+    padding: $padding $padding * 2;
+    border: none;
+    border-radius: $border-radius;
+    background-color: $primary-color;
+    color: white;
+    height: 40px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: darken($primary-color, 10%);
+    }
+  }
+}
