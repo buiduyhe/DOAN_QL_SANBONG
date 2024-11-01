@@ -44,20 +44,19 @@ function LoginForm() {
 
       const userData = await userResponse.json();
       const userRole = userData && Array.isArray(userData.roles) && userData.roles.length > 0 ? userData.roles[0].name.trim().toLowerCase() : '';
-      alert('User Role: ' + userRole);
+     
       
 
       localStorage.setItem('access_token', data.access_token);
       
       setSuccess('Đăng nhập thành công!');
-      // Xử lý token và chuyển hướng hoặc lưu thông tin người dùng nếu cần.
 
       if (userRole === 'admin') {
         window.location.href = '/admin';
       } else if (userRole === 'supadmin') {
         window.location.href = '/supadmin';
       } else {
-        window.location.href = '/user';
+        window.location.href = '/';
       }
 
     } catch (error) {
