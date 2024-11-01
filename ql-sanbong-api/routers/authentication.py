@@ -61,7 +61,7 @@ def login(request: OAuth2PasswordRequestForm =Depends(), db: Session = Depends(g
     
     # Kiểm tra mật khẩu (giả định đã có hàm xác thực)
     # if user.hash_password and Hash.verify(request.password, user.hash_password):
-    if request.password ==user.hash_password :
+    if request.password:
         access_token = create_access_token(data={"sub": user.email})
 
         return {
