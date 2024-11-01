@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -11,7 +12,7 @@ function LoginForm() {
     event.preventDefault();
     setError('');
     setSuccess('');
-
+  
     try {
       const response = await fetch('http://localhost:8000/login', {
         method: 'POST',
@@ -23,11 +24,11 @@ function LoginForm() {
           password: password,
         }).toString(),
       });
-
+  
       if (!response.ok) {
         throw new Error('Đăng nhập không thành công.');
       }
-
+  
       const data = await response.json();
       
       const userResponse = await fetch('http://localhost:8000/user/my-profile', {
@@ -37,32 +38,38 @@ function LoginForm() {
           'Authorization': `Bearer ${data.access_token}`,
         },
       });
-
+  
       if (!userResponse.ok) {
         throw new Error('Không thể lấy thông tin người dùng.');
       }
-
+  
       const userData = await userResponse.json();
       const userRole = userData && Array.isArray(userData.roles) && userData.roles.length > 0 ? userData.roles[0].name.trim().toLowerCase() : '';
-     
+      const username = userData && userData.full_name ? userData.full_name : '';
       
-
-      localStorage.setItem('access_token', data.access_token);
+      // Save access token and other user info in cookies
+      Cookies.set('access_token', data.access_token, { expires: 1, secure: true, sameSite: 'Strict' });
+      Cookies.set('user_role', userRole, { expires: 1, secure: true, sameSite: 'Strict' });
+      Cookies.set('username', username, { expires: 1, secure: true, sameSite: 'Strict' });
       
       setSuccess('Đăng nhập thành công!');
-
-      if (userRole === 'admin') {
-        window.location.href = '/admin';
-      } else if (userRole === 'supadmin') {
-        window.location.href = '/supadmin';
-      } else {
-        window.location.href = '/';
-      }
-
+      
+      // Wait for 5 seconds before redirecting based on user role
+      setTimeout(() => {
+        if (userRole === 'admin') {
+          window.location.href = '/admin';
+        } else if (userRole === 'supadmin') {
+          window.location.href = '/supadmin';
+        } else {
+          window.location.href = '/';
+        }
+      }, 1000); // 1500 ms = 1.5 seconds
+  
     } catch (error) {
       setError(error.message);
     }
   };
+  
   
   return (
     <div style={{ maxWidth: '400px', margin: '0 auto', padding: '20px' }}>
