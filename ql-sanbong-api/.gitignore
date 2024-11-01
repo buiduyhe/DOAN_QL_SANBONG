@@ -2,7 +2,7 @@
 __pycache__/
 auth/__pycache__/
 db/__pycache__/
-router/__pycache__/
+routers/__pycache__/
 
 *.py[cod]
 *.pyo
