@@ -1,0 +1,78 @@
+.DanhMuc {
+    margin-top: 100px;
+    .sanpham {
+      font-size: 50px; // Kích thước chữ
+      color: #000000; // Màu chữ
+      font-weight: bold;
+      margin-bottom: 20px; // Khoảng cách dưới tiêu đề
+      text-align: center; // Căn giữa tiêu đề
+      
+    }
+  
+    // Định dạng cho danh sách sản phẩm
+    .DanhMucSP {
+      display: flex; // Sử dụng Flexbox để sắp xếp các button
+      justify-content: center; // Căn giữa các button
+      gap: 20px; // Khoảng cách giữa các button
+      flex-wrap: wrap; // Cho phép xuống dòng nếu không đủ chỗ
+  
+      // Định dạng cho từng sản phẩm
+      .img-btn {
+        display: flex;
+        flex-direction: column; // Đặt hình ảnh và text theo chiều dọc
+        align-items: center; // Căn giữa theo chiều ngang
+        cursor: pointer; // Đổi con trỏ khi hover
+        transition: transform 0.2s; // Hiệu ứng khi hover
+        position: relative; // Để định vị các yếu tố con
+      }
+  
+      // Định dạng cho hình ảnh sản phẩm
+      .btn-img {
+        width: 100px; // Điều chỉnh kích thước hình ảnh
+        height: 100px; // Chiều cao để tạo thành hình tròn
+        border-radius: 50%; // Biến hình ảnh thành hình tròn
+        object-fit: cover; // Đảm bảo hình ảnh không bị méo
+        transition: transform 0.2s; // Hiệu ứng khi hover
+      }
+  
+      // Hiệu ứng hover cho hình ảnh
+      .img-btn:hover .btn-img {
+        transform: scale(1.1); // Phóng to hình ảnh khi hover
+      }
+  
+      // Định dạng cho văn bản
+      span {
+        color: black; // Màu chữ mặc định
+        margin-top: 10px; // Khoảng cách giữa hình ảnh và văn bản
+        font-size: 16px; // Kích thước chữ cho tên sản phẩm
+        position: relative; // Cần thiết để định vị pseudo-element
+        text-decoration: none; // Không có gạch chân mặc định
+        transition: color 0.2s; // Hiệu ứng cho màu chữ
+      }
+  
+      // Tạo gạch chân bằng pseudo-element
+      span::after {
+        content: ''; // Tạo nội dung rỗng
+        display: block; // Hiển thị dưới dạng block
+        width: 100%; // Chiều rộng 100%
+        height: 3px; // Kích thước gạch chân
+        background: red; // Màu gạch chân
+        position: absolute; // Định vị tuyệt đối
+        bottom: -5px; // Cách chữ 5px
+        left: 0; // Căn trái
+        transform: scaleX(0); // Bắt đầu với gạch chân không hiển thị
+        transition: transform 0.2s; // Hiệu ứng chuyển đổi
+      }
+  
+      // Hiệu ứng hover cho văn bản
+      span:hover {
+        color: red; // Đổi màu chữ thành đỏ khi hover
+      }
+  
+      // Hiệu ứng gạch chân khi hover
+      .img-btn:hover span::after {
+        transform: scaleX(1); // Hiển thị gạch chân khi hover
+      }
+    }
+  }
+  
