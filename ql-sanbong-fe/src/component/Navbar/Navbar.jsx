@@ -9,6 +9,12 @@ const Navbar = () => {
   const handleLoginClick = () => {
     window.location.href = "/login";
   };
+  const handleProductsClick = () => {
+    window.location.href = "/product"; // Điều hướng đến trang sản phẩm
+  };
+  const handleHomeClick = () => {
+    window.location.href = "/Home"; // Điều hướng đến trang sản phẩm
+  };
   return (
     <div className="NB">
       <div className="logo">
@@ -16,16 +22,14 @@ const Navbar = () => {
       </div>
       <nav className="nav-bar">
         <ul>
-          <li>
-            <a href="#Home" className="active">
-              Trang Chủ
-            </a>
+        <li className="menu-item">
+            <a onClick={handleHomeClick}>Sản Phẩm</a>
           </li>
           <li className="menu-item ">
             <a href="#Carousel">Giới Thiệu</a>
           </li>
           <li className="menu-item">
-            <a href="#roadmap">Sản Phẩm</a>
+            <a onClick={handleProductsClick}>Sản Phẩm</a>
           </li>
           <li className="menu-item">
             <a href="#connect-wallet">Liên Hệ</a>
