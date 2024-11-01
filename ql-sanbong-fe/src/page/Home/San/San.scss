@@ -1,0 +1,46 @@
+.San {
+    padding-top: 50px;
+
+    .San-UI {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+
+        .title {
+            font-size: 30px;
+            font-weight: 600;
+        }
+        .NoiDung {
+            display: flex;
+            justify-content: center;
+            .Loai {
+                display: flex;
+                gap:200px;
+                a{
+                    font-size: 20px;
+                    
+                }
+            }
+        }
+
+        .See-more {
+            display: flex;
+            justify-content: center;
+
+            button {
+                height: 50px;
+                width: 150px;
+                border: 1px solid orangered;
+                background-color: #fff;
+                color: orangered;
+                border-radius: 5px;
+            }
+
+            button:hover {
+                background-color: orangered;
+                color: #fff;
+            }
+
+        }
+    }
+}
