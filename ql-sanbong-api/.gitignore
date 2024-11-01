@@ -1,0 +1,62 @@
+# Python
+__pycache__/
+auth/__pycache__/
+db/__pycache__/
+router/__pycache__/
+
+*.py[cod]
+*.pyo
+*.pyd
+
+# Thư mục venv (môi trường ảo)
+venv/
+env/
+.venv/
+ENV/
+.ENV/
+
+# Các file thiết lập môi trường
+.env
+.env.*
+
+# Các file log
+*.log
+logs/
+*.out
+*.err
+
+# Các tệp SQLite database
+*.sqlite3
+*.db
+*.sqlite
+
+# Các file mặc định của hệ điều hành
+.DS_Store
+Thumbs.db
+
+# Mặc định của IDEs/Editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Tệp bytecode của Jupyter notebook nếu có
+*.ipynb_checkpoints
+
+# Các thư mục build
+build/
+dist/
+*.egg-info/
+*.egg
+.eggs/
+*.whl
+
+# Các tệp chạy bởi pytest
+.pytest_cache/
+.tox/
+.coverage
+coverage.xml
+htmlcov/
+
+# Các tệp cache
+.cache/
