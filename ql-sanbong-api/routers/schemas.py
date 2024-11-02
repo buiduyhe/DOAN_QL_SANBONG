@@ -49,7 +49,13 @@ class UserAuth(BaseModel):
     username: str
     email:str
     
-
+class DichVuDisplay(BaseModel):
+    id:int
+    ten_dv:str
+    gia_dv:int
+    soluong:int
+    image_dv:str
+    
 class CommentBase(BaseModel):
     username : str
     text : str
@@ -64,7 +70,6 @@ class CreateUserDTO(BaseModel):
     email: str 
     phone: str 
     hashed_password: str | None
-    avatar_id: int | None
 class UserRoleResponse(BaseModel):
     id : int
     name : str

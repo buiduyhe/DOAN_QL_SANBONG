@@ -75,30 +75,24 @@ async def register(
     fullname: str = Form(...),
     email: str = Form(...),
     phone: str = Form(...),
-    avatar: Optional[UploadFile] = File(None),
+    password: str = Form(...),
     db: Session = Depends(get_db),
 ):
     phone = await db_auth.check_phone_number_valid(phone=phone)
     email = email.lower()
 
 
-    hashed_password = None
-    password = db_auth.generate_password()
-    # hashed_password = Hash.bcrypt(password) này bản gốc sau nay dùng
+    # hashed_password = password
+    # password = db_auth.generate_password()
+    # hashed_password = Hash.bcrypt(password)# này bản gốc sau nay dùng
     hashed_password = password
     
 
-    # Khởi tạo biến message để sử dụng
-    message = f"Mật khẩu của bạn là {password}"  # Đảm bảo biến message được khởi tạo
-
-    avatar_id = None
-    
     userDTO = CreateUserDTO(
         fullname=fullname,
         email=email,
         phone=phone,
-        hashed_password=hashed_password,
-        avatar_id=avatar_id,
+        hashed_password=hashed_password
     )
     
     user = db_user.create_user(db=db, userDTO=userDTO)
@@ -109,4 +103,4 @@ async def register(
             detail="lỗi đăng kí tài khoản",  # Replace with the correct error message or variable
         )
     
-    return {"detail": message}  # Trả về thông báo thành công với mật khẩu
+    return {"detail": "Đăng kí tài khoản thành công"}  # Trả về thông báo thành công với mật khẩu

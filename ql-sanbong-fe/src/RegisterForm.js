@@ -4,7 +4,7 @@ function RegisterForm() {
   const [fullname, setFullname] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [avatar, setAvatar] = useState(null);
+  const [password, setPassword] = useState(null);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
@@ -17,9 +17,7 @@ function RegisterForm() {
     formData.append('fullname', fullname);
     formData.append('email', email);
     formData.append('phone', phone);
-    if (avatar) {
-      formData.append('avatar', avatar);
-    }
+    formData.append('password', password);
 
     try {
       const response = await fetch('http://localhost:8000/register', {
@@ -75,11 +73,12 @@ function RegisterForm() {
           />
         </div>
         <div style={{ marginBottom: '15px' }}>
-          <label>Ảnh Đại Diện:</label>
+          <label>Mật khẩu:</label>
           <input
-            type="file"
-            onChange={(e) => setAvatar(e.target.files[0])}
-            accept="image/*"
+            type="text"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
             style={{ width: '100%', padding: '8px' }}
           />
         </div>

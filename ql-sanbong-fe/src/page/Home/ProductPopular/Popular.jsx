@@ -1,24 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Popular.scss";
-import p1 from "../../../assets/ball.jpeg";
-import p2 from "../../../assets/bang1.jpeg";
-import p3 from "../../../assets/giay1.jpeg";
-import p4 from "../../../assets/redbull.jpeg";
-import p5 from "../../../assets/revive.jpeg";
-import p6 from "../../../assets/tat1.webp";
-import p7 from "../../../assets/banggoi.jpg";
-import p8 from "../../../assets/xit.jpeg";
-const Popular = () => {
-  const images = [p1, p2, p3, p4, p5, p6, p7, p8];
 
+const Popular = () => {
+  const [services, setServices] = useState([]);
+
+  // Gọi API để lấy danh sách dịch vụ
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/dichvu/dichvu"); // Thay bằng URL API của bạn
+        if (!response.ok) throw new Error("Failed to fetch services");
+        
+        const data = await response.json();
+        setServices(data);
+      } catch (error) {
+        console.error("Error fetching services:", error);
+      }
+    };
+
+    fetchServices();
+  }, []);
   return (
     <div className="Popular">
       <div className="UI container">
         <div className="title">DỊCH VỤ BÁN CHẠY CỦA CHÚNG TÔI</div>
         <div className="SP row">
-          {images.map((image, index) => (
+        {services.map((service, index) => (
             <div className="col-md-3 image-container" key={index}>
-              <img src={image} alt={`Popular service ${index + 1}`} />
+               <img src={`http://localhost:8000/${service.image_dv}`} alt={service.tendichvu} />
               <button className="view-button">Xem ngay</button>
             </div>
           ))}
