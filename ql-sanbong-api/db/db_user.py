@@ -45,8 +45,7 @@ def create_user( db: Session, userDTO: CreateUserDTO):
             email=userDTO.email, 
             phone=userDTO.phone, 
             hash_password=userDTO.hashed_password, 
-            status=1,
-            avatar_id=userDTO.avatar_id,
+            status=1
         )
         db.add(new_user)
         db.commit()
