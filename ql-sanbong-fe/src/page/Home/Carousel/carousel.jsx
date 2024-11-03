@@ -5,12 +5,12 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "./carousel.scss";
 import { Pagination, Navigation, Autoplay } from "swiper/modules";
-import C1 from "../../../assets/C1.jpg";
-import C2 from "../../../assets/C2.jpg";
-import C3 from "../../../assets/C3.jpg";
-import C4 from "../../../assets/C4.jpg";
-import C5 from "../../../assets/C5.jpg";
-import C6 from "../../../assets/C6.jpg";
+import C1 from "../../../assets/Home/C1.jpg";
+import C2 from "../../../assets/Home/C2.jpg";
+import C3 from "../../../assets/Home/C3.jpg";
+import C4 from "../../../assets/Home/C4.jpg";
+import C5 from "../../../assets/Home/C5.jpg";
+import C6 from "../../../assets/Home/C6.jpg";
 const imgDatas = [
   { avt: C1 },
   { avt: C2 },
@@ -21,7 +21,7 @@ const imgDatas = [
 ];
 const carousel = () => {
   return (
-    <div className="SW">
+    <div className="SW" id="home">
       <Swiper
         grabCursor={true}
         centeredSlides={true}
