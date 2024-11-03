@@ -1,0 +1,38 @@
+.Book {
+    padding-top: 150px;
+    padding-bottom: 150px;
+    .UI {
+      .row {
+        display: flex;
+        justify-content: space-between; 
+        flex-wrap: wrap; 
+  
+        .col-md-4 {
+          display: flex;
+          flex-direction: column;
+          align-items: center; 
+          margin-bottom: 20px; 
+  
+          img {
+            width: 150px; 
+            height: 150px; 
+            border-radius: 10px; 
+            transition: transform 0.3s; 
+  
+            &:hover {
+              transform: scale(1.1); 
+            }
+          }
+  
+          p {
+            margin-top: 30px; 
+            font-size: 25px; 
+            color: #333; 
+            text-align: center; 
+            font-weight: 600;
+          }
+        }
+      }
+    }
+  }
+  

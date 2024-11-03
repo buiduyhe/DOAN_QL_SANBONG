@@ -1,12 +1,11 @@
 import React from "react";
 import "./Navbar.scss";
-import logo from "../../assets/logo.jpg";
-import Cookies from 'js-cookie';
+import logo from "../../assets/Home/logo.jpg";
+import Cookies from "js-cookie";
 
-const token = Cookies.get('access_token');
-const username = Cookies.get('username'); // Assuming you store the username in a cookie
-const role = Cookies.get('user_role');
-
+const token = Cookies.get("access_token");
+const username = Cookies.get("username"); // Assuming you store the username in a cookie
+const role = Cookies.get("user_role");
 
 const Navbar = () => {
   const handleRegisterClick = () => {
@@ -18,8 +17,8 @@ const Navbar = () => {
   };
 
   const handleLogoutClick = () => {
-    Cookies.remove('access_token');
-    Cookies.remove('username');
+    Cookies.remove("access_token");
+    Cookies.remove("username");
     window.location.href = "/";
   };
 
@@ -31,18 +30,16 @@ const Navbar = () => {
       <nav className="nav-bar">
         <ul>
           <li>
-            <a href="#Home" className="active">
-              Trang Chủ
-            </a>
+            <a href="/Home">Trang Chủ</a>
           </li>
           <li className="menu-item ">
             <a href="#Carousel">Giới Thiệu</a>
           </li>
           <li className="menu-item">
-            <a href="#roadmap">Sản Phẩm</a>
+            <a href="/product">Sản Phẩm</a>
           </li>
           <li className="menu-item">
-            <a href="#connect-wallet">Liên Hệ</a>
+            <a href="/LienHe">Liên Hệ</a>
           </li>
           {token ? (
             <>

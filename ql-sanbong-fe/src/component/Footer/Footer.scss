@@ -1,0 +1,255 @@
+.footer {
+    position: relative;
+    z-index: 0;
+
+    .background {
+        position: absolute;
+        z-index: -2;
+        width: 100%;
+        height: 100%;
+
+        img {
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    .footer-UI {
+        padding: 70px 0px;
+        display: flex;
+        justify-content: space-between;
+
+        .links {
+            display: flex;
+            gap: 100px;
+
+            .feature    {
+                ul {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
+
+                    h4 {
+                        font-size: 20px;
+                        font-weight: 400;
+                        line-height: 20px;
+                    }
+
+                    li {
+                        list-style: none;
+
+                        a {
+                            text-decoration: none;
+
+                            font-size: 15px;
+                            cursor: pointer;
+                            font-weight: 400;
+                            color: #848895;
+                            line-height: 28px;
+
+                            &:hover {
+                                color: #FFDD4A;
+                            }
+                        }
+                    }
+                }
+
+
+            }
+        }
+        .footer-content {
+            
+            h4 {
+                font-size: 20px;
+                font-weight: 400;
+                line-height: 20px;
+                color: #fff;
+            }
+            p{
+                margin-top: 50px;
+                text-decoration: none;
+
+                font-size: 15px;
+                cursor: pointer;
+                font-weight: 400;
+                color: #848895;
+                line-height: 28px;
+
+            }
+        }
+        .CS {
+            width: 400px;
+            
+            h4 {
+                font-size: 20px;
+                font-weight: 400;
+                line-height: 20px;
+                color: #fff;
+            }
+            .card-call {
+                padding: 20px;
+                margin-top: 50px;
+                border: 1px solid #000;
+                background-color: #848895;
+                border-radius: 10px;
+                display: flex;
+                gap: 100px;
+                .card-left {
+                    p {
+                        font-size: 16px;
+                        font-weight: 500;
+                    }
+                    a {
+                        font-size: 16px;
+                    }
+                }
+                .card-right {
+                    display: flex;
+                    
+                    button {
+                        height: 50px;
+                        border-radius: 20px;
+                        background-color: #FFDD4A;
+                        margin-top: 20px;
+                        
+                    }
+                    button:hover {
+                        
+                            background-color: antiquewhite;
+                       
+                    }
+                }
+            }
+        }
+        .TON {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+
+            .social {
+                display: flex;
+                gap: 10px;
+
+                .fb,
+                .x,
+                .tk,
+                .tele {
+                    width: 50px;
+                    height: 40px;
+                    flex-shrink: 0;
+                    border-radius: 3px;
+                    border: 2px solid var(--bg_Ton, #FBF9F1);
+                    background: rgba(217, 217, 217, 0.00);
+                    padding: 5px 12px;
+                    cursor: pointer;
+
+                    &:hover {
+                        background: #43434366;
+                    }
+                }
+            }
+
+            .txt {
+                p {
+                    color: #848895;
+                }
+            }
+        }
+    }
+
+    .dp {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .footer {
+        padding-bottom: 30px;
+        gap: 40px;
+        display: flex;
+        flex-direction: column;
+
+        .background {
+            height: 100%;
+
+            img {
+
+                height: 100%;
+
+            }
+        }
+
+        .footer-UI {
+            padding: 60px 20px 60px 20px;
+
+            .TON {
+                gap: 20px;
+
+                .logo {
+                    img {
+                        width: 100px;
+                    }
+                }
+
+                .social {
+
+                    .fb,
+                    .tk,
+                    .tele,
+                    .x {
+                        height: 30px;
+                        width: 30px;
+
+                        img {
+                            height: 18px;
+                            width: 15px;
+                            margin-top: -10px;
+                            margin-left: -8px;
+                        }
+                    }
+                }
+            }
+
+            .txt {
+                display: none;
+            }
+
+            .links {
+                gap: 20px;
+
+                .feature,
+                .getCN {
+
+                    ul {
+                        gap: 8px;
+
+                        h4 {
+                            font-size: 12px;
+                        }
+
+                        li {
+                            a {
+                                font-size: 10px;
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+
+        .dp {
+            display: flex;
+            justify-content: center;
+
+            p {
+                color: #848895;
+                font-family: Poppins;
+                font-size: 10px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+            }
+        }
+    }
+}

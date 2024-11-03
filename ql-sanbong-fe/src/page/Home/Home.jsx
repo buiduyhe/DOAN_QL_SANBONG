@@ -4,6 +4,8 @@ import Carousel from "./Carousel/carousel";
 import Search from "./Search/Search";
 import Popular from "./ProductPopular/Popular";
 import San from "./San/San";
+import Booksan from "./BookSan/Booksan";
+import Footer from "../../component/Footer/Footer";
 const Home = () => {
   return (
     <div>
@@ -12,6 +14,8 @@ const Home = () => {
       <Search />
       <Popular />
       <San />
+      <Booksan />
+      <Footer />
     </div>
   );
 };
