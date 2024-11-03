@@ -1,0 +1,47 @@
+.san-pham {
+    margin-bottom: 20px;
+}
+
+.sort-dropdown {
+    position: relative;
+    display: inline-block;
+    margin-left: 85%;
+    margin-bottom: 20px;
+    display: flex;
+  align-items: center;
+}
+
+.sort-dropdown-button {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.arrow {
+    margin-left: 5px;
+}
+
+.sort-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    list-style-type: none;
+    padding: 0;
+    margin: 5px 0 0;
+    z-index: 1;
+}
+
+.sort-dropdown-menu li {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.sort-dropdown-menu li:hover {
+    background-color: #f0f0f0;
+}

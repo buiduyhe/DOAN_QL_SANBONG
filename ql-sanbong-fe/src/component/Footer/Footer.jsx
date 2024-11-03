@@ -60,7 +60,7 @@ const Footer = () => {
         </div>
         <div className="footer-content">
           <h4>Địa chỉ liên hệ</h4>
-          <p>Địa chỉ: 123 Đường ABC, Thành phố XYZ</p>
+          <p>Địa chỉ: 31/2 Đ. Kênh 19/5, Phường Sơn Kỳ, Quận Tân Phú, Hồ Chí Minh</p>
           <p>Điện thoại: (123) 456-7890</p>
           <p>Email: contact@example.com</p>
         </div>

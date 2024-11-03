@@ -33,7 +33,7 @@ const Navbar = () => {
             <a href="/Home">Trang Chủ</a>
           </li>
           <li className="menu-item ">
-            <a href="#Carousel">Giới Thiệu</a>
+            <a href="/gioithieu">Giới Thiệu</a>
           </li>
           <li className="menu-item">
             <a href="/product">Sản Phẩm</a>

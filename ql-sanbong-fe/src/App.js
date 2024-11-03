@@ -3,6 +3,8 @@ import LoginForm from './LoginForm'; // Đường dẫn tới file LoginForm
 import RegisterForm from './RegisterForm'; // Đường dẫn tới file RegisterForm
 import Home from './page/Home/Home';
 import Product from './page/Product/Product';
+import LienHe from './page/LienHe/LienHe';
+import GioiThieu from './page/GioiThieu/GioiThieu';
 function App() {
   return (
     <Router>
@@ -12,6 +14,8 @@ function App() {
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/Home" element={<Home />} />
         <Route path="/product" element = {<Product/>}/>
+        <Route path="/LienHe" element = {<LienHe/>}/>
+        <Route path="/gioithieu" element = {<GioiThieu/>}/>
       </Routes>
     </Router>
   );
