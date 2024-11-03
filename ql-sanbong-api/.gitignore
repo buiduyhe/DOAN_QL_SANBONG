@@ -3,7 +3,6 @@ __pycache__/
 auth/__pycache__/
 db/__pycache__/
 routers/__pycache__/
-sanbong_api.db
 
 *.py[cod]
 *.pyo
