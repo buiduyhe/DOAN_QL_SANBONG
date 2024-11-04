@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import "./Popular.scss";
 
 const Popular = () => {
   const [services, setServices] = useState([]);
+  const navigate = useNavigate(); // Khởi tạo useNavigate
 
   // Gọi API để lấy danh sách dịch vụ
   useEffect(() => {
@@ -20,20 +22,25 @@ const Popular = () => {
 
     fetchServices();
   }, []);
+
+  const handleViewMore = () => {
+    navigate("/product"); // Chuyển hướng đến trang /product
+  };
+
   return (
     <div className="Popular">
       <div className="UI container">
         <div className="title">DỊCH VỤ BÁN CHẠY CỦA CHÚNG TÔI</div>
         <div className="SP row">
-        {services.map((service, index) => (
+          {services.map((service, index) => (
             <div className="col-md-3 image-container" key={index}>
-               <img src={`http://localhost:8000/${service.image_dv}`} alt={service.tendichvu} />
+              <img src={`http://localhost:8000/${service.image_dv}`} alt={service.tendichvu} />
               <button className="view-button">Xem ngay</button>
             </div>
           ))}
         </div>
         <div className="See-more">
-          <button>Xem thêm</button>
+          <button onClick={handleViewMore}>Xem thêm</button> {/* Gọi hàm khi nhấn nút */}
         </div>
       </div>
     </div>
