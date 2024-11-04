@@ -1,0 +1,47 @@
+.gioi-thieu {
+    font-family: 'Times New Roman', Times, serif; // Đặt font chữ mặc định là Times New Roman
+    padding: 20px;
+    margin-top: 90px;
+    margin-left: 20px; // Thêm khoảng cách bên trong cho component
+    background: white;
+
+    h2 {
+        margin-top: 30px;
+        font-size: 30px; // Kích thước chữ cho tiêu đề chính
+        margin-bottom: 15px; // Khoảng cách dưới tiêu đề
+        color: #333;
+        text-align: center;
+    }
+
+    h3 {
+        font-size: 16px; // Kích thước chữ cho tiêu đề phụ
+        margin-top: 20px; // Khoảng cách trên tiêu đề phụ
+        margin-bottom: 10px; // Khoảng cách dưới tiêu đề phụ
+        color: #555; // Màu sắc cho tiêu đề phụ
+    }
+
+    p {
+        font-size: 16px; // Kích thước chữ cho đoạn văn
+        line-height: 1.5; // Đường dẫn giữa các dòng
+        color: #444; // Màu sắc cho văn bản
+        margin-bottom: 15px; // Khoảng cách dưới mỗi đoạn văn
+    }
+
+    ul {
+        margin-left: 20px; // Khoảng cách bên trái cho danh sách
+        list-style-type: disc; // Kiểu dấu đầu dòng
+
+        li {
+            font-size: 16px; // Kích thước chữ cho danh sách
+            color: #444; // Màu sắc cho danh sách
+            margin-bottom: 5px; // Khoảng cách dưới mỗi mục trong danh sách
+        }
+    }
+
+    // Thêm kiểu cho footer nếu cần
+    footer {
+        margin-top: 20px; // Khoảng cách trên footer
+        text-align: center; // Căn giữa nội dung footer
+        color: #777; // Màu sắc cho văn bản footer
+    }
+}
