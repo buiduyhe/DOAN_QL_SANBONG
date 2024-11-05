@@ -1,115 +1,133 @@
-.body{
-    background: white;
+body {
+  background: white !important;
 }
+
+.DanhMuc {
+  padding: 20px 0;
+  text-align: center;
+}
+
+.DanhMucSP {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.img-btn {
+  cursor: pointer;
+  text-align: center;
+}
+
+.img-btn img {
+  width: 50px;
+  height: 50px;
+}
+
 .san-pham {
-    display: flex;
-    flex-direction: row;
-    margin: 20px;
-    
-    
-    .sort-dropdown {
-      position: absolute;
-      margin-left: 80%;
-      
-      
-      .sort-label-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+
+  .sort-dropdown {
+    align-self: flex-end;
+    margin-bottom: 20px;
+    margin-right: 20px;
+
+    .sort-label-button {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+
+      .sort-label {
+        margin-right: 8px;
+        font-weight: bold;
+      }
+
+      .sort-dropdown-button {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        padding: 8px 12px;
+        cursor: pointer;
+        font-size: 16px;
+        width: 150px;
+        height: 40px;
         display: flex;
         align-items: center;
-        margin-bottom: 10px;
-        max-width: 400px;
-        width: 400px;
-        .sort-label {
-          margin-right: 8px;
-          font-weight: bold;
-        }
-        
-        .sort-dropdown-button {
-          background-color: #fff;
-          border: 1px solid #ddd;
-          padding: 8px 12px;
-          cursor: pointer;
-          font-size: 16px;
-          display: flex;
-          align-items: center;
-          text-align: center;
-          width: 150px; /* Thay đổi kích thước theo nhu cầu */
-          height: 40px; /* Thay đổi kích thước theo nhu cầu */
-          min-width: 150px; /* Kích thước tối thiểu */
-          min-height: 40px;
-        }
-        
-        .arrow {
-          margin-left: 5px;
-        }
+        justify-content: center;
       }
-      
-      .sort-dropdown-menu {
-        position: absolute;
-        top: 70%;
-        left: 71px;
-        min-width: 150px;
-        border: 1px solid #ddd;
-        background-color: #fff;
-        list-style-type: none;
-        padding: 0;
-        margin: 5px 0 0;
-        z-index: 1000;
-  
-        li {
-          padding: 8px 12px;
-          cursor: pointer;
-          font-size: 16px;
-  
-          &:hover {
-            background-color: #f0f0f0;
-          }
-        }
+
+      .arrow {
+        margin-left: 5px;
       }
     }
-  
-    .product-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: flex-start;
-      max-width: 1200px;
-      width: 100%;
-      margin-left: 100px;
-      margin-top: 80px;
-      
-      .product-item {
-        width: 250px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        overflow: hidden;
-        background-color: #fff;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        transition: transform 0.2s;
-        
+
+    .sort-dropdown-menu {
+      position: absolute;
+      top: 57%;
+      left: 1343px;
+      min-width: 150px;
+      border: 1px solid #ddd;
+      background-color: #fff;
+      list-style-type: none;
+      padding: 0;
+      margin: 5px 0 0;
+      z-index: 1000;
+
+      li {
+        padding: 8px 12px;
+        cursor: pointer;
+        font-size: 16px;
+
         &:hover {
-          transform: scale(1.05);
-        }
-  
-        img {
-          width: 100%;
-          height: 200px;
-          object-fit: cover;
-        }
-  
-        h3 {
-          font-size: 18px;
-          font-weight: 600;
-          margin: 10px 0;
-          padding: 0 10px;
-        }
-  
-        p {
-          font-size: 16px;
-          color: #333;
-          margin-bottom: 10px;
+          background-color: #f0f0f0;
         }
       }
     }
   }
-  
+
+  .product-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    max-width: 1200px;
+    width: 100%;
+    padding: 20px;
+    margin-left: 200px;
+
+    .product-item {
+      width: 250px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      transition: transform 0.2s;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+
+      img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 10px 0;
+        padding: 0 10px;
+      }
+
+      p {
+        font-size: 16px;
+        color: #333;
+        margin-bottom: 10px;
+      }
+    }
+  }
+}

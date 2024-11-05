@@ -7,7 +7,6 @@ const Product = () => {
   return (
     <div>
         <Navbar/>
-        <DanhMuc/>
         <SanPham/>
         <Footer/>
     </div>
