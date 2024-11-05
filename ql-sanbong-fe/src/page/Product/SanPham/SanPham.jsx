@@ -11,7 +11,7 @@ const SanPham = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:8000/dichvu/dichvu");
+        const response = await fetch("https://6728f7106d5fa4901b6babb0.mockapi.io/LoaiSanPham");
         if (!response.ok) throw new Error("Failed to fetch products");
 
         const data = await response.json();
@@ -41,22 +41,22 @@ const SanPham = () => {
 
     switch (filterValue) {
       case 'under-100k':
-        filtered = filtered.filter(product => product.gia_dv < 100000);
+        filtered = filtered.filter(product => product.Gia < 100000);
         break;
       case '100k-200k':
-        filtered = filtered.filter(product => product.gia_dv >= 100000 && product.gia_dv < 200000);
+        filtered = filtered.filter(product => product.Gia >= 100000 && product.Gia < 200000);
         break;
       case '200k-300k':
-        filtered = filtered.filter(product => product.gia_dv >= 200000 && product.gia_dv < 300000);
+        filtered = filtered.filter(product => product.Gia >= 200000 && product.Gia < 300000);
         break;
       case '300k-500k':
-        filtered = filtered.filter(product => product.gia_dv >= 300000 && product.gia_dv < 500000);
+        filtered = filtered.filter(product => product.Gia >= 300000 && product.Gia < 500000);
         break;
       case '500k-1000k':
-        filtered = filtered.filter(product => product.gia_dv >= 500000 && product.gia_dv < 1000000);
+        filtered = filtered.filter(product => product.Gia >= 500000 && product.Gia < 1000000);
         break;
       case 'above-1000k':
-        filtered = filtered.filter(product => product.gia_dv >= 1000000);
+        filtered = filtered.filter(product => product.Gia >= 1000000);
         break;
       default:
         break;
@@ -71,22 +71,16 @@ const SanPham = () => {
 
     switch (option) {
       case 'A → Z':
-        sortedProducts.sort((a, b) => a.ten_dv.localeCompare(b.ten_dv));
+        sortedProducts.sort((a, b) => a.TenSanPham.localeCompare(b.TenSanPham));
         break;
       case 'Z → A':
-        sortedProducts.sort((a, b) => b.ten_dv.localeCompare(a.ten_dv));
+        sortedProducts.sort((a, b) => b.TenSanPham.localeCompare(a.TenSanPham));
         break;
       case 'Giá tăng dần':
-        sortedProducts.sort((a, b) => a.gia_dv - b.gia_dv);
+        sortedProducts.sort((a, b) => a.Gia - b.Gia);
         break;
       case 'Giá giảm dần':
-        sortedProducts.sort((a, b) => b.gia_dv - a.gia_dv);
-        break;
-      case 'Hàng mới nhất':
-        sortedProducts.sort((a, b) => new Date(b.ngay_them) - new Date(a.ngay_them)); // Giả sử bạn có trường ngày thêm
-        break;
-      case 'Hàng cũ nhất':
-        sortedProducts.sort((a, b) => new Date(a.ngay_them) - new Date(b.ngay_them)); // Giả sử bạn có trường ngày thêm
+        sortedProducts.sort((a, b) => b.Gia - a.Gia);
         break;
       default:
         break;
@@ -111,20 +105,20 @@ const SanPham = () => {
             <li onClick={() => handleOptionClick('Z → A')}>Z → A</li>
             <li onClick={() => handleOptionClick('Giá tăng dần')}>Giá tăng dần</li>
             <li onClick={() => handleOptionClick('Giá giảm dần')}>Giá giảm dần</li>
-            <li onClick={() => handleOptionClick('Hàng mới nhất')}>Hàng mới nhất</li>
-            <li onClick={() => handleOptionClick('Hàng cũ nhất')}>Hàng cũ nhất</li>
           </ul>
         )}
       </div>
       <div className="product-list">
-        {filteredProducts.map((product, index) => (
-          <div className="product-item" key={index}>
-            <img src={`http://localhost:8000/${product.image_dv}`} alt={product.ten_dv} />
-            <h3>{product.ten_dv}</h3>
-            <p>{product.gia_dv} VND</p>
+        {filteredProducts.map((product) => (
+          <div className="product-item" key={product.id}>
+            <img src={product.HinhAnh} alt={product.TenSanPham} />
+            <h3>{product.TenSanPham}</h3>
+            <p>{product.MoTa}</p>
+            <p style={{ color: '#007bff', fontWeight: 'bold' }}>
+              {product.Gia ? product.Gia.toLocaleString('vi-VN') + "₫" : "Giá không xác định"}
+            </p>
           </div>
         ))}
-
       </div>
     </div>
   );
