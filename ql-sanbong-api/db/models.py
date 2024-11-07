@@ -37,11 +37,38 @@ class SysUserRole(Base):
      # Quan hệ hai chiều với SysUser và SysRole
     user = relationship("SysUser", back_populates="roles")
     role = relationship("SysRole", back_populates="users")
-# Thêm bảng DICH_VU
+# Bảng LoaiDichVu (lưu trữ loại dịch vụ)
+class LoaiDichVu(Base):
+    __tablename__ = 'LOAI_DICH_VU'
+    id = Column(Integer, primary_key=True, index=True)
+    ten_loai_dv = Column(String(255), nullable=False)
+    image_dv = Column(String(255))
+
+    # Thiết lập mối quan hệ với bảng DichVu_LoaiDichVu
+    dichvus = relationship("DichVu_LoaiDichVu", back_populates="loaidichvu")
+
+
+# Bảng DichVu_LoaiDichVu (liên kết giữa DichVu và LoaiDichVu)
+class DichVu_LoaiDichVu(Base):
+    __tablename__ = 'DICH_VU_LOAI_DICH_VU'
+    id = Column(Integer, primary_key=True, index=True)
+    dichvu_id = Column(Integer, ForeignKey('DICH_VU.id'))
+    loaidichvu_id = Column(Integer, ForeignKey('LOAI_DICH_VU.id'))
+
+    # Thiết lập quan hệ với bảng DichVu và LoaiDichVu
+    dichvu = relationship("DichVu", back_populates="loaidichvus")
+    loaidichvu = relationship("LoaiDichVu", back_populates="dichvus")
+
+
+# Cập nhật bảng DichVu để tạo mối quan hệ nhiều-nhiều với LoaiDichVu
 class DichVu(Base):
     __tablename__ = 'DICH_VU'
     id = Column(Integer, primary_key=True, index=True)
     ten_dv = Column(String(255), nullable=False)
     gia_dv = Column(Integer, nullable=False)
     soluong = Column(Integer, nullable=False)
+    mota = Column(String(255), nullable=True)
     image_dv = Column(String(255))
+
+    # Mối quan hệ với bảng DichVu_LoaiDichVu
+    loaidichvus = relationship("DichVu_LoaiDichVu", back_populates="dichvu")

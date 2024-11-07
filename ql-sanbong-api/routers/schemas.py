@@ -54,8 +54,10 @@ class DichVuDisplay(BaseModel):
     ten_dv:str
     gia_dv:int
     soluong:int
+    mota:str
     image_dv:str
-    
+    class Config:
+        orm_mode = True
 class CommentBase(BaseModel):
     username : str
     text : str
@@ -86,3 +88,13 @@ class UserResponseModel(BaseModel):
     class Config:
         from_attributes = True
         
+class LoaiDichVuDisplay(BaseModel):
+    id:int
+    ten_loai_dv:str
+    image_dv:str
+
+class DichVuResponse(BaseModel):
+    loaidichvu_id:int
+    dichvu:List[DichVuDisplay]
+    class Config():
+        orm_mode = True
