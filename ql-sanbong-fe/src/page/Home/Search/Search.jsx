@@ -15,8 +15,8 @@ const Search = () => {
     "6:30 AM - 7:30 AM",
     "7:00 AM - 8:00 AM",
     "7:30 AM - 8:30 AM",
-    "8:00 AM - 9:00 PM",
-    "8:30 PM - 9:30 PM",
+    "8:00 AM - 9:00 AM",
+    "8:30 AM - 9:30 AM",
     "2:00 PM - 3:00 PM",
     "2:30 PM - 3:30 PM",
     "3:00 PM - 4:00 PM",
@@ -53,7 +53,7 @@ const Search = () => {
       state: {
         fieldType,
         selectedDate,
-        timeSlot,
+        timeSlot, // Truyền thông tin thời gian đã chọn
         duration,
         currentStep: 2,  // Truyền giá trị step là "Chọn sân"
       },
@@ -66,15 +66,7 @@ const Search = () => {
   const availableTimeSlots = duration === "60" ? timeSlots60Min : timeSlots90Min;
 
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "10px",
-        justifyContent: "center",
-      }}
-      className="search-container"
-    >
+    <div className="search-container">
       <select
         value={fieldType}
         onChange={(e) => setFieldType(e.target.value)}

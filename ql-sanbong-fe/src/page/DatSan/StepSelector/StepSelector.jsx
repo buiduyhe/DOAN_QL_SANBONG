@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom"; // Thêm useNavigate
 import "./StepSelector.scss";
 
 const StepSelector = () => {
-  const { state } = useLocation(); // Nhận state được truyền từ Search
+  const { state } = useLocation(); // Nhận state từ useLocation
+  const navigate = useNavigate(); // Để điều hướng lại trang với thông tin cập nhật
   const [selectedTime, setSelectedTime] = useState(state?.timeSlot || "5:00 AM - 6:30 AM"); // Đặt thời gian mặc định từ state
 
   useEffect(() => {
@@ -46,6 +47,18 @@ const StepSelector = () => {
     "9:30 PM - 11:00 PM",
   ];
 
+  // Hàm thay đổi giờ
+  const handleTimeChange = (time) => {
+    setSelectedTime(time);
+    // Chuyển đến trang "DatSan" với thông tin cập nhật
+    navigate("/DatSan", {
+      state: {
+        ...state,
+        timeSlot: time, // Cập nhật lại timeSlot
+      },
+    });
+  };
+
   return (
     <div className="step-selector">
       <label className="label">Đổi giờ đặt sân</label>
@@ -54,7 +67,7 @@ const StepSelector = () => {
           <button
             key={index}
             className={`time-slot ${time === selectedTime ? "active" : ""}`}
-            onClick={() => setSelectedTime(time)}
+            onClick={() => handleTimeChange(time)} // Cập nhật giờ khi chọn
           >
             {time}
           </button>
