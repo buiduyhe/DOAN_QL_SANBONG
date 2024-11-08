@@ -1,0 +1,85 @@
+body {
+    overflow-x: hidden;
+  }
+  
+  .stadium-layout {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    margin-top: 50px;
+    margin-left: 150px; /* Giảm bớt margin bên trái nếu cần */
+  
+    .left-column, .mid-column, .right-column {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+  
+    .row {
+      display: flex;
+      gap: 10px;
+    }
+  
+    .field {
+      width: 100px;  /* Tăng chiều rộng */
+      height: 180px; /* Tăng chiều cao */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      position: relative;
+      font-weight: bold;
+      text-align: center;
+      border-radius: 5px;
+      border: none; /* Xóa viền mặc định của nút */
+      cursor: pointer;
+  
+      &.reserved {
+        opacity: 0.7;
+      }
+  
+      .reserved-text {
+        position: absolute;
+        bottom: 10px;
+        font-size: 12px;
+        color: red;
+      }
+    }
+  
+    .info-box-NVS {
+      width: 120px;  /* Tăng chiều rộng */
+      height: 40px;  /* Tăng chiều cao */
+      background-color: gray;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+  
+    .info-box-QQL {
+      width: 120px;  /* Tăng chiều rộng */
+      height: 120px; /* Tăng chiều cao */
+      background-color: gray;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+  
+    .info-box.large {
+      width: 120px;  /* Tăng chiều rộng */
+      height: 180px; /* Tăng chiều cao */
+      background-color: gray;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+  }
+  
