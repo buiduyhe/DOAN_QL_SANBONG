@@ -1,0 +1,43 @@
+.step-selector {
+    display: flex;
+    align-items: center;
+    margin-top: 30px;
+    margin-left: 40px;
+  
+    .label {
+      font-size: 16px;
+      font-weight: 500;
+      margin-right: 20px;
+      color: #666;
+    }
+  
+    .time-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 20px;
+  
+      .time-slot {
+        padding: 10px 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #fff;
+        color: #333;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.3s, color 0.3s;
+  
+        &.active {
+          background-color: #0056b3;
+          color: #fff;
+          border-color: #0056b3;
+        }
+  
+        &:hover {
+          border-color: #0056b3;
+          color: #0056b3;
+        }
+      }
+    }
+  }
+  

@@ -5,6 +5,7 @@ import Home from './page/Home/Home';
 import Product from './page/Product/Product';
 import LienHe from './page/LienHe/LienHe';
 import GioiThieu from './page/GioiThieu/GioiThieu';
+import DatSan from './page/DatSan/DatSan';
 function App() {
   return (
     <Router>
@@ -16,6 +17,7 @@ function App() {
         <Route path="/product" element = {<Product/>}/>
         <Route path="/LienHe" element = {<LienHe/>}/>
         <Route path="/gioithieu" element = {<GioiThieu/>}/>
+        <Route path="/DatSan" element = {<DatSan/>}/>
       </Routes>
     </Router>
   );
