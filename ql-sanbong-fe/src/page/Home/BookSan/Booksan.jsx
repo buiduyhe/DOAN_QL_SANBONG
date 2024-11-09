@@ -6,7 +6,7 @@ import B2 from "../../../assets/Home/cart.png";
 import B3 from "../../../assets/Home/call.png";
 
 const bookdata = [
-  { img: B1, txt: "Đặt Sân Ngay", link: "/Home" },
+  { img: B1, txt: "Đặt Sân Ngay", link: "/DatSan" },
   { img: B2, txt: "Thêm Các Dịch Vụ Hấp Dẫn", link: "/Product" },
   { img: B3, txt: "Liên Hệ Để Được Cap Kèo Đấu", link: "/LienHe" },
 ];
