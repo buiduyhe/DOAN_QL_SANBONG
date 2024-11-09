@@ -55,7 +55,7 @@ const Search = () => {
         selectedDate,
         timeSlot, // Truyền thông tin thời gian đã chọn
         duration,
-        currentStep: 2,  // Truyền giá trị step là "Chọn sân"
+        currentStep: 2, // Truyền giá trị step là "Chọn sân"
       },
     });
     console.log("Loại sân:", fieldType);
@@ -63,19 +63,11 @@ const Search = () => {
     console.log("Khoảng thời gian:", timeSlot);
   };
 
-  const availableTimeSlots = duration === "60" ? timeSlots60Min : timeSlots90Min;
+  const availableTimeSlots =
+    duration === "60" ? timeSlots60Min : timeSlots90Min;
 
   return (
     <div className="search-container">
-      <select
-        value={fieldType}
-        onChange={(e) => setFieldType(e.target.value)}
-        style={{ padding: "5px" }}
-      >
-        <option value="Sân 7">Sân 7</option>
-        <option value="Sân 5">Sân 5</option>
-      </select>
-
       <DatePicker
         selected={selectedDate}
         onChange={(date) => setSelectedDate(date)}
@@ -83,15 +75,6 @@ const Search = () => {
         placeholderText="Ngày Đặt"
         style={{ padding: "5px", height: "20px" }}
       />
-
-      <select
-        value={duration}
-        onChange={(e) => setDuration(e.target.value)}
-        style={{ padding: "5px" }}
-      >
-        <option value="90">90 phút</option>
-        <option value="60">60 phút</option>
-      </select>
 
       <select
         value={timeSlot}

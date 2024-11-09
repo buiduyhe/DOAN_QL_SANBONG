@@ -6,8 +6,7 @@ body {
     display: flex;
     gap: 20px;
     width: 100%;
-    margin-top: 50px;
-    margin-left: 150px; /* Giảm bớt margin bên trái nếu cần */
+    padding: 100px 100px;
   
     .left-column, .mid-column, .right-column {
       display: flex;

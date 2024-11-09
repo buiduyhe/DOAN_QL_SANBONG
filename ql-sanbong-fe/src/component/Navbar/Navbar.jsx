@@ -41,6 +41,9 @@ const Navbar = () => {
           <li className="menu-item">
             <a href="/LienHe">Liên Hệ</a>
           </li>
+          <li className="menu-item">
+            <a href="/DatSan">Đặt Sân</a>
+          </li>
           {token ? (
             <>
               <li className="menu-item">
