@@ -16,7 +16,7 @@ const Stepper = () => {
   const steps = [
     "Chọn loại sân/ngày/giờ",
     "Chọn sân",
-    "Xác nhận/Thanh toán",
+    "Xác nhận/Đặt Sân",
   
   ];
 
