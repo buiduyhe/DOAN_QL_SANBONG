@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import "./SidebarVN.scss";
 import staff from "../../../assets/Home/stafficon.png";
 
-const SidebarVN = () => {
+const SidebarVN = ({ onMenuClick }) => {
   const [employeeName, setEmployeeName] = useState("");
 
   useEffect(() => {
@@ -29,16 +29,16 @@ const SidebarVN = () => {
       </div>
       <ul className="sidebar-menu">
         <li>
-          <Link to="/NhanVien/customers">Quản lý khách hàng</Link>
+          <a onClick={() => onMenuClick("customers")}>Quản lý khách hàng</a>
         </li>
         <li>
-          <Link to="/NhanVien/services">Quản lý dịch vụ</Link>
+          <a onClick={() => onMenuClick("services")}>Quản lý dịch vụ</a>
         </li>
         <li>
-          <Link to="/NhanVien/orders">Quản lý đơn đặt</Link>
+          <a onClick={() => onMenuClick("orders")}>Quản lý đơn đặt</a>
         </li>
         <li>
-          <Link to="/NhanVien/courts">Quản lý sân</Link>
+          <a onClick={() => onMenuClick("courts")}>Quản lý sân</a>
         </li>
       </ul>
     </div>
