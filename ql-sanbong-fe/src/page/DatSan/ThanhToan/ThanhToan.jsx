@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Navbar from '../../../component/Navbar/Navbar';
 import Stepper from '../Stepper/Stepper';
+import { format } from 'date-fns-tz'; // Thư viện date-fns-tz
+import { addMinutes } from 'date-fns'; // Thư viện date-fns để cộng phút
 import './ThanhToan.scss';
 
 const ThanhToan = () => {
@@ -19,31 +21,71 @@ const ThanhToan = () => {
     });
   };
 
+  // Hàm để chuyển đổi thời gian sang múi giờ Việt Nam
+  const formatDateInVN = (date) => {
+    const vietnamTime = format(new Date(date), 'yyyy-MM-dd HH:mm:ss', { timeZone: 'Asia/Ho_Chi_Minh' });
+    return vietnamTime;
+  };
+
+  // Tính toán thời gian checkout (GioCheckout) và chuyển đổi sang múi giờ Việt Nam
+  const calculateCheckoutTime = (selectedDate) => {
+    // Chuyển selectedDate thành đối tượng Date nếu cần thiết
+    const selectedDateObj = new Date(selectedDate);
+    
+    // Nếu selectedDate không hợp lệ, trả về lỗi
+    if (isNaN(selectedDateObj)) {
+      alert('Ngày không hợp lệ');
+      return;
+    }
+
+    // Sử dụng date-fns addMinutes để cộng 90 phút vào thời gian checkout
+    const checkoutDate = addMinutes(selectedDateObj, 90);
+    
+    // Chuyển checkoutDate sang múi giờ Việt Nam
+    const formattedCheckoutDate = format(checkoutDate, 'yyyy-MM-dd HH:mm:ss', { timeZone: 'Asia/Ho_Chi_Minh' });
+    return formattedCheckoutDate;
+  };
+
   const handleDatSan = async () => {
+    if (!id) return;
+
+    // Kiểm tra xem selectedDate có hợp lệ không
+    if (!selectedDate) {
+      alert('Ngày không hợp lệ!');
+      return;
+    }
+
+    // Chuyển đổi thời gian về múi giờ VN
+    const formattedSelectedDate = formatDateInVN(selectedDate);
+
+    // Tính toán thời gian checkout và chuyển đổi sang múi giờ VN
+    const GioCheckout = calculateCheckoutTime(formattedSelectedDate);
+    if (!GioCheckout) return;
+
+    // Tạo đối tượng dữ liệu gửi API
     const data = {
       LoaiSan,
-      GioCheckin: selectedDate,
-      GioCheckout: new Date(new Date(selectedDate).getTime() + 90 * 60000).toISOString(),
+      GioCheckin: formattedSelectedDate, // Sử dụng thời gian đã chuyển đổi
+      GioCheckout, // Thời gian checkout đã được tính toán và chuyển đổi
       ThoiGian: 90,
       TinhTrang: 'Da Dat San',
       Gia,
-      id
     };
-  
+
     try {
-      const response = await fetch('https://672b14c2976a834dd0258200.mockapi.io/DatSan', {
-        method: 'POST',
+      const response = await fetch(`https://672b14c2976a834dd0258200.mockapi.io/DatSan/${id}`, {
+        method: 'PUT', // Sử dụng PUT để cập nhật dữ liệu
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
       });
-  
+
       if (response.ok) {
         setIsSuccess(true);
-        console.log("Success:", await response.json()); // In dữ liệu phản hồi để kiểm tra
+        console.log("Success:", await response.json()); // In phản hồi từ API khi cập nhật thành công
       } else {
-        console.log("Failed Response:", await response.text()); // In lỗi từ API
+        console.log("Failed Response:", await response.text()); // In lỗi nếu có
         alert('Đặt sân không thành công, vui lòng thử lại.');
       }
     } catch (error) {
