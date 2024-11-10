@@ -16,8 +16,8 @@ const Stepper = () => {
   const steps = [
     "Chọn loại sân/ngày/giờ",
     "Chọn sân",
-    "Thanh toán",
-    "Xác nhận"
+    "Xác nhận/Thanh toán",
+  
   ];
 
   // Tính toán chiều rộng của progress bar dựa trên currentStep
