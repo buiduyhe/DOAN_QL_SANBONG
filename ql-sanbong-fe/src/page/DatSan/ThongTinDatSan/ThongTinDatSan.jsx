@@ -2,6 +2,7 @@ import React from 'react';
 import './ThongTinDatSan.scss';
 import placeholderImage from '../../../assets/DatSan/SanBanh5.jpg';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const ThongTinDatSan = ({ selectedField }) => {
   const location = useLocation();
@@ -22,6 +23,15 @@ const ThongTinDatSan = ({ selectedField }) => {
   };
 
   const handleXacNhan = () => {
+    const accessToken = Cookies.get('access_token');
+
+    if (!accessToken) {
+      // Nếu chưa đăng nhập, hiển thị thông báo và chuyển hướng đến trang đăng nhập
+      alert('Bạn cần đăng nhập để tiếp tục đặt sân.');
+      navigate('/login');
+      return;
+    }
+
     // Điều hướng đến trang ThanhToan và truyền thông tin đặt sân
     navigate('/thanh-toan', { state: { selectedField, selectedDate, timeSlot, currentStep: 3 } });
   };
