@@ -6,20 +6,39 @@ import QLDichVu from "./QLDichVu/QLDichVu";
 import QLDonDat from "./QLDonDat/QLDonDat";
 import QLSan from "./QLSan/QLSan";
 import "./NhanVienPage.scss";
+import Cookies from "js-cookie";
+import { useLocation } from "react-router-dom";
+
+
+const token = Cookies.get("access_token");
+const username = Cookies.get("username");
+const role = Cookies.get("user_role");
+
+
 const NhanVienPage = () => {
   const [activeContent, setActiveContent] = useState(null);
+  const location = useLocation();
+  const errorMessage = location.state?.error;
   const handleMenuClick = (content) => {
     setActiveContent(content);
   };
+  const handleLogoutClick = () => {
+    Cookies.remove("access_token");
+    Cookies.remove("username");
+    Cookies.remove("user_role");
+    window.location.href = "/";
+  };
   return (
     <div className="NVPage row">
+    {errorMessage && <div className="error-message">{errorMessage}</div>}
+
       <div className="NV-left col-md-2">
         <SidebarVN onMenuClick={handleMenuClick} />
       </div>
       <div className="NV-right col-md-10">
         <div className="title">
-          <h2>Trang Nhân Viên</h2>
-          <h5>Đăng xuất</h5>
+          <h5>nhân viên: {username}</h5>
+          <h5 onClick={handleLogoutClick}>Đăng xuất</h5>
         </div>
 
         <div className="Fix">
