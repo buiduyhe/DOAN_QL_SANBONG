@@ -1,9 +1,10 @@
 import React from "react";
+import "../QL.scss";
 
 const QLSan = () => {
   return (
     <div>
-      <h2>Quản lý Sân Bóng</h2>
+      <h4>Quản lý Sân Bóng</h4>
     </div>
   );
 };

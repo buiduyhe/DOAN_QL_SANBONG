@@ -7,6 +7,7 @@ import LienHe from './page/LienHe/LienHe';
 import GioiThieu from './page/GioiThieu/GioiThieu';
 import DatSan from './page/DatSan/DatSan';
 import ThanhToan from './page/DatSan/ThanhToan/ThanhToan';
+import NhanVienPage from './page/NhanVienPage/NhanVienPage';
 function App() {
   return (
     <Router>
@@ -20,6 +21,8 @@ function App() {
         <Route path="/gioithieu" element = {<GioiThieu/>}/>
         <Route path="/DatSan" element = {<DatSan/>}/>
         <Route path="/thanh-toan" element = {<ThanhToan/>}/>
+        <Route path="/NhanVien" element = {<NhanVienPage/>}/>
+
       </Routes>
     </Router>
   );
