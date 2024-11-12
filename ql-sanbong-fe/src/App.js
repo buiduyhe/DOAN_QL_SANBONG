@@ -33,13 +33,8 @@ function App() {
             </PrivateRoute>
           }
         />
-         <Route
-          path="/admin"
-          element={
-            <ProtectedRoute element={<NhanVienPage />} requiredRole="admin" />
-          }
-        />
-         <Route path="/supadmin" element = {<ProtectedRoute element = {<Admin/>}requiredRole="supadmin"/>}/>
+         <Route path="/admin" element={<PrivateRoute allowedRole="admin"><NhanVienPage /></PrivateRoute>} />
+         <Route path="/supadmin" element={<PrivateRoute allowedRole="supadmin"><Admin /></PrivateRoute>} />
       </Routes>
      
     </Router>
