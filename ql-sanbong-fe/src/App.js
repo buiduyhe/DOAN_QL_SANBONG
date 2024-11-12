@@ -32,12 +32,7 @@ function App() {
             </PrivateRoute>
           }
         />
-         <Route
-          path="/admin"
-          element={
-            <ProtectedRoute element={<NhanVienPage />} requiredRole="admin" />
-          }
-        />
+         <Route path="/admin" element={<PrivateRoute allowedRole="admin"><NhanVienPage /></PrivateRoute>} />
       </Routes>
     </Router>
   );
