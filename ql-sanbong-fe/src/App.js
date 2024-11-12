@@ -10,6 +10,7 @@ import ThanhToan from "./page/DatSan/ThanhToan/ThanhToan";
 import NhanVienPage from "./page/NhanVienPage/NhanVienPage";
 import PrivateRoute from "./PrivateRoute";
 import ProtectedRoute from "./PrivateRoute";
+import Admin from "./page/Admin/Admin";
 function App() {
   return (
     <Router>
@@ -38,7 +39,9 @@ function App() {
             <ProtectedRoute element={<NhanVienPage />} requiredRole="admin" />
           }
         />
+         <Route path="/supadmin" element = {<ProtectedRoute element = {<Admin/>}requiredRole="supadmin"/>}/>
       </Routes>
+     
     </Router>
   );
 }
