@@ -45,11 +45,14 @@ def create_user( db: Session, userDTO: CreateUserDTO):
             email=userDTO.email, 
             phone=userDTO.phone, 
             hash_password=userDTO.hashed_password, 
-            status=1
+            status=1,
+            gender=userDTO.gender
         )
         db.add(new_user)
+        db.flush()
+        new_role_user = SysUserRole(user_id=new_user.id, role_id=3)
+        db.add(new_role_user)
         db.commit()
-        db.refresh(new_user)
         return new_user
     except Exception as e:
         print(f"[error][db_user][create]: {e}")
@@ -112,3 +115,13 @@ async def get_user_information(db: Session, user_id: int) :
         status=user.status,
         roles=roles
     )
+    
+async def get_SysUser(db: Session, role_id: int):
+    user_role = (
+        db.query(SysUser)
+        .join(SysUserRole, SysUser.id == SysUserRole.user_id)
+        .filter(SysUserRole.role_id == role_id)
+        .all()
+    )
+    
+    return user_role

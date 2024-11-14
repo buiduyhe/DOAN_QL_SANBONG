@@ -76,11 +76,12 @@ async def register(
     email: str = Form(...),
     phone: str = Form(...),
     password: str = Form(...),
+    gender: str = Form(...),
     db: Session = Depends(get_db),
 ):
     phone = await db_auth.check_phone_number_valid(phone=phone)
     email = email.lower()
-
+    gender =gender.upper()
 
     # hashed_password = password
     # password = db_auth.generate_password()
@@ -92,7 +93,8 @@ async def register(
         fullname=fullname,
         email=email,
         phone=phone,
-        hashed_password=hashed_password
+        hashed_password=hashed_password,
+        gender=gender
     )
     
     user = db_user.create_user(db=db, userDTO=userDTO)

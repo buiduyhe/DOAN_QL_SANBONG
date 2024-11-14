@@ -11,6 +11,7 @@ class SysUser(Base):
     phone = Column(String(20))
     email = Column(String(255), unique=True, nullable=False)
     full_name = Column(String(255))
+    gender = Column(String(10))
     status = Column(Integer)
 
 class SysRole(Base):
