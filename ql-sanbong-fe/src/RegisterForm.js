@@ -6,6 +6,7 @@ function RegisterForm() {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState(null);
   const [message, setMessage] = useState('');
+  const [gender, setGender] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = async (event) => {
@@ -18,6 +19,7 @@ function RegisterForm() {
     formData.append('email', email);
     formData.append('phone', phone);
     formData.append('password', password);
+    formData.append('gender',gender);
 
     try {
       const response = await fetch('http://localhost:8000/register', {
@@ -31,6 +33,11 @@ function RegisterForm() {
       }
 
       setMessage(data.detail); // Lưu thông báo thành công
+      setTimeout(() => {
+        if (data.detail === 'Đăng kí tài khoản thành công') {
+          window.location.href = '/login';
+        }
+      }, 1000); // 1500 ms = 1.5 seconds
     } catch (error) {
       setError(error.message); // Lưu thông báo lỗi
     }
@@ -63,6 +70,16 @@ function RegisterForm() {
           />
         </div>
         <div style={{ marginBottom: '15px' }}>
+          <label>Mật khẩu:</label>
+          <input
+            type="text"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            style={{ width: '100%', padding: '8px' }}
+          />
+        </div>
+        <div style={{ marginBottom: '15px' }}>
           <label>Số Điện Thoại:</label>
           <input
             type="text"
@@ -73,14 +90,18 @@ function RegisterForm() {
           />
         </div>
         <div style={{ marginBottom: '15px' }}>
-          <label>Mật khẩu:</label>
-          <input
-            type="text"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={{ width: '100%', padding: '8px' }}
-          />
+            <label>Giới tính:</label>
+            <select
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+                required
+                style={{ width: '100%', padding: '8px' }}
+            >
+                <option value="">Chọn giới tính</option>
+                <option value="male">Nam</option>
+                <option value="female">Nữ</option>
+                <option value="other">Khác</option>
+            </select>
         </div>
         <button type="submit" style={{ padding: '10px 20px' }}>Đăng Ký</button>
       </form>

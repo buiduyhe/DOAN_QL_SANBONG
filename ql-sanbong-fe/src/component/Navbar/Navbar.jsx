@@ -21,6 +21,12 @@ const Navbar = () => {
     Cookies.remove("username");
     window.location.href = "/";
   };
+  const handleAdminClick = () => {
+    window.location.href = "/admin";
+  }
+  const handleSupAdminClick = () => {
+    window.location.href = "/supadmin";
+  }
 
   return (
     <div className="NB">
@@ -52,6 +58,16 @@ const Navbar = () => {
               <li className="menu-item">
                 <a onClick={handleLogoutClick}>Đăng Xuất</a>
               </li>
+              {role === "admin" && (
+                <li className="menu-item">
+                  <a onClick={handleAdminClick}>Trang Nhân Viên</a>
+                </li>
+              )}
+              {role === "supadmin" && (
+                <li className="menu-item">
+                  <a onClick={handleSupAdminClick}>Trang Quản Lý</a>
+                </li>
+              )}
             </>
           ) : (
             <>

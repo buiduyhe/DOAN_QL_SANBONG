@@ -4,6 +4,7 @@ from routers.schemas import  UserDisplay,UserBase
 from db.database import get_db
 from db import db_user
 from db.models import SysUser
+from routers import schemas
 
 router = APIRouter(
     prefix="/user",
@@ -17,3 +18,22 @@ async def my_profile(
 ):
     my_profile = await db_user.get_user_information(db=db, user_id=current_user.id)
     return my_profile
+
+@router.get('/get_SysUser/{role_id}')
+async def get_SysUser(
+    role_id: int,
+    db: Session = Depends(get_db),
+    current_user: SysUser = Depends(db_user.get_current_user_info)
+):
+    user_roles = await db_user.get_SysUser(db=db, role_id=role_id)
+    user_responses = []
+    for user_role in user_roles:
+        user_responses.append(schemas.UserResponse(
+            id=user_role.id,
+            phone=user_role.phone,
+            email=user_role.email,
+            full_name=user_role.full_name,
+            status=user_role.status,
+            gender=user_role.gender
+        ))
+    return user_responses

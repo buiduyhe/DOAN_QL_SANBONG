@@ -57,9 +57,9 @@ function LoginForm() {
       // Wait for 5 seconds before redirecting based on user role
       setTimeout(() => {
         if (userRole === 'admin') {
-          window.location.href = '/admin';
+          window.location.href = '/';
         } else if (userRole === 'supadmin') {
-          window.location.href = '/supadmin';
+          window.location.href = '/';
         } else {
           window.location.href = '/';
         }

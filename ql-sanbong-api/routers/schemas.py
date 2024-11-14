@@ -72,6 +72,7 @@ class CreateUserDTO(BaseModel):
     email: str 
     phone: str 
     hashed_password: str | None
+    gender: str
 class UserRoleResponse(BaseModel):
     id : int
     name : str
@@ -98,3 +99,14 @@ class DichVuResponse(BaseModel):
     dichvu:List[DichVuDisplay]
     class Config():
         orm_mode = True
+        
+class UserResponse(BaseModel):
+    id: int
+    phone: Optional[str]
+    email: str
+    full_name: Optional[str]
+    status: Optional[int]
+    gender: Optional[str]
+    class Config:
+        orm_mode = True
+        
