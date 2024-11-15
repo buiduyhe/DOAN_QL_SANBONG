@@ -1,10 +1,9 @@
-// PrivateRoute.js
 import React from "react";
 import { Navigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import Unauthorized from "./Unauthorized";
 
-const PrivateRoute = ({ children, allowedRole }) => {
+const PrivateRoute = ({ children, allowedRoles }) => {
   const token = Cookies.get("access_token");
   const userRole = Cookies.get("user_role");
 
@@ -12,8 +11,8 @@ const PrivateRoute = ({ children, allowedRole }) => {
     return <Navigate to="/login" />;
   }
 
-  // Show Unauthorized message if role is incorrect
-  if (userRole !== allowedRole) {
+  // Check if user role is in the allowed roles
+  if (!allowedRoles.includes(userRole)) {
     return <Unauthorized />;
   }
 

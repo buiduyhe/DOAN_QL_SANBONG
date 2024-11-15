@@ -6,6 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from routers import authentication
 from fastapi.middleware.cors import CORSMiddleware
 
+from scheduler import start_scheduler
 
 app= FastAPI()
 
@@ -36,3 +37,8 @@ app.add_middleware(
     allow_headers=['*']
 )
 app.mount('/images',StaticFiles(directory='images'),name ='images')
+
+# @app.on_event("startup")
+# def startup_event():
+#     start_scheduler()
+#     print("Scheduler started.")

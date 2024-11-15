@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Date, DateTime, Float
+from sqlalchemy import Boolean, Column, Integer, String, ForeignKey, Date, DateTime, Float
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from db.database import Base
@@ -69,29 +69,42 @@ class DatSan(Base):
     thoi_gian_ket_thuc = Column(DateTime, nullable=False)  # Thời gian kết thúc thuê
     trang_thai = Column(Integer, nullable=False)  # Trạng thái đặt sân (1: Đã xác nhận, 0: Đang chờ, 2: Đã hủy)
 
-class GioHoatDong(Base):
-    __tablename__ = 'GIO_HOAT_DONG'
+class TimeSlot(Base):
+    __tablename__ = 'TIME_SLOT'
     id = Column(Integer, primary_key=True, index=True)
-    ngay_trong_tuan = Column(Integer, nullable=False)
-    gio_mo_cua = Column(DateTime, nullable=False)
-    gio_dong_cua = Column(DateTime, nullable=False)
-    
+    san_id = Column(Integer, ForeignKey('SAN_BONG.id'), nullable=False)  # Liên kết với sân
+    date = Column(Date, nullable=False)  # Ngày cụ thể
+    start_time = Column(DateTime, nullable=False)  # Thời gian bắt đầu (vd: 5:00 sáng)
+    end_time = Column(DateTime, nullable=False)  # Thời gian kết thúc (vd: 6:30 sáng)
+    is_available = Column(Boolean, default=True)  # Đánh dấu nếu khung giờ này trống
+
+    # Thiết lập quan hệ với bảng SanBong
+    san = relationship("SanBong", back_populates="time_slots")
+
 class SanBong(Base):
     __tablename__ = 'SAN_BONG'
-    id = Column(Integer, primary_key=True, index=True)
-    loai_san = Column(String(50), nullable=False)  # Loại sân (sân 5 hoặc sân 7)
+    id = Column(String, primary_key=True, index=True)
     gia_thue = Column(Float, nullable=False)  # Giá thuê sân
     trang_thai = Column(Integer, nullable=False)  # Trạng thái sân (1: sẵn sàng, 0: không sẵn sàng)
-    gio_hoat_dong_id = Column(Integer, ForeignKey('GIO_HOAT_DONG.id'), nullable=False)  # Liên kết với bảng GIO_HOAT_DONG
+    # Mối quan hệ với bảng TimeSlot
+    time_slots = relationship("TimeSlot", back_populates="san")
     # Mối quan hệ với bảng DatSan
     datsans = relationship("DatSan", back_populates="sanbong")
-    # Mối quan hệ với bảng GioHoatDong
-    gio_hoat_dongs = relationship("GioHoatDong", back_populates="sanbong")
 
 DatSan.sanbong = relationship("SanBong", back_populates="datsans")
-GioHoatDong.sanbong = relationship("SanBong", back_populates="gio_hoat_dongs")
+class LoaiSanBong(Base):
+    __tablename__ = 'LOAI_SAN_BONG'
+    id = Column(Integer, primary_key=True, index=True)
+    ten_loai_san = Column(String(50), nullable=False)
+    mo_ta = Column(String(255), nullable=True)
 
+    # Mối quan hệ với bảng SanBong
+    san_bongs = relationship("SanBong", back_populates="loai_san_bong")
+
+SanBong.loai_san_bong = relationship("LoaiSanBong", back_populates="san_bongs")
+SanBong.loai_san_id = Column(Integer, ForeignKey('LOAI_SAN_BONG.id'), nullable=False)
 class HoaDon(Base):
+   
     __tablename__ = 'HOA_DON'
     id = Column(Integer, primary_key=True, index=True)
     ma_hoa_don = Column(String(255), unique=True, nullable=False)

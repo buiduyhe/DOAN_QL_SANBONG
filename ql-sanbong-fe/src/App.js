@@ -23,20 +23,11 @@ function App() {
         <Route path="/LienHe" element={<LienHe />} />
         <Route path="/gioithieu" element={<GioiThieu />} />
         <Route path="/DatSan" element={<DatSan />} />
-        
         {/* Protected Routes */}
-        <Route
-          path="/thanh-toan"
-          element={
-            <PrivateRoute>
-              <ThanhToan />
-            </PrivateRoute>
-          }
-        />
-         <Route path="/admin" element={<PrivateRoute allowedRole="admin"><NhanVienPage /></PrivateRoute>} />
-         <Route path="/supadmin" element={<PrivateRoute allowedRole="supadmin"><Admin /></PrivateRoute>} />
+        <Route path="/thanh-toan" element={<PrivateRoute allowedRoles={['admin', 'user', 'supadmin']}><ThanhToan /></PrivateRoute>} />
+        <Route path="/admin" element={<PrivateRoute allowedRole="admin"><NhanVienPage /></PrivateRoute>} />
+        <Route path="/supadmin" element={<PrivateRoute allowedRole="supadmin"><Admin /></PrivateRoute>} />
       </Routes>
-     
     </Router>
   );
 }
