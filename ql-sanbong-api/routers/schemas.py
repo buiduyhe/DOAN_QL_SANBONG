@@ -2,6 +2,8 @@ from pydantic import BaseModel
 from datetime import datetime
 from typing import List, Optional
 
+from datetime import time as Time
+
 class UserBase(BaseModel):
     username:str
     email:str
@@ -109,4 +111,10 @@ class UserResponse(BaseModel):
     gender: Optional[str]
     class Config:
         orm_mode = True
-        
+
+class TimeSlotResponse(BaseModel):
+    start_time: Time
+    end_time: Time
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
