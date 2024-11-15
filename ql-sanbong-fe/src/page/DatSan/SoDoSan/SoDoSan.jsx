@@ -12,7 +12,7 @@ const SoDoSan = () => {
 
   // Fetch field data from API
   useEffect(() => {
-    fetch('https://672b14c2976a834dd0258200.mockapi.io/DatSan')
+    fetch('http://127.0.0.1:8000/san/san')
       .then((response) => response.json())
       .then((data) => setFields(data))
       .catch((error) => console.error("Error fetching data:", error));
@@ -23,8 +23,8 @@ const SoDoSan = () => {
 
   // Handle field selection
   const handleFieldClick = (field) => {
-    if (field.TinhTrang === "Da Dat San") {
-      return; // Stop if the field is already reserved
+    if (field.TinhTrang === "0") {
+      return; 
     }
     setSelectedField(field); // Update selected field
   };
@@ -89,9 +89,8 @@ const Field = ({ field, onClick, isLarge }) => {
   if (!field) return null;
 
   // Check if the field is reserved
-  const isReserved = field.TinhTrang === "Da Dat San";
+  const isReserved = field.TinhTrang === "0";
 
-  // Define styles for reserved fields and background image based on field type
   const fieldStyle = isReserved ? { pointerEvents: 'none', opacity: 0.5 } : {};
   const backgroundImage = isLarge ? `url(${San_7})` : `url(${fieldImage})`;
 

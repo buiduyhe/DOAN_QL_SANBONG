@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom"; // Thêm useNavigate
+import { useLocation, useNavigate } from "react-router-dom";
 import "./StepSelector.scss";
 
 const StepSelector = () => {
-  const { state } = useLocation(); // Nhận state từ useLocation
-  const navigate = useNavigate(); // Để điều hướng lại trang với thông tin cập nhật
-  const [selectedTime, setSelectedTime] = useState(state?.timeSlot || "5:00 AM - 6:30 AM"); // Đặt thời gian mặc định từ state
+  const { state } = useLocation();
+  const navigate = useNavigate();
+  const [selectedTime, setSelectedTime] = useState(state?.timeSlot || "5:00 AM - 6:30 AM");
+  const [timeSlots, setTimeSlots] = useState([]);
 
   useEffect(() => {
     if (state?.timeSlot) {
@@ -13,48 +14,27 @@ const StepSelector = () => {
     }
   }, [state]);
 
-  const timeSlots = state?.duration === "60" ? [
-    "5:00 AM - 6:00 AM",
-    "6:30 AM - 7:30 AM",
-    "7:00 AM - 8:00 AM",
-    "7:30 AM - 8:30 AM",
-    "8:00 AM - 9:00 PM",
-    "8:30 PM - 9:30 PM",
-    "2:00 PM - 3:00 PM",
-    "2:30 PM - 3:30 PM",
-    "3:00 PM - 4:00 PM",
-    "3:30 PM - 4:30 PM",
-    "4:00 PM - 5:00 PM",
-    "5:30 PM - 6:30 PM",
-    "6:00 PM - 7:00 PM",
-    "7:00 PM - 8:00 PM",
-    "7:30 PM - 8:30 PM",
-    "8:00 PM - 9:00 PM",
-    "9:30 PM - 10:30 PM",
-    "10:00 PM - 11:00 PM",
-  ] : [
-    "5:00 AM - 6:30 AM",
-    "6:30 AM - 8:00 AM",
-    "8:00 AM - 9:30 AM",
-    "9:30 AM - 11:00 AM",
-    "11:00 AM - 12:30 PM",
-    "12:30 PM - 2:00 PM",
-    "2:00 PM - 3:30 PM",
-    "3:30 PM - 5:00 PM",
-    "5:00 PM - 6:30 PM",
-    "6:30 PM - 8:00 PM",
-    "8:00 PM - 9:30 PM",
-    "9:30 PM - 11:00 PM",
-  ];
+  useEffect(() => {
+    const fetchTimeSlots = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/san/time_slot");
+        const data = await response.json();
+        const formattedTimeSlots = data.map(slot => `${slot.start_time} - ${slot.end_time}`);
+        setTimeSlots(formattedTimeSlots);
+      } catch (error) {
+        console.error("Error fetching time slots:", error);
+      }
+    };
 
-  // Hàm thay đổi giờ
+    fetchTimeSlots();
+  }, []);
+
   const handleTimeChange = (time) => {
     setSelectedTime(time);
-    // Chuyển đến trang "DatSan" với thông tin cập nhật
     navigate("/DatSan", {
       state: {
         ...state,
-        timeSlot: time, // Cập nhật lại timeSlot
+        timeSlot: time,
       },
     });
   };
@@ -67,7 +47,7 @@ const StepSelector = () => {
           <button
             key={index}
             className={`time-slot ${time === selectedTime ? "active" : ""}`}
-            onClick={() => handleTimeChange(time)} // Cập nhật giờ khi chọn
+            onClick={() => handleTimeChange(time)}
           >
             {time}
           </button>

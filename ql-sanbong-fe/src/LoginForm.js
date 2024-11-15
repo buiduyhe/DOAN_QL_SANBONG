@@ -51,6 +51,7 @@ function LoginForm() {
       Cookies.set('access_token', data.access_token, { expires: 1, secure: true, sameSite: 'Strict' });
       Cookies.set('user_role', userRole, { expires: 1, secure: true, sameSite: 'Strict' });
       Cookies.set('username', username, { expires: 1, secure: true, sameSite: 'Strict' });
+      Cookies.set('user_id', userData.id, { expires: 1, secure: true, sameSite: 'Strict' });
       
       setSuccess('Đăng nhập thành công!');
       

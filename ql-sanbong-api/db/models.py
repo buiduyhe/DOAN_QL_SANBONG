@@ -2,6 +2,7 @@ from sqlalchemy import Boolean, Column, Integer, String, ForeignKey, Date, DateT
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from db.database import Base
+from sqlalchemy import Time
 
 # Define the SysUser model
 class SysUser(Base):
@@ -64,18 +65,19 @@ class DatSan(Base):
     __tablename__ = 'DAT_SAN'
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey('SYS_USER.id'), nullable=False)  # Liên kết với bảng SYS_USER
-    san_id = Column(Integer, ForeignKey('SAN_BONG.id'), nullable=False)  # Liên kết với bảng SAN_BONG
+    san_id = Column(String, ForeignKey('SAN_BONG.id'), nullable=False)  # Liên kết với bảng SAN_BONG
     thoi_gian_bat_dau = Column(DateTime, nullable=False)  # Thời gian bắt đầu thuê
     thoi_gian_ket_thuc = Column(DateTime, nullable=False)  # Thời gian kết thúc thuê
     trang_thai = Column(Integer, nullable=False)  # Trạng thái đặt sân (1: Đã xác nhận, 0: Đang chờ, 2: Đã hủy)
+    create_at = Column(DateTime, default=func.now())  # Thời gian tạo
 
 class TimeSlot(Base):
     __tablename__ = 'TIME_SLOT'
     id = Column(Integer, primary_key=True, index=True)
-    san_id = Column(Integer, ForeignKey('SAN_BONG.id'), nullable=False)  # Liên kết với sân
+    san_id = Column(String, ForeignKey('SAN_BONG.id'), nullable=False)  # Liên kết với sân
     date = Column(Date, nullable=False)  # Ngày cụ thể
-    start_time = Column(DateTime, nullable=False)  # Thời gian bắt đầu (vd: 5:00 sáng)
-    end_time = Column(DateTime, nullable=False)  # Thời gian kết thúc (vd: 6:30 sáng)
+    start_time = Column(Time, nullable=False)  # Thời gian bắt đầu (chỉ giờ phút)
+    end_time = Column(Time, nullable=False)  # Thời gian kết thúc (chỉ giờ phút)
     is_available = Column(Boolean, default=True)  # Đánh dấu nếu khung giờ này trống
 
     # Thiết lập quan hệ với bảng SanBong

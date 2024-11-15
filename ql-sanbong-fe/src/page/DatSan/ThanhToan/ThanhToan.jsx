@@ -5,12 +5,17 @@ import Stepper from '../Stepper/Stepper';
 import { format } from 'date-fns-tz'; // Thư viện date-fns-tz
 import { addMinutes } from 'date-fns'; // Thư viện date-fns để cộng phút
 import './ThanhToan.scss';
+import Cookies from 'js-cookie';
+
 
 const ThanhToan = () => {
   const location = useLocation();
-  const { selectedField, selectedDate, timeSlot } = location.state || {};
-  const { LoaiSan, id, Gia } = selectedField || {};
+  const { selectedField, selectedDate, timeSlot, loaiSanDescription, loaiSanName } = location.state || {};
+  const {id, gia_thue } = selectedField || {};
   const [isSuccess, setIsSuccess] = useState(false);
+
+  const user_id = Cookies.get("user_id");
+
 
   const formatDate = (date) => {
     if (!date) return '--';
@@ -64,12 +69,11 @@ const ThanhToan = () => {
 
     // Tạo đối tượng dữ liệu gửi API
     const data = {
-      LoaiSan,
+      user_id,
+      id,
       GioCheckin: formattedSelectedDate, // Sử dụng thời gian đã chuyển đổi
       GioCheckout, // Thời gian checkout đã được tính toán và chuyển đổi
-      ThoiGian: 90,
       TinhTrang: 'Da Dat San',
-      Gia,
     };
 
     try {
@@ -93,7 +97,6 @@ const ThanhToan = () => {
       alert('Có lỗi xảy ra, vui lòng thử lại sau.');
     }
   };
-
   return (
     <div className="thanh-toan">
       <Navbar />
@@ -102,13 +105,13 @@ const ThanhToan = () => {
         <h2>Thông Tin Đặt Sân</h2>
         {selectedField ? (
           <div className="field-info">
-            <p>{LoaiSan === 'San 7' ? 'Sân bóng đá 7 người' : 'Sân bóng mini 5 người'}</p>
-            <p>Loại sân: <strong>{LoaiSan} - {id}</strong></p>
+            <p>{loaiSanDescription}</p>
+            <p>Loại sân: <strong>{loaiSanName} - {id}</strong></p>
             <p>Ngày đặt: <strong>{formatDate(selectedDate)}</strong></p>
             <p>Thời gian: <strong>{timeSlot || '--'}</strong></p>
             <div className="total-amount">
               <p>Tổng cộng: </p>
-              <p><strong>{Gia?.toLocaleString('vi-VN')} VND</strong></p>
+              <p><strong>{gia_thue?.toLocaleString('vi-VN')} VND</strong></p>
             </div>
             <button className="pay-button" onClick={handleDatSan}>Đặt Sân</button>
             {isSuccess && <p className="success-message">Đặt sân thành công!</p>}

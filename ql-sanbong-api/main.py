@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from db import models
 from db.database import engine
-from routers import user ,dichvu,comment
+from routers import user ,dichvu,comment,san
 from fastapi.staticfiles import StaticFiles
 from routers import authentication
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,6 +13,8 @@ app= FastAPI()
 app.include_router(authentication.router)
 app.include_router(user.router)
 app.include_router(dichvu.router)
+app.include_router(san.router)
+
 
 @app.get("/")
 def root():
@@ -38,7 +40,7 @@ app.add_middleware(
 )
 app.mount('/images',StaticFiles(directory='images'),name ='images')
 
-# @app.on_event("startup")
-# def startup_event():
-#     start_scheduler()
-#     print("Scheduler started.")
+@app.on_event("startup")
+def startup_event():
+    start_scheduler()
+    print("Scheduler started.")
