@@ -134,9 +134,9 @@ class DatSanResponse(BaseModel):
         orm_mode = True
         
 class TimeSlotRequest(BaseModel):
-    san_id: str
-    ngay_dat: date
-    batdau: Time
+    san_id: Optional[str] = None
+    ngay_dat: Optional[date] = None
+    batdau: Optional[Time] = None
     
 class TimeSlotDisplay(BaseModel):
     id: int

@@ -1,4 +1,4 @@
-from routers.schemas import PostBase, TimeSlotDisplay,TimeSlotResponse
+from routers.schemas import PostBase, TimeSlotDisplay, TimeSlotRequest,TimeSlotResponse
 from sqlalchemy.orm.session import Session
 import datetime
 from fastapi import HTTPException, status
@@ -60,3 +60,7 @@ def create_dat_san(db, request):
     db.add(new_dat_san)
     db.commit()
     return {"detail": "Đặt sân thành công."}
+
+def get_san_available(request:TimeSlotRequest, db: Session):
+    san_available = db.query(TimeSlot).filter(TimeSlot.is_available == 1 , TimeSlot.start_time == request.batdau, TimeSlot.date == request.ngay_dat).all()
+    return san_available
