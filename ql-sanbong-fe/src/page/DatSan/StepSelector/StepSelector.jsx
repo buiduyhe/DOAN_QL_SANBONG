@@ -5,13 +5,17 @@ import "./StepSelector.scss";
 const StepSelector = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
+
   const [selectedTime, setSelectedTime] = useState(state?.timeSlot || "5:00 AM - 6:30 AM");
   const [timeSlots, setTimeSlots] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(state?.selectedDate || new Date());
 
   useEffect(() => {
     if (state?.timeSlot) {
       setSelectedTime(state.timeSlot);
+    }
+    if (state?.selectedDate) {
+      setSelectedDate(new Date(state.selectedDate));
     }
   }, [state]);
 
@@ -36,19 +40,35 @@ const StepSelector = () => {
       state: {
         ...state,
         timeSlot: time,
+        selectedDate,
+      },
+    });
+  };
+
+  const handleDateChange = (date) => {
+    setSelectedDate(new Date(date));
+    navigate("/DatSan", {
+      state: {
+        ...state,
+        selectedDate: new Date(date),
+        timeSlot: selectedTime,
       },
     });
   };
 
   return (
     <div className="step-selector">
-      <label className="label">Đổi giờ đặt sân</label>
+      <label className="label">Đổi ngày và giờ đặt sân</label>
+      <div className="Date-Time">
+      
+
       <div className="time-options">
         {timeSlots.map((time, index) => {
           const [startTime] = time.split(" - ");
           const [hours, minutes] = startTime.split(":");
-          const slotTime = new Date();
+          const slotTime = new Date(selectedDate);
           slotTime.setHours(hours, minutes, 0, 0);
+
           const isDisabled = slotTime < new Date();
           return (
             <button
@@ -61,6 +81,26 @@ const StepSelector = () => {
             </button>
           );
         })}
+      </div>
+      <select
+        value={selectedDate.toISOString().split('T')[0]}
+        onChange={(e) => handleDateChange(e.target.value)}
+        className="date-selector"
+      >
+        {[...Array(3)].map((_, i) => {
+          const date = new Date();
+          date.setDate(date.getDate() + i);
+          let label = "";
+          if (i === 0) label = "Hôm nay";
+          else if (i === 1) label = "Ngày mai";
+          else if (i === 2) label = "Ngày kia";
+          return (
+            <option key={i} value={date.toISOString().split('T')[0]}>
+              {label} - {date.toLocaleDateString("vi-VN")}
+            </option>
+          );
+        })}
+      </select>
       </div>
     </div>
   );
