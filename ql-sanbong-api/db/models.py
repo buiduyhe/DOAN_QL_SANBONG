@@ -52,6 +52,7 @@ class DichVu(Base):
 
     # Mối quan hệ với bảng DichVu_LoaiDichVu
     loaidichvus = relationship("DichVu_LoaiDichVu", back_populates="dichvu")
+    chi_tiet_hoa_dons = relationship("ChiTietHoaDon", back_populates="dich_vu") 
 class DichVu_LoaiDichVu(Base):
     __tablename__ = 'DICH_VU_LOAI_DICH_VU'
     id = Column(Integer, primary_key=True, index=True)
@@ -65,12 +66,15 @@ class DatSan(Base):
     __tablename__ = 'DAT_SAN'
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey('SYS_USER.id'), nullable=False)  # Liên kết với bảng SYS_USER
-    san_id = Column(String, ForeignKey('SAN_BONG.id'), nullable=False)  # Liên kết với bảng SAN_BONG
-    thoi_gian_bat_dau = Column(DateTime, nullable=False)  # Thời gian bắt đầu thuê
-    thoi_gian_ket_thuc = Column(DateTime, nullable=False)  # Thời gian kết thúc thuê
-    trang_thai = Column(Integer, nullable=False)  # Trạng thái đặt sân (1: Đã xác nhận, 0: Đang chờ, 2: Đã hủy)
-    create_at = Column(DateTime, default=func.now())  # Thời gian tạo
+    timeslot_id = Column(Integer, ForeignKey('TIME_SLOT.id'), nullable=False)  # Liên kết với bảng TIME_SLOT
+    gia = Column(Integer, nullable=False)  # Giá đặt sân
+    created_at = Column(DateTime, server_default=func.now(), nullable=False)
 
+
+    # Thiết lập quan hệ với bảng TimeSlot
+    timeslot = relationship("TimeSlot", back_populates="datsans")
+    # Thiết lập quan hệ với bảng ChiTietHoaDon
+    chi_tiet_hoa_dons = relationship("ChiTietHoaDon", back_populates="dat_san")
 class TimeSlot(Base):
     __tablename__ = 'TIME_SLOT'
     id = Column(Integer, primary_key=True, index=True)
@@ -82,6 +86,9 @@ class TimeSlot(Base):
 
     # Thiết lập quan hệ với bảng SanBong
     san = relationship("SanBong", back_populates="time_slots")
+    
+    # Thiết lập quan hệ với bảng DatSan
+    datsans = relationship("DatSan", back_populates="timeslot")
 
 class SanBong(Base):
     __tablename__ = 'SAN_BONG'
@@ -91,9 +98,6 @@ class SanBong(Base):
     # Mối quan hệ với bảng TimeSlot
     time_slots = relationship("TimeSlot", back_populates="san")
     # Mối quan hệ với bảng DatSan
-    datsans = relationship("DatSan", back_populates="sanbong")
-
-DatSan.sanbong = relationship("SanBong", back_populates="datsans")
 class LoaiSanBong(Base):
     __tablename__ = 'LOAI_SAN_BONG'
     id = Column(Integer, primary_key=True, index=True)
@@ -122,30 +126,24 @@ class HoaDon(Base):
 
 class ChiTietHoaDon(Base):
     __tablename__ = 'CHI_TIET_HOA_DON'
+
     id = Column(Integer, primary_key=True, index=True)
     hoa_don_id = Column(Integer, ForeignKey('HOA_DON.id'), nullable=False)
-    dat_san_dich_vu_id = Column(Integer, ForeignKey('DAT_SAN_DICH_VU.id'), nullable=False)
+    dat_san_id = Column(Integer, ForeignKey('DAT_SAN.id'), nullable=False)
+    dich_vu_id = Column(Integer, ForeignKey('DICH_VU.id'))
     so_luong = Column(Integer, nullable=False)
     gia = Column(Float, nullable=False)
     thanh_tien = Column(Float, nullable=False)
-
-    # Mối quan hệ với bảng HoaDon
+    
+    dat_san = relationship("DatSan", back_populates="chi_tiet_hoa_dons")
     hoa_don = relationship("HoaDon", back_populates="chi_tiet_hoa_dons")
+    dich_vu = relationship("DichVu", back_populates="chi_tiet_hoa_dons")
 
-class DatSanDichVu(Base):
-    __tablename__ = 'DAT_SAN_DICH_VU'
-    id = Column(Integer, primary_key=True, index=True)
-    dat_san_id = Column(Integer, ForeignKey('DAT_SAN.id'), nullable=False)
-    dich_vu_id = Column(Integer, ForeignKey('DICH_VU.id'), nullable=False)
-    so_luong = Column(Integer, nullable=False)
+# Thiết lập quan hệ với bảng DatSan
+DatSan.chi_tiet_hoa_dons = relationship("ChiTietHoaDon", back_populates="dat_san")
 
-    # Mối quan hệ với bảng DatSan và DichVu
-    dat_san = relationship("DatSan", back_populates="dat_san_dich_vus")
-    dich_vu = relationship("DichVu", back_populates="dat_san_dich_vus")
+# Thiết lập quan hệ với bảng DichVu
+DichVu.chi_tiet_hoa_dons = relationship("ChiTietHoaDon", back_populates="dich_vu")
 
-DatSan.dat_san_dich_vus = relationship("DatSanDichVu", back_populates="dat_san")
-DichVu.dat_san_dich_vus = relationship("DatSanDichVu", back_populates="dich_vu")
-
-
-
-
+# Sửa lại mối quan hệ trong bảng ChiTietHoaDon
+ChiTietHoaDon.dich_vu = relationship("DichVu", back_populates="chi_tiet_hoa_dons")
