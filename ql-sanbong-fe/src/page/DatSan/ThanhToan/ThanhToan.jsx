@@ -13,7 +13,8 @@ const ThanhToan = () => {
   const { id, gia_thue } = selectedField || {};
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const user_id = Cookies.get("user_id");
+  // Lấy user_id từ cookie
+  const user_id = Cookies.get('user_id');
 
   const formatDate = (date) => {
     if (!date) return '--';
@@ -45,8 +46,40 @@ const ThanhToan = () => {
     const checkoutDate = addMinutes(selectedDateObj, 90);
     
     // Chuyển checkoutDate sang múi giờ Việt Nam
-    const formattedCheckoutDate = format(checkoutDate, 'yyyy-MM-dd HH:mm:ss', { timeZone: 'Asia/Ho_Chi_Minh' });
+    const formattedCheckoutDate = format(checkoutDate, 'YYYY-MM-DD', { timeZone: 'Asia/Ho_Chi_Minh' });
     return formattedCheckoutDate;
+  };
+  const formattedSelectedDate = format(new Date(selectedDate), 'yyyy-MM-dd', { timeZone: 'Asia/Ho_Chi_Minh' });
+  const getTimeslotId = async () => {
+    const [start_time] = timeSlot.split(' - ');
+    const requestData = {
+      san_id: id,
+      ngay_dat: formattedSelectedDate,
+      batdau: start_time
+    };
+
+    try {
+      const response = await fetch('http://127.0.0.1:8000/san/get_id_timeslot', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        return data.id;
+      } else {
+        console.log("Failed Response:", await response.text());
+        alert('Không thể lấy timeslot_id, vui lòng thử lại.');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Có lỗi xảy ra khi lấy timeslot_id, vui lòng thử lại sau.');
+      return null;
+    }
   };
 
   const handleDatSan = async () => {
@@ -58,22 +91,23 @@ const ThanhToan = () => {
       return;
     }
 
+    // Lấy timeslot_id từ API
+    const timeslot_id = await getTimeslotId();
+    if (!timeslot_id) return;
+
     // Tách start_time và end_time từ timeSlot
     const [start_time, end_time] = timeSlot.split(' - ');
 
     // Tạo đối tượng dữ liệu gửi API
     const data = {
       user_id,
-      id,
-      selectedDate,
-      start_time, // Sử dụng thời gian đã chuyển đổi
-      end_time, // Thời gian checkout đã được tính toán và chuyển đổi
-      trang_thai: '1',
+      timeslot_id,
+      gia: gia_thue
     };
 
     try {
-      const response = await fetch(`https://672b14c2976a834dd0258200.mockapi.io/DatSan/${id}`, {
-        method: 'PUT', // Sử dụng PUT để cập nhật dữ liệu
+      const response = await fetch(`http://127.0.0.1:8000/san/dat_san`, {
+        method: 'POST', // Sử dụng PUT để cập nhật dữ liệu
         headers: {
           'Content-Type': 'application/json',
         },
@@ -83,9 +117,11 @@ const ThanhToan = () => {
       if (response.ok) {
         setIsSuccess(true);
         console.log("Success:", await response.json()); // In phản hồi từ API khi cập nhật thành công
+        alert('Đặt sân thành công!');
+        window.location.href = '/datsan'; // Chuyển hướng về trang /datsan
       } else {
         console.log("Failed Response:", await response.text()); // In lỗi nếu có
-        alert('Đặt sân không thành công, vui lòng thử lại.');
+        alert('Đặt sân không thành công, vui lòng thử lại.'+data.timeslot_id +data.gia +data.user_id);
       }
     } catch (error) {
       console.error('Error:', error);

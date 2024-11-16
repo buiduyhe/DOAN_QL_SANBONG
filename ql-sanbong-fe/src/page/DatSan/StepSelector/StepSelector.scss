@@ -38,6 +38,10 @@
           color: #000000;
 
         }
+        &:disabled {
+          background-color: #cccccc;
+          cursor: not-allowed;
+        }
       }
     }
   }

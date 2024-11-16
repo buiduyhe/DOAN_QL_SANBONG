@@ -115,13 +115,13 @@ class UserResponse(BaseModel):
 class TimeSlotResponse(BaseModel):
     start_time: Time
     end_time: Time
-    tinhtrang: int
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
 class DatSanRequest(BaseModel):
     user_id: int
     timeslot_id: int
+    gia : int
 
 # Response schema
 class DatSanResponse(BaseModel):
@@ -137,3 +137,13 @@ class TimeSlotRequest(BaseModel):
     san_id: str
     ngay_dat: date
     batdau: Time
+    
+class TimeSlotDisplay(BaseModel):
+    id: int
+    san_id: str
+    ngay: date
+    batdau: Time
+    ketthuc: Time
+    tinhtrang: bool
+    class Config:
+        orm_mode = True
