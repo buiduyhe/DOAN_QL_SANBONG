@@ -2,18 +2,10 @@
 
 import logging
 from apscheduler.schedulers.background import BackgroundScheduler
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta ,date
 from sqlalchemy.orm import Session
 from db.database import SessionLocal, get_db
 from db.models import SanBong, TimeSlot
-from sqlalchemy import Time
-
-def get_available_slots(db: Session, san_id: int, booking_date: date):
-    return db.query(TimeSlot).filter(
-        TimeSlot.san_id == san_id,
-        TimeSlot.date == booking_date,
-        TimeSlot.is_available == True
-    ).all()
     
 # Hàm tạo khung giờ hàng ngày cho tất cả các sân
 def create_time_slots_for_day(db, san_id, today):
@@ -26,7 +18,7 @@ def create_time_slots_for_day(db, san_id, today):
         # Thêm khung giờ vào bảng TIME_SLOT
         new_slot = TimeSlot(
             san_id=san_id,
-            date=today,  # Assign the correct date
+            date=today,
             start_time=start_time.time(),
             end_time=slot_end_time.time(),
             is_available=True
@@ -60,13 +52,33 @@ def create_daily_time_slots():
         db.close()
         logging.info("create_daily_time_slots completed")
 
+
+# Hàm cập nhật trạng thái TimeSlot khi thời gian hiện tại đã qua end_time
+def update_time_slots_status():
+    db: Session = SessionLocal()
+    try:
+        current_time = datetime.now().time()
+        affected_slots = db.query(TimeSlot).filter(
+            TimeSlot.start_time < current_time,
+            TimeSlot.is_available == True
+        ).all()
+
+        for slot in affected_slots:
+            slot.is_available = False
+            logging.info(f"Updated TimeSlot ID {slot.id} to unavailable.")
+
+        db.commit()
+    finally:
         db.close()
-        logging.info("create_daily_time_slots completed")
-        
+        logging.info("update_time_slots_status completed.")
+
 
 # Cấu hình scheduler
 def start_scheduler():
     scheduler = BackgroundScheduler()
-    create_daily_time_slots()  # Run the job immediately when the server starts
+    create_daily_time_slots()  # Tạo khung giờ ngay khi server khởi động
+    update_time_slots_status()
+    scheduler.add_job(create_daily_time_slots, 'cron', hour=0, minute=0)  # Chạy vào 00:00 hàng ngày
+    scheduler.add_job(update_time_slots_status, 'interval', minutes=1)  # Cập nhật trạng thái mỗi phút
     scheduler.start()
-    logging.info("Scheduler started and job added.")
+    logging.info("Scheduler started with daily and interval jobs.")

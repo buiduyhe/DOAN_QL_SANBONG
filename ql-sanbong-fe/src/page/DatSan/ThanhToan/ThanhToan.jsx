@@ -10,7 +10,7 @@ import Cookies from 'js-cookie';
 const ThanhToan = () => {
   const location = useLocation();
   const { selectedField, selectedDate, timeSlot, loaiSanDescription, loaiSanName } = location.state || {};
-  const { san_id, gia_thue } = selectedField || {};
+  const { id, gia_thue } = selectedField || {};
   const [isSuccess, setIsSuccess] = useState(false);
 
   const user_id = Cookies.get("user_id");
@@ -50,7 +50,7 @@ const ThanhToan = () => {
   };
 
   const handleDatSan = async () => {
-    if (!san_id) return;
+    if (!id) return;
 
     // Kiểm tra xem selectedDate có hợp lệ không
     if (!selectedDate) {
@@ -64,7 +64,7 @@ const ThanhToan = () => {
     // Tạo đối tượng dữ liệu gửi API
     const data = {
       user_id,
-      san_id,
+      id,
       selectedDate,
       start_time, // Sử dụng thời gian đã chuyển đổi
       end_time, // Thời gian checkout đã được tính toán và chuyển đổi
@@ -72,7 +72,7 @@ const ThanhToan = () => {
     };
 
     try {
-      const response = await fetch(`https://672b14c2976a834dd0258200.mockapi.io/DatSan/${san_id}`, {
+      const response = await fetch(`https://672b14c2976a834dd0258200.mockapi.io/DatSan/${id}`, {
         method: 'PUT', // Sử dụng PUT để cập nhật dữ liệu
         headers: {
           'Content-Type': 'application/json',
@@ -102,7 +102,7 @@ const ThanhToan = () => {
         {selectedField ? (
           <div className="field-info">
             <p>{loaiSanDescription}</p>
-            <p>Loại sân: <strong>{loaiSanName} - {san_id}</strong></p>
+            <p>Loại sân: <strong>{loaiSanName} - {id}</strong></p>
             <p>Ngày đặt: <strong>{formatDate(selectedDate)}</strong></p>
             <p>Thời gian: <strong>{timeSlot || '--'}</strong></p>
             <div className="total-amount">

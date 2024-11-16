@@ -115,6 +115,7 @@ class UserResponse(BaseModel):
 class TimeSlotResponse(BaseModel):
     start_time: Time
     end_time: Time
+    tinhtrang: int
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True

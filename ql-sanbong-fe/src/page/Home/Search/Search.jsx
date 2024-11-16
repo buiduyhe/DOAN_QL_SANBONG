@@ -16,8 +16,10 @@ const Search = () => {
       try {
         const response = await fetch("http://127.0.0.1:8000/san/time_slot");
         const data = await response.json();
-        const formattedTimeSlots = data.map(slot => `${slot.start_time} - ${slot.end_time}`);
-        setTimeSlots(formattedTimeSlots);
+        const filteredTimeSlots = data
+          .filter(slot => slot.tinhtrang !== 0)
+          .map(slot => `${slot.start_time} - ${slot.end_time}`);
+        setTimeSlots(filteredTimeSlots);
       } catch (error) {
         console.error("Error fetching time slots:", error);
       }
