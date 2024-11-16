@@ -6,9 +6,20 @@ const StepSelector = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
 
+  function getVietnamTime() {
+    const now = new Date();
+    const vietnamOffset = 7 * 60; // Vietnam is UTC+7
+    const localOffset = now.getTimezoneOffset();
+    const vietnamTime = new Date(now.getTime() + (vietnamOffset + localOffset) * 60000);
+    // Đặt giờ về 0 để tránh sai lệch khi chuyển đổi
+    vietnamTime.setHours(0, 0, 0, 0);
+    return vietnamTime;
+  }
+  
+
   const [selectedTime, setSelectedTime] = useState(state?.timeSlot || "5:00 AM - 6:30 AM");
   const [timeSlots, setTimeSlots] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(state?.selectedDate || new Date());
+  const [selectedDate, setSelectedDate] = useState(state?.selectedDate || getVietnamTime());
 
   useEffect(() => {
     if (state?.timeSlot) {
@@ -56,51 +67,65 @@ const StepSelector = () => {
     });
   };
 
+  console.log("Current system date:", getVietnamTime().toLocaleString());
+
   return (
     <div className="step-selector">
-      <label className="label">Đổi ngày và giờ đặt sân</label>
       <div className="Date-Time">
-      
-
-      <div className="time-options">
-        {timeSlots.map((time, index) => {
-          const [startTime] = time.split(" - ");
-          const [hours, minutes] = startTime.split(":");
-          const slotTime = new Date(selectedDate);
-          slotTime.setHours(hours, minutes, 0, 0);
-
-          const isDisabled = slotTime < new Date();
-          return (
-            <button
-              key={index}
-              className={`time-slot ${time === selectedTime ? "active" : ""}`}
-              onClick={() => handleTimeChange(time)}
-              disabled={isDisabled}
+        <div className="date-time-row">
+          <label className="label">Ngày đặt sân:</label>
+          <select
+              value={selectedDate.toISOString().split('T')[0]} // Giá trị được điều chỉnh dưới đây
+              onChange={(e) => handleDateChange(e.target.value)}
+              className="date-selector"
+              style={{ marginLeft: "10px" }}
             >
-              {time}
-            </button>
-          );
-        })}
-      </div>
-      <select
-        value={selectedDate.toISOString().split('T')[0]}
-        onChange={(e) => handleDateChange(e.target.value)}
-        className="date-selector"
-      >
-        {[...Array(3)].map((_, i) => {
-          const date = new Date();
-          date.setDate(date.getDate() + i);
-          let label = "";
-          if (i === 0) label = "Hôm nay";
-          else if (i === 1) label = "Ngày mai";
-          else if (i === 2) label = "Ngày kia";
-          return (
-            <option key={i} value={date.toISOString().split('T')[0]}>
-              {label} - {date.toLocaleDateString("vi-VN")}
-            </option>
-          );
-        })}
-      </select>
+              {[...Array(3)].map((_, i) => {
+                const date = getVietnamTime();
+                date.setDate(date.getDate() + i); // Tăng ngày đúng múi giờ Việt Nam
+
+                const label =
+                  i === 0 ? "Hôm nay" : i === 1 ? "Ngày mai" : "Ngày kia";
+
+                // Sử dụng định dạng ngày chính xác cho value
+                const value = `${date.getFullYear()}-${String(
+                  date.getMonth() + 1
+                ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+
+                return (
+                  <option key={i} value={value}>
+                    {label} - {date.toLocaleDateString("vi-VN")}
+                  </option>
+                );
+              })}
+            </select>
+
+
+        </div>
+        <div className="date-time-row" style={{ marginTop: "20px", display: "flex", alignItems: "center" }}>
+          <label className="label" style={{ whiteSpace: "nowrap" }}>Giờ đặt sân:</label>
+          <div className="time-options" style={{ marginLeft: "5px" }}>
+            {timeSlots.map((time, index) => {
+              const [startTime] = time.split(" - ");
+              const [hours, minutes] = startTime.split(":");
+              const slotTime = new Date(selectedDate);
+              slotTime.setHours(hours, minutes, 0, 0);
+
+              const isToday = selectedDate.toDateString() === getVietnamTime().toDateString();
+              const isDisabled = isToday && slotTime < getVietnamTime();
+              return (
+                <button
+                  key={index}
+                  className={`time-slot ${time === selectedTime ? "active" : ""}`}
+                  onClick={() => handleTimeChange(time)}
+                  disabled={isDisabled}
+                >
+                  {time}
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );

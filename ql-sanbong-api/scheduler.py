@@ -33,25 +33,25 @@ def create_daily_time_slots():
     try:
         today = datetime.now().date()
         sanbongs = db.query(SanBong).all()
+        for i in range(0, 3):
+            future_date = today + timedelta(days=i)
+            for sanbong in sanbongs:
+                # Kiểm tra xem khung giờ đã tồn tại cho ngày hôm nay chưa
+                existing_slots = db.query(TimeSlot).filter(
+                    TimeSlot.san_id == sanbong.id,
+                    TimeSlot.date == future_date
+                ).first()
 
-        for sanbong in sanbongs:
-            # Kiểm tra xem khung giờ đã tồn tại cho ngày hôm nay chưa
-            existing_slots = db.query(TimeSlot).filter(
-                TimeSlot.san_id == sanbong.id,
-                TimeSlot.date == today
-            ).first()
-
-            if existing_slots:
-                logging.info(f"Time slots for SanBong ID {sanbong.id} already exist for {today}. Skipping...")
-                continue
-
-            # Tạo mới nếu chưa tồn tại
-            create_time_slots_for_day(db=db, san_id=sanbong.id, today=today)
+                if existing_slots:
+                    logging.info(f"Time slots for SanBong ID {sanbong.id} already exist for {today}. Skipping...")
+                    continue
+                # Tạo mới nếu chưa tồn tại
+                create_time_slots_for_day(db=db, san_id=sanbong.id, today=future_date)
 
     finally:
         db.close()
         logging.info("create_daily_time_slots completed")
-
+       
 
 # Hàm cập nhật trạng thái TimeSlot khi thời gian hiện tại đã qua end_time
 def update_time_slots_status():

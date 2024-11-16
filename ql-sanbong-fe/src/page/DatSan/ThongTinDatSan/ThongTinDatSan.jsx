@@ -11,7 +11,7 @@ const ThongTinDatSan = ({ selectedField }) => {
   const [fields, setFields] = useState([]); // State to store field data
   const [loaiSanData, setLoaiSanData] = useState([]); // State to store loai_san data from API
 
-  const defaultDate = selectedDate || new Date();
+  const defaultDate = selectedDate || new Date().toLocaleString('en-US', { timeZone: 'Asia/Ho_Chi_Minh' });
 
   useEffect(() => {
     // Fetch loại sân data
@@ -62,7 +62,7 @@ const ThongTinDatSan = ({ selectedField }) => {
         <p>Ngày đặt: <strong>{formatDate(defaultDate)}</strong></p>
         <p>Thời gian: <strong>{timeSlot || '--'}</strong></p>
         <div className="total-amount">
-          <p>Tổng cộng: </p>
+          <p>Tổng cộng:  </p>
           <p><strong>{gia_thue?.toLocaleString('vi-VN')} VND</strong></p>
         </div>
         <button className="pay-button" onClick={handleXacNhan}>Xác Nhận</button>
