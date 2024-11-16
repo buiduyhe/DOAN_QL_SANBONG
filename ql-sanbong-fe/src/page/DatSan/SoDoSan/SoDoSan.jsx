@@ -31,55 +31,49 @@ const SoDoSan = () => {
 
   return (
     <div className="stadium-layout">
-      
       <div className="left-column">
-        {/* Render "San 5" fields */}
-
-        <div className="bottom-row">
-        {/* Render "San 7" fields */}
-        <Field field={getFieldById("S701")} onClick={() => handleFieldClick(getFieldById("S701"))} isLarge />
-        <Field field={getFieldById("S702")} onClick={() => handleFieldClick(getFieldById("S702"))} isLarge />
-      </div>
         <div className="row">
           <Field field={getFieldById("S507")} onClick={() => handleFieldClick(getFieldById("S507"))} />
           <Field field={getFieldById("S505")} onClick={() => handleFieldClick(getFieldById("S505"))} />
           <Field field={getFieldById("S503")} onClick={() => handleFieldClick(getFieldById("S503"))} />
           <Field field={getFieldById("S501")} onClick={() => handleFieldClick(getFieldById("S501"))} />
         </div>
-        
         <div className="row">
           <Field field={getFieldById("S508")} onClick={() => handleFieldClick(getFieldById("S508"))} />
           <Field field={getFieldById("S506")} onClick={() => handleFieldClick(getFieldById("S506"))} />
           <Field field={getFieldById("S504")} onClick={() => handleFieldClick(getFieldById("S504"))} />
           <Field field={getFieldById("S502")} onClick={() => handleFieldClick(getFieldById("S502"))} />
         </div>
+        <div className='row'>
+          <Field field={getFieldById("S702")} onClick={() => handleFieldClick(getFieldById("S702"))} isLarge />
+        </div>
       </div>
 
       <div className="mid-column">
-        <div className="info-box-NVS">Nhà vệ sinh</div>
-        <div className="info-box-QQL">Quầy quản lý</div>
+        <div className="info-box info-box-NVS">Nhà vệ sinh</div>
+        <div className="info-box info-box-QQL">Quầy quản lý</div>
         <div className="info-box large">Đường đi, giữ xe</div>
+        <div className="row">
+          <Field field={getFieldById("S701")} onClick={() => handleFieldClick(getFieldById("S701"))} isLarge />
+        </div>
+        
       </div>
 
-      <div className="right-column">  
+      <div className="right-column">
         <div className="row">
           <Field field={getFieldById("S509")} onClick={() => handleFieldClick(getFieldById("S509"))} />
           <Field field={getFieldById("S511")} onClick={() => handleFieldClick(getFieldById("S511"))} />
-        
         </div>
         <div className="row">
           <Field field={getFieldById("S510")} onClick={() => handleFieldClick(getFieldById("S510"))} />
           <Field field={getFieldById("S512")} onClick={() => handleFieldClick(getFieldById("S512"))} />
         </div>
-
+        
       </div>
-
-
 
       <div className="layout-right">
         <ThongTinDatSan selectedField={selectedField} selectedTimeSlot={selectedTimeSlot} selectedDate={selectedDate} />
       </div>
-
     </div>
   );
 };

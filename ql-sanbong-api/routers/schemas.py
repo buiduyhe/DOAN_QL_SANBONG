@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from datetime import datetime
 from typing import List, Optional
 
-from datetime import time as Time
+from datetime import time as Time ,date
 
 class UserBase(BaseModel):
     username:str
@@ -118,3 +118,21 @@ class TimeSlotResponse(BaseModel):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
+class DatSanRequest(BaseModel):
+    user_id: int
+    timeslot_id: int
+
+# Response schema
+class DatSanResponse(BaseModel):
+    id: int
+    user_id: int
+    timeslot_id: int
+    create_at: str
+
+    class Config:
+        orm_mode = True
+        
+class TimeSlotRequest(BaseModel):
+    san_id: str
+    ngay_dat: date
+    batdau: Time

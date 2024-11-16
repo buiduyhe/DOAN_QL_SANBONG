@@ -2,25 +2,29 @@
   display: flex;
   gap: 20px;
   width: 100%;
-  padding: 100px 100px;
+  padding: 100px;
   margin-bottom: 280px;
+  align-items: flex-start;
+  position: relative;
 
   .left-column{
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-top: -370px;
   }
   
   .mid-column, .right-column {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    margin-left: 10px;
+    margin-bottom: 20px;
   }
 
   .row {
     display: flex;
     gap: 10px;
+    width: 120%;
   }
 
   .field {
@@ -55,14 +59,13 @@
   .large-field {
     width: 300px; /* Tăng chiều ngang cho sân 7 */
     height: 180px; /* Giữ nguyên chiều cao */
-    top: 750px;
-   left: 250px;
-   
+    top: 10px;
+    left: 10px;
   }
 
   .info-box-NVS {
-    width: 120px;
     height: 40px;
+    width: 300px;
     background-color: gray;
     color: white;
     display: flex;
@@ -72,7 +75,7 @@
   }
 
   .info-box-QQL {
-    width: 120px;
+    width: 300px;
     height: 120px;
     background-color: gray;
     color: white;
@@ -83,7 +86,7 @@
   }
 
   .info-box.large {
-    width: 120px;
+    width: 300px;
     height: 180px;
     background-color: gray;
     color: white;
@@ -91,5 +94,6 @@
     justify-content: center;
     align-items: center;
     text-align: center;
+    margin-bottom: 10px;
   }
 }

@@ -1,7 +1,5 @@
-import React, { useState } from "react";
-import DatePicker from "react-datepicker";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "react-datepicker/dist/react-datepicker.css";
 import "./Search.scss";
 
 const Search = () => {
@@ -9,72 +7,61 @@ const Search = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [timeSlot, setTimeSlot] = useState("");
   const [duration, setDuration] = useState("90");
-
-  const timeSlots60Min = [
-    "5:00 AM - 6:00 AM",
-    "6:30 AM - 7:30 AM",
-    "7:00 AM - 8:00 AM",
-    "7:30 AM - 8:30 AM",
-    "8:00 AM - 9:00 AM",
-    "8:30 AM - 9:30 AM",
-    "2:00 PM - 3:00 PM",
-    "2:30 PM - 3:30 PM",
-    "3:00 PM - 4:00 PM",
-    "3:30 PM - 4:30 PM",
-    "4:00 PM - 5:00 PM",
-    "5:30 PM - 6:30 PM",
-    "6:00 PM - 7:00 PM",
-    "7:00 PM - 8:00 PM",
-    "7:30 PM - 8:30 PM",
-    "8:00 PM - 9:00 PM",
-    "9:30 PM - 10:30 PM",
-    "10:00 PM - 11:00 PM",
-  ];
-
-  const timeSlots90Min = [
-    "5:00 AM - 6:30 AM",
-    "6:30 AM - 8:00 AM",
-    "8:00 AM - 9:30 AM",
-    "9:30 AM - 11:00 AM",
-    "11:00 AM - 12:30 PM",
-    "12:30 PM - 2:00 PM",
-    "2:00 PM - 3:30 PM",
-    "3:30 PM - 5:00 PM",
-    "5:00 PM - 6:30 PM",
-    "6:30 PM - 8:00 PM",
-    "8:00 PM - 9:30 PM",
-    "9:30 PM - 11:00 PM",
-  ];
+  const [timeSlots, setTimeSlots] = useState([]);
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const fetchTimeSlots = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/san/time_slot");
+        const data = await response.json();
+        const formattedTimeSlots = data.map(slot => `${slot.start_time} - ${slot.end_time}`);
+        setTimeSlots(formattedTimeSlots);
+      } catch (error) {
+        console.error("Error fetching time slots:", error);
+      }
+    };
+    fetchTimeSlots();
+  }, []);
+
   const handleSearch = () => {
+    if (!timeSlot && timeSlots.length > 0) {
+      setTimeSlot(timeSlots[0]);
+    }
     navigate("/DatSan", {
       state: {
         fieldType,
         selectedDate,
-        timeSlot, // Truyền thông tin thời gian đã chọn
+        timeSlot: timeSlot || timeSlots[0],
         duration,
-        currentStep: 2, // Truyền giá trị step là "Chọn sân"
+        currentStep: 2,
+        slot: timeSlot || timeSlots[0],
       },
     });
-    console.log("Loại sân:", fieldType);
-    console.log("Ngày đặt:", selectedDate);
-    console.log("Khoảng thời gian:", timeSlot);
   };
-
-  const availableTimeSlots =
-    duration === "60" ? timeSlots60Min : timeSlots90Min;
 
   return (
     <div className="search-container">
-      <DatePicker
-        selected={selectedDate}
-        onChange={(date) => setSelectedDate(date)}
-        dateFormat="dd/MM/yyyy"
-        placeholderText="Ngày Đặt"
-        style={{ padding: "5px", height: "20px" }}
-      />
+      <select
+        value={selectedDate}
+        onChange={(e) => setSelectedDate(new Date(e.target.value))}
+        style={{ padding: "5px" }}
+      >
+        {[...Array(3)].map((_, i) => {
+          const date = new Date();
+          date.setDate(date.getDate() + i);
+          let label = "";
+          if (i === 0) label = "Hôm nay";
+          else if (i === 1) label = "Ngày mai";
+          else if (i === 2) label = "Ngày kia";
+          return (
+            <option key={i} value={date}>
+              {label} - {date.toLocaleDateString("vi-VN")}
+            </option>
+          );
+        })}
+      </select>
 
       <select
         value={timeSlot}
@@ -82,7 +69,7 @@ const Search = () => {
         style={{ padding: "5px" }}
       >
         <option value="">Chọn thời gian</option>
-        {availableTimeSlots.map((slot, index) => (
+        {timeSlots.map((slot, index) => (
           <option key={index} value={slot}>
             {slot}
           </option>

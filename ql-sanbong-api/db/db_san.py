@@ -21,3 +21,9 @@ def get_time_slot(db: Session):
             seen_slots.add((slot.start_time, slot.end_time))
             unique_slots.append(TimeSlotResponse(start_time=slot.start_time, end_time=slot.end_time))
     return unique_slots
+
+def get_id_timeslot(request,db: Session):
+    time_slot = db.query(TimeSlot).filter(TimeSlot.san_id == request.san_id, TimeSlot.date == request.ngay_dat,TimeSlot.start_time == request.batdau).first()
+    if not time_slot:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Không tìm thấy time slot.")
+    return {"id": time_slot.id}
