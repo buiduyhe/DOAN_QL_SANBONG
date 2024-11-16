@@ -44,7 +44,7 @@ const Search = () => {
   return (
     <div className="search-container">
       <select
-        value={selectedDate}
+        value={selectedDate.toISOString().split('T')[0]}
         onChange={(e) => setSelectedDate(new Date(e.target.value))}
         style={{ padding: "5px" }}
       >
@@ -56,7 +56,7 @@ const Search = () => {
           else if (i === 1) label = "Ngày mai";
           else if (i === 2) label = "Ngày kia";
           return (
-            <option key={i} value={date}>
+            <option key={i} value={date.toISOString().split('T')[0]}>
               {label} - {date.toLocaleDateString("vi-VN")}
             </option>
           );
@@ -69,11 +69,16 @@ const Search = () => {
         style={{ padding: "5px" }}
       >
         <option value="">Chọn thời gian</option>
-        {timeSlots.map((slot, index) => (
-          <option key={index} value={slot}>
-            {slot}
-          </option>
-        ))}
+        {timeSlots.map((slot, index) => {
+          const now = new Date();
+          const [startTime] = slot.split(" - ");
+          const startDateTime = new Date(`${selectedDate.toLocaleDateString("en-US")} ${startTime}`);
+          return (
+            <option key={index} value={slot} hidden={startDateTime < now}>
+              {slot}
+            </option>
+          );
+        })}
       </select>
 
       <button onClick={handleSearch} style={{ padding: "5px 10px" }}>

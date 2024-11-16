@@ -48,3 +48,7 @@ def get_timeslot_by_id(id:int,db: Session = Depends(get_db)):
 @router.post("/dat_san")
 def dat_san(request: DatSanRequest, db: Session = Depends(get_db)):
     return db_san.dat_san(request, db)
+
+@router.post('/san_available')
+def get_san_available(request:TimeSlotRequest,db: Session = Depends(get_db)):
+    return db_san.get_san_available(request,db)
