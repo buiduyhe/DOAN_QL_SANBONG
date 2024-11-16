@@ -19,10 +19,7 @@ const StepSelector = () => {
       try {
         const response = await fetch("http://127.0.0.1:8000/san/time_slot");
         const data = await response.json();
-        const formattedTimeSlots = data.map(slot => ({
-          time: `${slot.start_time} - ${slot.end_time}`,
-          tinhtrang: slot.tinhtrang
-        }));
+        const formattedTimeSlots = data.map(slot => `${slot.start_time} - ${slot.end_time}`);
         setTimeSlots(formattedTimeSlots);
       } catch (error) {
         console.error("Error fetching time slots:", error);
@@ -46,14 +43,13 @@ const StepSelector = () => {
     <div className="step-selector">
       <label className="label">Đổi giờ đặt sân</label>
       <div className="time-options">
-        {timeSlots.map((slot, index) => (
+        {timeSlots.map((time, index) => (
           <button
             key={index}
-            className={`time-slot ${slot.time === selectedTime ? "active" : ""}`}
-            onClick={() => handleTimeChange(slot.time)}
-            disabled={slot.tinhtrang === 0}
+            className={`time-slot ${time === selectedTime ? "active" : ""}`}
+            onClick={() => handleTimeChange(time)}
           >
-            {slot.time}
+            {time}
           </button>
         ))}
       </div>

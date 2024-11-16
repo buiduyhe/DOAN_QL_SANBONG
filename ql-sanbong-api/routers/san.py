@@ -40,3 +40,11 @@ def get_time_slot(db: Session = Depends(get_db)):
 @router.post("/get_id_timeslot")
 def get_id_timeslot(request:TimeSlotRequest,db: Session = Depends(get_db)):
     return db_san.get_id_timeslot(request,db)
+
+@router.post("/get_timeslot_by_id/{id}")
+def get_timeslot_by_id(id:int,db: Session = Depends(get_db)):
+    return db_san.get_timeslot_by_id(id,db)
+
+@router.post("/dat_san")
+def dat_san(request: DatSanRequest, db: Session = Depends(get_db)):
+    return db_san.dat_san(request, db)
