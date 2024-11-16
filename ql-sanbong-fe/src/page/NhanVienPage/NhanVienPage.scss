@@ -1,37 +1,166 @@
 .NVPage {
-    .NV-right {
+    .add-form {
+        background: #f9f9f9;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        width: 400px; /* Giảm kích thước form */
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Thêm bóng để nổi bật */
         display: flex;
-        flex-direction: column;
-        gap: 30px;
-       .title{
+        flex-direction: column; /* Sắp xếp các phần tử trong form theo chiều dọc */
+        position: fixed; /* Đặt vị trí cố định trên màn hình */
+        top: 50%; /* Đưa form vào giữa chiều dọc */
+        left: 50%; /* Đưa form vào giữa chiều ngang */
+        transform: translate(-50%, -50%); /* Điều chỉnh lại vị trí để hoàn toàn căn giữa */
+        z-index: 9999; /* Đảm bảo form luôn nổi bật lên trên */
+      }
+    
+      // Title styling in the form
+      .add-form h3 {
+        margin-bottom: 15px;
+        text-align: center; /* Căn giữa tiêu đề */
+        font-size: 18px;
+        font-weight: bold;
+        color: #333; /* Đảm bảo tiêu đề dễ đọc */
+      }
+    
+      // Styling for the form input fields and labels
+      .add-form div {
+        margin-bottom: 15px; /* Tăng khoảng cách giữa các trường */
+      }
+    
+      .add-form label {
+        display: block;
+        font-weight: bold;
+        font-size: 14px;
+        color: #333; /* Thêm màu cho nhãn để dễ đọc */
+      }
+    
+      .add-form input,
+      .add-form select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+        color: #333; /* Đảm bảo màu chữ trong các ô input dễ đọc */
+      }
+    
+      .add-form input:focus,
+      .add-form select:focus {
+        border-color: #007bff; /* Thêm hiệu ứng khi focus vào ô input */
+        outline: none;
+      }
+    
+      // Button styles in the form
+      .add-form button {
+        padding: 12px 20px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.3s ease; /* Thêm hiệu ứng chuyển màu */
+      }
+    
+      .add-form button:hover {
+        background: #0056b3;
+      }
+    .NV-right {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      .title {
         display: flex;
         padding-left: 50px;
-        padding-right: 50px;    
+        padding-right: 50px;
         justify-content: space-between;
         height: 100px;
         background-color: antiquewhite;
         padding-top: 25px;
-        h5{
-           left: 0;
-           cursor: pointer;
-           
+        h5 {
+          left: 0;
+          cursor: pointer;
         }
-       }
-       .btn {
+      }
+  
+      .btn {
         display: flex;
         gap: 30px;
         justify-content: center;
         button {
-            height: 30px;
-            width: 100px;
-            border-radius: 10px;
-            background-color: rgb(145, 205, 205);
+          height: 30px;
+          width: 100px;
+          border-radius: 10px;
+          background-color: rgb(145, 205, 205);
         }
         button:hover {
-            color: #fff;
-            background-color: burlywood;
+          color: #fff;
+          background-color: burlywood;
         }
-       }
-       
+      }
+  
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000; /* Đảm bảo lớp phủ nổi lên trên */
+      }
+    
+      .modal {
+        border-radius: 8px;
+        width: 450px;
+        display: flex;
+        flex-direction: column-reverse;
+      }
+    
+      .modal-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+      }
+    
+      .modal-buttons button {
+        padding: 12px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+    
+      .modal-buttons button:first-child {
+        background-color: #28a745;
+        color: white;
+      }
+    
+      .modal-buttons button:last-child {
+        background-color: #dc3545;
+        color: white;
+      }
+    
+      // Animation for the modal when it appears
+      @keyframes slideDown {
+        from {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
     }
-}
+  
+    .gohome {
+      text-align: end;
+      margin-top: 20px;
+    }
+  }
+  
