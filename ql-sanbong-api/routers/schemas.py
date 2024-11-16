@@ -147,3 +147,13 @@ class TimeSlotDisplay(BaseModel):
     tinhtrang: bool
     class Config:
         orm_mode = True
+        
+class SanAvailableResponse(BaseModel):
+    id: int
+    san_id: str
+    ngay: date
+    batdau: Time
+    ketthuc: Time
+    tinhtrang: bool
+    class Config:
+        orm_mode = True

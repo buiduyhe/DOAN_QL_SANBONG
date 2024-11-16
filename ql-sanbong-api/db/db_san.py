@@ -3,6 +3,7 @@ from sqlalchemy.orm.session import Session
 import datetime
 from fastapi import HTTPException, status
 from db.models import DatSan, DichVu, DichVu_LoaiDichVu, SanBong,LoaiSanBong, TimeSlot
+from routers import schemas
 
 
 
@@ -63,4 +64,14 @@ def create_dat_san(db, request):
 
 def get_san_available(request:TimeSlotRequest, db: Session):
     san_available = db.query(TimeSlot).filter(TimeSlot.is_available == 1 , TimeSlot.start_time == request.batdau, TimeSlot.date == request.ngay_dat).all()
-    return san_available
+    san_available_responses = []
+    for san in san_available:
+        san_available_responses.append(schemas.SanAvailableResponse(
+            id=san.id,
+            san_id=san.san_id,
+            ngay=san.date,
+            batdau=san.start_time,
+            ketthuc=san.end_time,
+            tinhtrang=san.is_available
+        ))
+    return san_available_responses

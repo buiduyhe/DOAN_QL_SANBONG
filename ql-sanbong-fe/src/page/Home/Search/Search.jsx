@@ -41,6 +41,18 @@ const Search = () => {
     });
   };
 
+  const formatDate = (date) => {
+    return new Intl.DateTimeFormat('vi-VN', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      timeZone: 'Asia/Ho_Chi_Minh'
+    }).format(date);
+  };
+
   return (
     <div className="search-container">
       <select
@@ -50,14 +62,14 @@ const Search = () => {
       >
         {[...Array(3)].map((_, i) => {
           const date = new Date();
-          date.setDate(date.getDate() + i);
+          const newDate = new Date(date.setDate(date.getDate() + i));
           let label = "";
           if (i === 0) label = "Hôm nay";
           else if (i === 1) label = "Ngày mai";
           else if (i === 2) label = "Ngày kia";
           return (
-            <option key={i} value={date.toISOString().split('T')[0]}>
-              {label} - {date.toLocaleDateString("vi-VN")}
+            <option key={i} value={newDate.toISOString().split('T')[0]}>
+              {label} - {newDate.toLocaleDateString("vi-VN")}
             </option>
           );
         })}
