@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import Unauthorized from "./Unauthorized";
 
-const PrivateRoute = ({ children, allowedRoles }) => {
+const PrivateRoute = ({ children, allowedRoles = [] }) => {
   const token = Cookies.get("access_token");
   const userRole = Cookies.get("user_role");
 
@@ -12,7 +12,8 @@ const PrivateRoute = ({ children, allowedRoles }) => {
   }
 
   // Check if user role is in the allowed roles
-  if (!allowedRoles.includes(userRole)) {
+  const allowedRolesSet = new Set(["user", "admin", "supadmin"]);
+  if (!allowedRolesSet.has(userRole)) {
     return <Unauthorized />;
   }
 
