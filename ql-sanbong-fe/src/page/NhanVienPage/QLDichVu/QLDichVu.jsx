@@ -12,6 +12,8 @@ const QLDichVu = () => {
             <th>Loại Dịch Vụ</th>
             <th>Giá</th>
             <th>Số Lượng</th>
+            <th>Mô tả</th>
+            <th>Thêm Ảnh</th>
           </tr>
         </thead>
         <tbody>{/* them du lieu tu api */}</tbody>
