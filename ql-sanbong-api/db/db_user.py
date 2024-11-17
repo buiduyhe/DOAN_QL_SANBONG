@@ -125,3 +125,26 @@ async def get_SysUser(db: Session, role_id: int):
     )
     
     return user_role
+
+def create_nv( db: Session, userDTO: CreateUserDTO):
+    try:
+        new_user = SysUser(
+            full_name=userDTO.fullname, 
+            email=userDTO.email, 
+            phone=userDTO.phone, 
+            hash_password=userDTO.hashed_password, 
+            status=1,
+            gender=userDTO.gender
+        )
+        db.add(new_user)
+        db.flush()
+        new_role_user = SysUserRole(user_id=new_user.id, role_id=2)
+        db.add(new_role_user)
+        db.commit()
+        return new_user
+    except Exception as e:
+        print(f"[error][db_user][create]: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE, 
+            detail="lỗi tạo tài khoản"  # Replace with appropriate error message
+         )
