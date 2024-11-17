@@ -1,32 +1,43 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";  // Import useNavigate từ React Router
 import "./Navbar.scss";
 import logo from "../../assets/Home/logo.jpg";
 import Cookies from "js-cookie";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 
 const token = Cookies.get("access_token");
 const username = Cookies.get("username"); // Assuming you store the username in a cookie
 const role = Cookies.get("user_role");
 
-const Navbar = () => {
+const Navbar = ({ cartCount }) => {
+  const navigate = useNavigate();  // Sử dụng useNavigate để điều hướng mà không reload trang
+
   const handleRegisterClick = () => {
-    window.location.href = "/register";
+    navigate("/register");
   };
 
   const handleLoginClick = () => {
-    window.location.href = "/login";
+    navigate("/login");
   };
 
   const handleLogoutClick = () => {
     Cookies.remove("access_token");
     Cookies.remove("username");
-    window.location.href = "/";
+    navigate("/");  // Điều hướng về trang chủ
   };
+
   const handleAdminClick = () => {
-    window.location.href = "/admin";
-  }
+    navigate("/admin");
+  };
+
   const handleSupAdminClick = () => {
-    window.location.href = "/supadmin";
-  }
+    navigate("/supadmin");
+  };
+
+  const handleCartClick = () => {
+    navigate("/cart");  // Điều hướng về giỏ hàng
+  };
 
   return (
     <div className="NB">
@@ -38,7 +49,7 @@ const Navbar = () => {
           <li>
             <a href="/Home">Trang Chủ</a>
           </li>
-          <li className="menu-item ">
+          <li className="menu-item">
             <a href="/gioithieu">Giới Thiệu</a>
           </li>
           <li className="menu-item">
@@ -68,6 +79,10 @@ const Navbar = () => {
                   <a onClick={handleSupAdminClick}>Trang Quản Lý</a>
                 </li>
               )}
+              <li className="menu-item cart-icon" onClick={handleCartClick}>
+                <FontAwesomeIcon icon={faShoppingCart} />
+                <span className="cart-count">{cartCount}</span>
+              </li>
             </>
           ) : (
             <>

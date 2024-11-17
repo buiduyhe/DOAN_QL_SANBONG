@@ -3,7 +3,7 @@ import Sidebar from '../../../component/Sidebar/Sidebar';
 import './SanPham.scss';
 import logo from '../../../assets/Home/logo.jpg';
 
-const SanPham = () => {
+const SanPham = ({onAddToCart}) => {
   // State variables
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('Thứ tự');
@@ -11,6 +11,7 @@ const SanPham = () => {
   const [products, setProducts] = useState([]);
   const [productType, setProductType] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [hoveredProduct, setHoveredProduct] = useState(null);
 
   // Fetch products and product types on component mount
   useEffect(() => {
@@ -190,21 +191,34 @@ const SanPham = () => {
 
       {/* Product List */}
       <div className="product-list">
-        {filteredProducts.length > 0 ? (
-          filteredProducts.map((product) => (
-            <div className="product-item" key={product.id}>
-              <img src={`http://127.0.0.1:8000/${product.image_dv}`} alt={product.ten_dv} />
-              <h3>{product.ten_dv}</h3>
-              <p>{product.mota || "Không có mô tả"}</p>
-              <p style={{ color: '#007bff', fontWeight: 'bold' }}>
-                {product.gia_dv ? product.gia_dv.toLocaleString('vi-VN') + "₫" : "Giá không xác định"}
-              </p>
-            </div>
-          ))
-        ) : (
-          <p>No products found</p>  
-        )}
-      </div>
+      {filteredProducts.length > 0 ? (
+        filteredProducts.map((product) => (
+          <div
+            className="product-item"
+            key={product.id}
+            onMouseEnter={() => setHoveredProduct(product.id)}
+            onMouseLeave={() => setHoveredProduct(null)}
+          >
+            <img src={`http://127.0.0.1:8000/${product.image_dv}`} alt={product.ten_dv} />
+            <h3>{product.ten_dv}</h3>
+            <p>{product.mota || "Không có mô tả"}</p>
+            <p style={{ color: "#007bff", fontWeight: "bold" }}>
+              {product.gia_dv ? product.gia_dv.toLocaleString("vi-VN") + "₫" : "Giá không xác định"}
+            </p>
+            {hoveredProduct === product.id && (
+              <button
+                className="add-to-cart"
+                onClick={() => onAddToCart(product)}
+              >
+                Thêm vào giỏ hàng
+              </button>
+            )}
+          </div>
+        ))
+      ) : (
+        <p>Không có sản phẩm</p>
+      )}
+    </div>
     </div>
   );
 };

@@ -128,6 +128,26 @@ body {
         color: #333;
         margin-bottom: 10px;
       }
+      .add-to-cart {
+        position: absolute;
+        top: 50%; /* Căn chỉnh theo chiều dọc */
+        left: 50%; /* Căn chỉnh theo chiều ngang */
+        transform: translate(-50%, -50%); /* Dịch chuyển để nút nằm chính giữa */
+        background-color: rgba(0, 123, 255, 0.9); /* Màu nền với độ trong suốt */
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        display: none; /* Ẩn mặc định */
+        transition: all 0.3s;
+        z-index: 10;
+      }
+    
+      &:hover .add-to-cart {
+        display: block; /* Hiển thị khi di chuột vào sản phẩm */
+      }
+    
     }
   }
 }
