@@ -1,6 +1,6 @@
 from fastapi import APIRouter , Depends,File ,HTTPException,status,UploadFile,Form
 from sqlalchemy.orm import Session
-from routers.schemas import DichVuResponse, LoaiDichVuDisplay, PostBase, PostDisplay
+from routers.schemas import DichVuDisplayQL, DichVuResponse, LoaiDichVuDisplay, PostBase, PostDisplay
 from db.database import get_db
 from db import db_dichvu,db_user
 from typing import List
@@ -9,13 +9,32 @@ import string
 import shutil
 from routers.schemas import DichVuDisplay
 import os
-from db.models import DichVu, DichVu_LoaiDichVu, SysUser
+from db.models import DichVu, DichVu_LoaiDichVu, LoaiDichVu, SysUser
 from db.db_user import get_current_user
 
 router = APIRouter(
     prefix='/dichvu',
     tags=['dichvu']
 )
+
+@router.get("/dichvu_QL", response_model=List[DichVuDisplayQL])
+def get_all_dichvuql(db: Session = Depends(get_db)):
+    dichvu_list = db_dichvu.get_all_dichvu_ql(db)
+    if not dichvu_list:
+        raise HTTPException(status_code=404, detail="Không tìm thấy dịch vụ nào.")
+    return [
+        DichVuDisplayQL(
+            id=dv.DichVu.id,
+            ten_dv=dv.DichVu.ten_dv,
+            gia_dv=dv.DichVu.gia_dv,
+            soluong=dv.DichVu.soluong,
+            mota=dv.DichVu.mota,
+            loai_dv_id=dv.LoaiDichVu.id,
+            ten_loai_dv=dv.LoaiDichVu.ten_loai_dv,
+            image_dv=dv.DichVu.image_dv
+        ) for dv in dichvu_list
+    ]
+
 
 @router.get("/dichvu", response_model=list[DichVuDisplay])
 def get_all_dichvu(db: Session = Depends(get_db)):

@@ -157,3 +157,16 @@ class SanAvailableResponse(BaseModel):
     tinhtrang: bool
     class Config:
         orm_mode = True
+        
+class DichVuDisplayQL(BaseModel):
+    id:int
+    ten_dv:str
+    gia_dv:int
+    soluong:int
+    mota:str
+    loai_dv_id:int
+    ten_loai_dv:str
+    image_dv:str
+    
+    class Config:
+        orm_mode = True

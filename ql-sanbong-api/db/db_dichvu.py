@@ -54,3 +54,7 @@ def add_dichvu_to_loaidichvu(db: Session, dichvu_id: int, loaidichvu_id: int):
     return dichvu_loaidichvu
 def get_dichvu_by_name(db: Session, ten_dv: str):
     return db.query(DichVu).filter(DichVu.ten_dv == ten_dv).first()
+
+def get_all_dichvu_ql(db: Session):
+    query = db.query(DichVu, LoaiDichVu).join(DichVu_LoaiDichVu, DichVu_LoaiDichVu.dichvu_id == DichVu.id).join(LoaiDichVu, DichVu_LoaiDichVu.loaidichvu_id == LoaiDichVu.id).all()
+    return query
