@@ -60,6 +60,7 @@ def update_time_slots_status():
         current_time = datetime.now().time()
         affected_slots = db.query(TimeSlot).filter(
             TimeSlot.start_time < current_time,
+            TimeSlot.date == datetime.now().date(), 
             TimeSlot.is_available == True
         ).all()
 

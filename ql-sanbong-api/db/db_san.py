@@ -63,7 +63,7 @@ def create_dat_san(db, request):
     return {"detail": "Đặt sân thành công."}
 
 def get_san_available(request:TimeSlotRequest, db: Session):
-    san_available = db.query(TimeSlot).filter(TimeSlot.is_available == 1 , TimeSlot.start_time == request.batdau, TimeSlot.date == request.ngay_dat).all()
+    san_available = db.query(TimeSlot).filter( TimeSlot.start_time == request.batdau, TimeSlot.date == request.ngay_dat).all()
     san_available_responses = []
     for san in san_available:
         san_available_responses.append(schemas.SanAvailableResponse(
