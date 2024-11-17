@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import "./Search.scss";
 
 const Search = () => {
-  const [fieldType, setFieldType] = useState("Sân 7");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [timeSlot, setTimeSlot] = useState("");
   const [duration, setDuration] = useState("90");
@@ -31,27 +30,14 @@ const Search = () => {
     }
     navigate("/DatSan", {
       state: {
-        fieldType,
         selectedDate,
         timeSlot: timeSlot || timeSlots[0],
-        duration,
         currentStep: 2,
         slot: timeSlot || timeSlots[0],
       },
     });
   };
 
-  const formatDate = (date) => {
-    return new Intl.DateTimeFormat('vi-VN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      timeZone: 'Asia/Ho_Chi_Minh'
-    }).format(date);
-  };
 
   return (
     <div className="search-container">
