@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./Search.scss";
 
 const Search = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState("");
   const [timeSlot, setTimeSlot] = useState("");
   const [duration, setDuration] = useState("90");
   const [timeSlots, setTimeSlots] = useState([]);
@@ -25,27 +25,42 @@ const Search = () => {
   }, []);
 
   const handleSearch = () => {
-    if (!timeSlot && timeSlots.length > 0) {
-      setTimeSlot(timeSlots[0]);
+    if (!selectedDate) {
+      alert("Vui lòng chọn ngày.");
+      return;
     }
+
+    let nearestTimeSlot = timeSlot;
+    if (!timeSlot && timeSlots.length > 0) {
+      const now = new Date();
+      const nearestSlot = timeSlots.find(slot => {
+        const [startTime] = slot.split(" - ");
+        const startDateTime = new Date(`${selectedDate}T${startTime}`);
+        return startDateTime > now;
+      });
+      nearestTimeSlot = nearestSlot || timeSlots[0];
+      setTimeSlot(nearestTimeSlot);
+    }
+
     navigate("/DatSan", {
       state: {
         selectedDate,
-        timeSlot: timeSlot || timeSlots[0],
+        timeSlot: nearestTimeSlot,
         currentStep: 2,
-        slot: timeSlot || timeSlots[0],
+        slot: nearestTimeSlot,
       },
     });
   };
 
-
   return (
     <div className="search-container">
+      <h5>Tìm sân: </h5>
       <select
-        value={selectedDate.toISOString().split('T')[0]}
-        onChange={(e) => setSelectedDate(new Date(e.target.value))}
+        value={selectedDate}
+        onChange={(e) => setSelectedDate(e.target.value)}
         style={{ padding: "5px" }}
       >
+        <option value="">Chọn ngày</option>
         {[...Array(3)].map((_, i) => {
           const date = new Date();
           const newDate = new Date(date.setDate(date.getDate() + i));
@@ -70,7 +85,7 @@ const Search = () => {
         {timeSlots.map((slot, index) => {
           const now = new Date();
           const [startTime] = slot.split(" - ");
-          const startDateTime = new Date(`${selectedDate.toLocaleDateString("en-US")} ${startTime}`);
+          const startDateTime = new Date(`${selectedDate}T${startTime}`);
           return (
             <option key={index} value={slot} hidden={startDateTime < now}>
               {slot}
