@@ -93,10 +93,8 @@ async def register(
     email = email.lower()
     gender =gender.upper()
 
-    # hashed_password = password
-    # password = db_auth.generate_password()
-    hashed_password = Hash.bcrypt(password)
-    # hashed_password = password
+    hashed_password = Hash.bcrypt(password)# này bản gốc sau nay dùng
+
     
 
     userDTO = CreateUserDTO(
