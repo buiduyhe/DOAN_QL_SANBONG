@@ -8,11 +8,12 @@ const QLDonDat = () => {
         <thead>
           <tr>
             <th>Mã Đơn</th>
-            <th>Tên Khách Hàng</th>
-            <th>Tên Nhân Viên Lập</th>
-            <th>Ngày Đặt</th>
-            <th>Giờ Đặt</th>
-            <th>Giờ Kết Thúc</th>
+            <th>Mã Nhân Viên</th>
+            <th>Mã Khách Hàng</th>
+            <th>Ngày Tạo</th>
+            <th>Trạng Thái</th>
+            <th>Tổng Tiền</th>
+            <th>Hình Thức Thanh Toán</th>
           </tr>
         </thead>
         <tbody>{/* them du lieu tu api */}</tbody>

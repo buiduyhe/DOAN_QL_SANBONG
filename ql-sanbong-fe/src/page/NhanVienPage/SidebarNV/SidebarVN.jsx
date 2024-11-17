@@ -38,7 +38,7 @@ const SidebarVN = ({ onMenuClick }) => {
           <a onClick={() => onMenuClick("orders")}>Quản lý đơn đặt</a>
         </li>
         <li>
-          <a onClick={() => onMenuClick("courts")}>Quản lý sân</a>
+          <a onClick={() => onMenuClick("Stadium")}>Quản lý sân</a>
         </li>
       </ul>
     </div>
