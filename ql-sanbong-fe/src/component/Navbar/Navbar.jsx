@@ -1,17 +1,21 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";  // Import useNavigate từ React Router
+import { useNavigate } from "react-router-dom";
+import { useCart } from "../../CartContext"; // Import useCart từ CartContext
 import "./Navbar.scss";
 import logo from "../../assets/Home/logo.jpg";
 import Cookies from "js-cookie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 
+// Lấy thông tin từ Cookies
 const token = Cookies.get("access_token");
-const username = Cookies.get("username"); // Assuming you store the username in a cookie
+const username = Cookies.get("username");
 const role = Cookies.get("user_role");
 
-const Navbar = ({ cartCount }) => {
-  const navigate = useNavigate();  // Sử dụng useNavigate để điều hướng mà không reload trang
+const Navbar = () => {
+  const navigate = useNavigate();
+  const { getTotalQuantity, cartItems } = useCart();  // Lấy hàm getTotalQuantity từ CartContext
+  const cartCount = getTotalQuantity(); // Lấy số lượng sản phẩm trong giỏ hàng
 
   const handleRegisterClick = () => {
     navigate("/register");
@@ -24,6 +28,7 @@ const Navbar = ({ cartCount }) => {
   const handleLogoutClick = () => {
     Cookies.remove("access_token");
     Cookies.remove("username");
+    Cookies.remove(`cart_${username}`); // Xóa giỏ hàng khi người dùng đăng xuất
     navigate("/");  // Điều hướng về trang chủ
   };
 
@@ -42,7 +47,7 @@ const Navbar = ({ cartCount }) => {
   return (
     <div className="NB">
       <div className="logo">
-        <img src={logo} alt="" />
+        <img src={logo} alt="Logo" />
       </div>
       <nav className="nav-bar">
         <ul>
@@ -79,9 +84,12 @@ const Navbar = ({ cartCount }) => {
                   <a onClick={handleSupAdminClick}>Trang Quản Lý</a>
                 </li>
               )}
+              {/* Biểu tượng giỏ hàng */}
               <li className="menu-item cart-icon" onClick={handleCartClick}>
                 <FontAwesomeIcon icon={faShoppingCart} />
-                <span className="cart-count">{cartCount}</span>
+                {cartCount > 0 && (
+                  <span className="cart-count">{cartCount}</span>
+                )}
               </li>
             </>
           ) : (

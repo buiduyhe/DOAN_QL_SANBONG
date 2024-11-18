@@ -12,6 +12,7 @@ import PrivateRoute from "./PrivateRoute";
 import Admin from "./page/Admin/Admin";
 import GioHang from "./page/GioHang/GioHang";
 import { CartProvider } from './CartContext';  // Import CartProvider
+import Checkout from "./page/GioHang/ThanhToan/Checkout";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/gioithieu" element={<GioiThieu />} />
           <Route path="/DatSan" element={<DatSan />} />
           <Route path="/cart" element={<GioHang />} />
+          <Route path="/checkout" element={<Checkout />} />
           {/* Protected Routes */}
           <Route path="/thanh-toan" element={<PrivateRoute allowedRoles={['admin', 'user', 'supadmin']}><ThanhToan /></PrivateRoute>} />
           <Route path="/admin" element={<PrivateRoute allowedRole="admin"><NhanVienPage /></PrivateRoute>} />
