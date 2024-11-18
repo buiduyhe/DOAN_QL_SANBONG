@@ -14,7 +14,7 @@ const role = Cookies.get("user_role");
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { getTotalQuantity, cartItems } = useCart();  // Lấy hàm getTotalQuantity từ CartContext
+  const { getTotalQuantity } = useCart();  // Lấy hàm getTotalQuantity từ CartContext
   const cartCount = getTotalQuantity(); // Lấy số lượng sản phẩm trong giỏ hàng
 
   const handleRegisterClick = () => {
@@ -72,7 +72,7 @@ const Navbar = () => {
                 <span>Chào, {username}</span>
               </li>
               <li className="menu-item">
-                <a onClick={handleLogoutClick}>Đăng Xuất</a>
+                <a href="" onClick={handleLogoutClick}>Đăng Xuất</a>
               </li>
               {role === "admin" && (
                 <li className="menu-item">
