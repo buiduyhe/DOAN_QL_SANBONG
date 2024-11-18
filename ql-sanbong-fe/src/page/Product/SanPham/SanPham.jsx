@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useCart } from '../../../CartContext';
 import Sidebar from '../../../component/Sidebar/Sidebar';
 import './SanPham.scss';
 import logo from '../../../assets/Home/logo.jpg';
 
-const SanPham = ({onAddToCart}) => {
-  // State variables
+const SanPham = () => {
+  const { addToCart } = useCart();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('Thứ tự');
   const [displayText, setDisplayText] = useState('TẤT CẢ SẢN PHẨM');
@@ -13,77 +14,57 @@ const SanPham = ({onAddToCart}) => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [hoveredProduct, setHoveredProduct] = useState(null);
 
-  // Fetch products and product types on component mount
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchProductsAndTypes = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:8000/dichvu/loaidichvu");
-        if (!response.ok) throw new Error("Failed to fetch product types");
-        
-        const response2 = await fetch("http://127.0.0.1:8000/dichvu/dichvu");
-        if (!response2.ok) throw new Error("Failed to fetch products");
+        const typeResponse = await fetch("http://127.0.0.1:8000/dichvu/loaidichvu");
+        const productResponse = await fetch("http://127.0.0.1:8000/dichvu/dichvu");
+        if (!typeResponse.ok || !productResponse.ok) throw new Error("Failed to fetch data");
 
-        const data = await response.json();
-        const data2 = await response2.json();
+        const types = await typeResponse.json();
+        const products = await productResponse.json();
 
-        setProductType(data);
-        setProducts(data2);
-        setFilteredProducts(data2); // Initialize filteredProducts with all products
+        setProductType(types);
+        setProducts(products);
+        setFilteredProducts(products);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
-    fetchProducts();
+    fetchProductsAndTypes();
   }, []);
 
-  // Toggle sort dropdown visibility
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
+  const toggleDropdown = () => setIsOpen(!isOpen);
 
-  // Handle sort option selection
   const handleOptionClick = (option) => {
     setSelectedOption(option);
     setIsOpen(false);
     sortProducts(option);
   };
 
-  // Handle category selection
   const handleCategoryClick = async (categoryName, categoryID) => {
     setDisplayText(categoryName);
-    
+
     try {
       const response = await fetch(`http://127.0.0.1:8000/dichvu/dichvu/${categoryID}`);
-      
-      if (!response.ok) {
-        throw new Error("Failed to fetch products for this category");
-      }
-  
+      if (!response.ok) throw new Error("Failed to fetch products for this category");
+
       const data = await response.json();
-      console.log("Fetched data:", data);  // Debugging
-      
-      if (data.dichvu && Array.isArray(data.dichvu)) {
-        setFilteredProducts(data.dichvu);  // Update filteredProducts with category-specific products
-      } else {
-        console.error("Invalid response format:", data);
-        setFilteredProducts([]);
-      }
+      setFilteredProducts(data.dichvu || []);
     } catch (error) {
-      console.error("Error fetching products by category:", error);
+      console.error("Error fetching category products:", error);
       setFilteredProducts([]);
     }
   };
 
-  // Show all products
   const showAllProducts = () => {
     setDisplayText("TẤT CẢ SẢN PHẨM");
-    setFilteredProducts(products);  // Reset to all products
+    setFilteredProducts(products);
   };
 
-  // Sort products based on selected option
-  const sortProducts = (option, productsToSort = filteredProducts) => {
-    let sortedProducts = [...productsToSort];
+  const sortProducts = (option) => {
+    const sortedProducts = [...filteredProducts];
     switch (option) {
       case 'A → Z':
         sortedProducts.sort((a, b) => a.ten_dv.localeCompare(b.ten_dv));
@@ -103,32 +84,25 @@ const SanPham = ({onAddToCart}) => {
     setFilteredProducts(sortedProducts);
   };
 
-  // Filter products by price range
   const filterByPrice = (priceRange) => {
-    let filtered = products;
-    switch (priceRange) {
-      case 'under-100k':
-        filtered = products.filter(product => product.gia_dv < 100000);
-        break;
-      case '100k-200k':
-        filtered = products.filter(product => product.gia_dv >= 100000 && product.gia_dv < 200000);
-        break;
-      case '200k-300k':
-        filtered = products.filter(product => product.gia_dv >= 200000 && product.gia_dv < 300000);
-        break;
-      case '300k-500k':
-        filtered = products.filter(product => product.gia_dv >= 300000 && product.gia_dv < 500000);
-        break;
-      case '500k-1000k':
-        filtered = products.filter(product => product.gia_dv >= 500000 && product.gia_dv < 1000000);
-        break;
-      case 'above-1000k':
-        filtered = products.filter(product => product.gia_dv >= 1000000);
-        break;
-      default:
-        filtered = products;
-        break;
-    }
+    const filtered = products.filter((product) => {
+      switch (priceRange) {
+        case 'under-100k':
+          return product.gia_dv < 100000;
+        case '100k-200k':
+          return product.gia_dv >= 100000 && product.gia_dv < 200000;
+        case '200k-300k':
+          return product.gia_dv >= 200000 && product.gia_dv < 300000;
+        case '300k-500k':
+          return product.gia_dv >= 300000 && product.gia_dv < 500000;
+        case '500k-1000k':
+          return product.gia_dv >= 500000 && product.gia_dv < 1000000;
+        case 'above-1000k':
+          return product.gia_dv >= 1000000;
+        default:
+          return true;
+      }
+    });
     setFilteredProducts(filtered);
   };
 
@@ -137,23 +111,20 @@ const SanPham = ({onAddToCart}) => {
       <div className="DanhMuc">
         <div className="sanpham">{displayText}</div>
         <div className="DanhMucSP">
-          {/* "Tất cả sản phẩm" button */}
           <div className="img-btn" onClick={showAllProducts} style={{ cursor: 'pointer' }}>
             <img src={logo} className="btn-img" alt="Tất cả sản phẩm" />
             <span>Tất cả sản phẩm</span>
           </div>
-          
-          {/* Render product categories */}
           {productType.length > 0 ? (
-            productType.map((type, index) => (
+            productType.map((type) => (
               <div
                 className="img-btn"
-                key={index}
+                key={type.id}
                 onClick={() => handleCategoryClick(type.ten_loai_dv, type.id)}
                 style={{ cursor: 'pointer' }}
               >
                 <img
-                  src={`http://localhost:8000/${type.image_dv}`} // Ensure correct image path
+                  src={`http://127.0.0.1:8000/${type.image_dv}`}
                   alt={type.ten_loai_dv}
                   className="btn-img"
                 />
@@ -166,7 +137,6 @@ const SanPham = ({onAddToCart}) => {
         </div>
       </div>
 
-      {/* Sorting Dropdown */}
       <div className="sort-dropdown">
         <div className="sort-label-button">
           <span className="sort-label">Sắp xếp:</span>
@@ -184,41 +154,36 @@ const SanPham = ({onAddToCart}) => {
         )}
       </div>
 
-      {/* Price Filter Sidebar */}
       <div className="filter-by-price">
         <Sidebar onFilterChange={filterByPrice} />
       </div>
 
-      {/* Product List */}
       <div className="product-list">
-      {filteredProducts.length > 0 ? (
-        filteredProducts.map((product) => (
-          <div
-            className="product-item"
-            key={product.id}
-            onMouseEnter={() => setHoveredProduct(product.id)}
-            onMouseLeave={() => setHoveredProduct(null)}
-          >
-            <img src={`http://127.0.0.1:8000/${product.image_dv}`} alt={product.ten_dv} />
-            <h3>{product.ten_dv}</h3>
-            <p>{product.mota || "Không có mô tả"}</p>
-            <p style={{ color: "#007bff", fontWeight: "bold" }}>
-              {product.gia_dv ? product.gia_dv.toLocaleString("vi-VN") + "₫" : "Giá không xác định"}
-            </p>
-            {hoveredProduct === product.id && (
-              <button
-                className="add-to-cart"
-                onClick={() => onAddToCart(product)}
-              >
-                Thêm vào giỏ hàng
-              </button>
-            )}
-          </div>
-        ))
-      ) : (
-        <p>Không có sản phẩm</p>
-      )}
-    </div>
+        {filteredProducts.length > 0 ? (
+          filteredProducts.map((product) => (
+            <div
+              className="product-item"
+              key={product.id}
+              onMouseEnter={() => setHoveredProduct(product.id)}
+              onMouseLeave={() => setHoveredProduct(null)}
+            >
+              <img src={`http://127.0.0.1:8000/${product.image_dv}`} alt={product.ten_dv} />
+              <h3>{product.ten_dv}</h3>
+              <p>{product.mota || "Không có mô tả"}</p>
+              <p style={{ color: "#007bff", fontWeight: "bold" }}>
+                {product.gia_dv ? product.gia_dv.toLocaleString("vi-VN") + "₫" : "Giá không xác định"}
+              </p>
+              {hoveredProduct === product.id && (
+                <button className="add-to-cart" onClick={() => addToCart(product)}>
+                  Thêm vào giỏ hàng
+                </button>
+              )}
+            </div>
+          ))
+        ) : (
+          <p>Không có sản phẩm</p>
+        )}
+      </div>
     </div>
   );
 };
