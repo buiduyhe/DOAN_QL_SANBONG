@@ -110,17 +110,18 @@ class LoaiSanBong(Base):
 SanBong.loai_san_bong = relationship("LoaiSanBong", back_populates="san_bongs")
 SanBong.loai_san_id = Column(Integer, ForeignKey('LOAI_SAN_BONG.id'), nullable=False)
 class HoaDon(Base):
-   
+
     __tablename__ = 'HOA_DON'
     id = Column(Integer, primary_key=True, index=True)
     ma_hoa_don = Column(String(255), unique=True, nullable=False)
-    user_id = Column(Integer, ForeignKey('SYS_USER.id'), nullable=False)  # Người tạo hóa đơn
-    nguoi_dat_san_id = Column(Integer, ForeignKey('SYS_USER.id'), nullable=False)  # Người đặt sân
+    id_nv = Column(Integer, ForeignKey('SYS_USER.id'), nullable=False)  # Người tạo hóa đơn
+    id_user = Column(Integer,nullable=False)  # Người đặt sân
     ngay_tao = Column(DateTime, default=func.now())
     trang_thai = Column(Integer, nullable=False, default=0)  # 0: Chưa thanh toán, 1: Đã thanh toán
     tong_tien = Column(Float, nullable=False)
     hinh_thuc_thanh_toan = Column(String(255), nullable=True)
-
+    chi_tiet_id = Column(Integer, ForeignKey('CHI_TIET_HOA_DON.id'), nullable=False)
+    
     # Mối quan hệ với bảng ChiTietHoaDon
     chi_tiet_hoa_dons = relationship("ChiTietHoaDon", back_populates="hoa_don")
 
@@ -128,12 +129,9 @@ class ChiTietHoaDon(Base):
     __tablename__ = 'CHI_TIET_HOA_DON'
 
     id = Column(Integer, primary_key=True, index=True)
-    hoa_don_id = Column(Integer, ForeignKey('HOA_DON.id'), nullable=False)
     dat_san_id = Column(Integer, ForeignKey('DAT_SAN.id'), nullable=False)
     dich_vu_id = Column(Integer, ForeignKey('DICH_VU.id'))
     so_luong = Column(Integer, nullable=False)
-    gia = Column(Float, nullable=False)
-    thanh_tien = Column(Float, nullable=False)
     
     dat_san = relationship("DatSan", back_populates="chi_tiet_hoa_dons")
     hoa_don = relationship("HoaDon", back_populates="chi_tiet_hoa_dons")
