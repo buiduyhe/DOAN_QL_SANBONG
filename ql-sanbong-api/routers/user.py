@@ -22,8 +22,7 @@ async def my_profile(
 @router.get('/get_SysUser/{role_id}')
 async def get_SysUser(
     role_id: int,
-    db: Session = Depends(get_db),
-    current_user: SysUser = Depends(db_user.get_current_user_info)
+    db: Session = Depends(get_db)
 ):
     user_roles = await db_user.get_SysUser(db=db, role_id=role_id)
     user_responses = []
