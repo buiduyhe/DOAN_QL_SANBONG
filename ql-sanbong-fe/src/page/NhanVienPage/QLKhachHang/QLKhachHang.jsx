@@ -4,7 +4,7 @@ import "../QL.scss";
 const QLKhachHang = () => {
   const [customer, setCustomer] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const [selectedId, setSelectedId] = useState(null);
   useEffect(() => {
     const fetchCustomer = async () => {
       try {
@@ -23,16 +23,20 @@ const QLKhachHang = () => {
         }
 
         const data = await response.json();
-        setCustomer(data[0]);
+        setCustomer(data); // Gán toàn bộ danh sách khách hàng thay vì chỉ lấy [0]
       } catch (error) {
         console.error("Error fetching customer:", error);
       } finally {
-        setLoading(false); // Dừng hiển thị trạng thái loading
+        setLoading(false);
       }
     };
 
     fetchCustomer();
   }, []);
+
+  const handleRadioChange = (id) => {
+    setSelectedId(id); // Gán ID của khách hàng được chọn
+  };
 
   return (
     <div>
@@ -43,6 +47,7 @@ const QLKhachHang = () => {
         <table>
           <thead>
             <tr>
+              <th></th>
               <th>Mã Khách Hàng</th>
               <th>Tên Khách Hàng</th>
               <th>Email</th>
@@ -51,22 +56,33 @@ const QLKhachHang = () => {
             </tr>
           </thead>
           <tbody>
-            {customer ? (
-              <tr>
-                <td>{customer.id}</td>
-                <td>{customer.full_name}</td>
-                <td>{customer.email}</td>
-                <td>{customer.phone}</td>
-                <td>{customer.gender}</td>
-              </tr>
+            {customer && customer.length > 0 ? (
+              customer.map((cus) => (
+                <tr key={cus.id}>
+                  <td>
+                  <input
+                      type="radio" // Đổi thành radio button
+                      name="customer" // Cùng một tên để đảm bảo chỉ chọn một
+                      onChange={() => handleRadioChange(cus.id)}
+                      checked={selectedId === cus.id}
+                    />
+                  </td>
+                  <td>{cus.id}</td>
+                  <td>{cus.full_name}</td>
+                  <td>{cus.email}</td>
+                  <td>{cus.phone}</td>
+                  <td>{cus.gender === "FEMALE" ? "Nữ" : "Nam"}</td>
+                </tr>
+              ))
             ) : (
               <tr>
-                <td colSpan="5">Không có dữ liệu</td>
+                <td colSpan="6">Không có dữ liệu</td>
               </tr>
             )}
           </tbody>
         </table>
       )}
+    
     </div>
   );
 };
