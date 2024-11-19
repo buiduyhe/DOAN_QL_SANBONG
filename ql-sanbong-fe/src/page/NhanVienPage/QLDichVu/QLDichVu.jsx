@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "../QL.scss";
+import "./QLDichVu.scss";
 
 const QLDichVu = () => {
   const [dichVuList, setDichVuList] = useState([]); 
-
+  const [selectedIds, setSelectedIds] = useState([]);
 
   useEffect(() => {
     fetch("http://localhost:8000/dichvu/dichvu_QL")
@@ -17,12 +18,35 @@ const QLDichVu = () => {
       .catch((error) => console.error("Có lỗi xảy ra:", error));
   }, []);
 
+  const handleCheckboxChange = (id) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter((selectedId) => selectedId !== id)); // Bỏ ID khỏi danh sách
+    } else {
+      setSelectedIds([...selectedIds, id]); // Thêm ID vào danh sách
+    }
+  };
+
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedIds(dichVuList.map((dichVu) => dichVu.id)); // Chọn tất cả dịch vụ
+    } else {
+      setSelectedIds([]); // Bỏ chọn tất cả
+    }
+  };
+
   return (
     <div>
       <h4>Quản lý Dịch Vụ</h4>
       <table>
         <thead>
           <tr>
+            <th>
+              <input
+                type="checkbox"
+                onChange={handleSelectAll}
+                checked={dichVuList.length > 0 && selectedIds.length === dichVuList.length}
+              />
+            </th>
             <th>Mã Dịch Vụ</th>
             <th>Tên Dịch Vụ</th>
             <th>Loại Dịch Vụ</th>
@@ -35,6 +59,13 @@ const QLDichVu = () => {
         <tbody>
           {dichVuList.map((dichVu) => (
             <tr key={dichVu.id}>
+              <td>
+                <input
+                  type="checkbox"
+                  onChange={() => handleCheckboxChange(dichVu.id)}
+                  checked={selectedIds.includes(dichVu.id)}
+                />
+              </td>
               <td>{dichVu.id}</td>
               <td>{dichVu.ten_dv}</td>
               <td>{dichVu.ten_loai_dv}</td>
