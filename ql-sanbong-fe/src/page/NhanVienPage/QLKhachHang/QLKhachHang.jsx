@@ -4,8 +4,7 @@ import "../QL.scss";
 const QLKhachHang = () => {
   const [customer, setCustomer] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [selectedIds, setSelectedIds] = useState([]);
-
+  const [selectedId, setSelectedId] = useState(null);
   useEffect(() => {
     const fetchCustomer = async () => {
       try {
@@ -35,20 +34,8 @@ const QLKhachHang = () => {
     fetchCustomer();
   }, []);
 
-  const handleCheckboxChange = (id) => {
-    if (selectedIds.includes(id)) {
-      setSelectedIds(selectedIds.filter((selectedId) => selectedId !== id));
-    } else {
-      setSelectedIds([...selectedIds, id]);
-    }
-  };
-
-  const handleSelectAll = (e) => {
-    if (e.target.checked) {
-      setSelectedIds(customer.map((cus) => cus.id)); // Chọn tất cả khách hàng
-    } else {
-      setSelectedIds([]); // Bỏ chọn tất cả
-    }
+  const handleRadioChange = (id) => {
+    setSelectedId(id); // Gán ID của khách hàng được chọn
   };
 
   return (
@@ -60,15 +47,7 @@ const QLKhachHang = () => {
         <table>
           <thead>
             <tr>
-              <th>
-                <input
-                  type="checkbox"
-                  onChange={handleSelectAll}
-                  checked={
-                    customer && selectedIds.length === customer.length
-                  }
-                />
-              </th>
+              <th></th>
               <th>Mã Khách Hàng</th>
               <th>Tên Khách Hàng</th>
               <th>Email</th>
@@ -81,10 +60,11 @@ const QLKhachHang = () => {
               customer.map((cus) => (
                 <tr key={cus.id}>
                   <td>
-                    <input
-                      type="checkbox"
-                      onChange={() => handleCheckboxChange(cus.id)}
-                      checked={selectedIds.includes(cus.id)}
+                  <input
+                      type="radio" // Đổi thành radio button
+                      name="customer" // Cùng một tên để đảm bảo chỉ chọn một
+                      onChange={() => handleRadioChange(cus.id)}
+                      checked={selectedId === cus.id}
                     />
                   </td>
                   <td>{cus.id}</td>

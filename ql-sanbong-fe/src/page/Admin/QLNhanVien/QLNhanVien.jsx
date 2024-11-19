@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 const QLNhanVien = () => {
   const [nhanVienList, setNhanVienList] = useState([]); // State để lưu danh sách nhân viên
-  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectedId, setSelectedId] = useState(null);
   // Gọi API khi component được render
   useEffect(() => {
     fetch("http://127.0.0.1:8000/user/get_SysUser/2")
@@ -17,11 +17,7 @@ const QLNhanVien = () => {
   }, []);
 
   const handleCheckboxChange = (id) => {
-    if (selectedIds.includes(id)) {
-      setSelectedIds(selectedIds.filter((selectedId) => selectedId !== id)); // Bỏ ID khỏi danh sách
-    } else {
-      setSelectedIds([...selectedIds, id]); // Thêm ID vào danh sách
-    }
+    setSelectedId(id);
   };
 
   return (
@@ -31,18 +27,7 @@ const QLNhanVien = () => {
         <thead>
           <tr>
             <th>
-            <input
-                type="checkbox"
-                onChange={(e) =>
-                  setSelectedIds(
-                    e.target.checked ? nhanVienList.map((nv) => nv.id) : []
-                  )
-                }
-                checked={
-                  nhanVienList.length > 0 &&
-                  selectedIds.length === nhanVienList.length
-                }
-              />
+
             </th>
             <th>Mã Nhân Viên</th>
             <th>Tên Nhân Viên</th>
@@ -56,9 +41,10 @@ const QLNhanVien = () => {
             <tr key={nhanVien.id}>
               <td>
               <input
-                  type="checkbox"
+                  type="radio" // Đổi từ checkbox thành radio
+                  name="nhanVien" // Cùng một tên để đảm bảo chỉ chọn được một
                   onChange={() => handleCheckboxChange(nhanVien.id)}
-                  checked={selectedIds.includes(nhanVien.id)}
+                  checked={selectedId === nhanVien.id}
                 />
               </td>
               <td>{nhanVien.id}</td>
