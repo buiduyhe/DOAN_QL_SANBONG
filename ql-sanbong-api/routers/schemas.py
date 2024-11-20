@@ -170,3 +170,14 @@ class DichVuDisplayQL(BaseModel):
     
     class Config:
         orm_mode = True
+        
+class HoaDonDisplay(BaseModel):
+    id: int
+    ma_hoa_don: str
+    id_nguoi_dat:int
+    ten_nguoi_dat:str
+    ngay_tao: datetime
+    tongtien:float
+    trangthai:int
+    class Config:
+        orm_mode = True
