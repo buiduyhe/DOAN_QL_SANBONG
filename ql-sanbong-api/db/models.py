@@ -66,6 +66,7 @@ class DatSan(Base):
     __tablename__ = 'DAT_SAN'
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey('SYS_USER.id'), nullable=False)  # Liên kết với bảng SYS_USER
+    id_san = Column(String,nullable=False)  # Liên kết v
     timeslot_id = Column(Integer, ForeignKey('TIME_SLOT.id'), nullable=False)  # Liên kết với bảng TIME_SLOT
     gia = Column(Integer, nullable=False)  # Giá đặt sân
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
@@ -126,7 +127,7 @@ class ChiTietHoaDon(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     hoa_don_id = Column(Integer, ForeignKey('HOA_DON.id'), nullable=False)
-    dat_san_id = Column(Integer, ForeignKey('DAT_SAN.id'), nullable=False)
+    dat_san_id = Column(Integer, ForeignKey('DAT_SAN.id'))
     dich_vu_id = Column(Integer, ForeignKey('DICH_VU.id'))
     so_luong = Column(Integer, nullable=False)
     

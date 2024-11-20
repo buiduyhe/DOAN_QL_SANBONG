@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from datetime import time as Time ,date
 
@@ -120,6 +120,7 @@ class TimeSlotResponse(BaseModel):
         arbitrary_types_allowed = True
 class DatSanRequest(BaseModel):
     user_id: int
+    san_id: str
     timeslot_id: int
     gia : int
 
@@ -179,5 +180,31 @@ class HoaDonDisplay(BaseModel):
     ngay_tao: datetime
     tongtien:float
     trangthai:int
+    class Config:
+        orm_mode = True
+        
+class DatDichVuRequest(BaseModel):
+    dichvu_id: int
+    soluong: int
+
+class DichVuBase(BaseModel):
+    id: int
+    ten_dv: str
+    gia_dv: int
+    mota: str
+    soluong: int
+    image_dv: str
+
+class DatSanBase(BaseModel):
+    id: int
+    gia: int
+    user_id: int
+    timeslot_id: int
+    created_at: datetime
+
+class ChiTietHoaDonDisplay(BaseModel):
+    stt: int
+    dich_vu: Union[DichVuBase, DatSanBase]
+
     class Config:
         orm_mode = True

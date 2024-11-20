@@ -1,6 +1,6 @@
 from fastapi import APIRouter , Depends,File ,HTTPException,status,UploadFile,Form
 from sqlalchemy.orm import Session
-from routers.schemas import DichVuDisplayQL, DichVuResponse, LoaiDichVuDisplay, PostBase, PostDisplay
+from routers.schemas import ChiTietHoaDonDisplay, DatDichVuRequest, DichVuDisplayQL, DichVuResponse, LoaiDichVuDisplay, PostBase, PostDisplay
 from db.database import get_db
 from db import db_dichvu,db_user
 from typing import List
@@ -162,3 +162,23 @@ def get_services_by_type(loaidichvu_id: int, db: Session = Depends(get_db)):
     )
 
     return dichvu_response
+
+@router.post('/dat_dv_By_HoaDon/{hoadon_id}')
+def dat_dv_By_HoaDon(
+    hoadon_id: int,
+    request: List[DatDichVuRequest],
+    db: Session = Depends(get_db)
+):
+    return db_dichvu.dat_dv_By_HoaDon(db=db, hoa_don_id=hoadon_id, request=request)
+@router.post('/dat_dv')
+def dat_dv(
+    request: List[DatDichVuRequest],
+    db: Session = Depends(get_db),
+    current_user: SysUser = Depends(db_user.get_current_user_info)
+
+):
+    return db_dichvu.dat_dv(db=db, request=request,user_id=current_user.id)
+@router.get('/get_chi_tiet_hoadon/{hoadon_id}')
+def get_chi_tiet_hoadon(hoadon_id: int, db: Session = Depends(get_db)):
+    chi_tiet_hoa_don = db_dichvu.get_chi_tiet_hoa_don(db, hoa_don_id=hoadon_id)
+    return chi_tiet_hoa_don

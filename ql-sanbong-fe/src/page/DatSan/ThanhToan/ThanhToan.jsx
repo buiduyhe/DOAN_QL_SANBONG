@@ -101,6 +101,7 @@ const ThanhToan = () => {
     // Tạo đối tượng dữ liệu gửi API
     const data = {
       user_id,
+      san_id: id,
       timeslot_id,
       gia: gia_thue
     };
