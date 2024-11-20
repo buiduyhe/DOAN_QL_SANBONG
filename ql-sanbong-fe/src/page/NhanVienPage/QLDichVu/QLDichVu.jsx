@@ -3,7 +3,7 @@ import "../QL.scss";
 import "./QLDichVu.scss";
 
 const QLDichVu = () => {
-  const [dichVuList, setDichVuList] = useState([]); 
+  const [dichVuList, setDichVuList] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
 
   useEffect(() => {
@@ -20,17 +20,17 @@ const QLDichVu = () => {
 
   const handleCheckboxChange = (id) => {
     if (selectedIds.includes(id)) {
-      setSelectedIds(selectedIds.filter((selectedId) => selectedId !== id)); // Bỏ ID khỏi danh sách
+      setSelectedIds(selectedIds.filter((selectedId) => selectedId !== id));
     } else {
-      setSelectedIds([...selectedIds, id]); // Thêm ID vào danh sách
+      setSelectedIds([...selectedIds, id]);
     }
   };
 
   const handleSelectAll = (e) => {
     if (e.target.checked) {
-      setSelectedIds(dichVuList.map((dichVu) => dichVu.id)); // Chọn tất cả dịch vụ
+      setSelectedIds(dichVuList.map((dichVu) => dichVu.id));
     } else {
-      setSelectedIds([]); // Bỏ chọn tất cả
+      setSelectedIds([]);
     }
   };
 
@@ -44,7 +44,10 @@ const QLDichVu = () => {
               <input
                 type="checkbox"
                 onChange={handleSelectAll}
-                checked={dichVuList.length > 0 && selectedIds.length === dichVuList.length}
+                checked={
+                  dichVuList.length > 0 &&
+                  selectedIds.length === dichVuList.length
+                }
               />
             </th>
             <th>Mã Dịch Vụ</th>
@@ -72,11 +75,16 @@ const QLDichVu = () => {
               <td>{dichVu.gia_dv.toLocaleString()} VND</td>
               <td>{dichVu.soluong}</td>
               <td>{dichVu.mota || "Không có mô tả"}</td>
-              <td>
+              <td style={{ textAlign: "center" }}>
                 <img
-                  src={dichVu.image_dv}
+                  src={`http://localhost:8000/${dichVu.image_dv}`}
                   alt={dichVu.ten_dv}
-                  style={{ width: "50px", height: "50px", objectFit: "cover" }}
+                  style={{
+                    width: "50px",
+                    height: "50px",
+                    objectFit: "cover",
+                    alignItems: "center",
+                  }}
                 />
               </td>
             </tr>

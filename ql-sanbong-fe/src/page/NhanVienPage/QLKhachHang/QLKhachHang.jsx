@@ -60,9 +60,9 @@ const QLKhachHang = () => {
               customer.map((cus) => (
                 <tr key={cus.id}>
                   <td>
-                  <input
-                      type="radio" // Đổi thành radio button
-                      name="customer" // Cùng một tên để đảm bảo chỉ chọn một
+                    <input
+                      type="radio"
+                      name="customer"
                       onChange={() => handleRadioChange(cus.id)}
                       checked={selectedId === cus.id}
                     />
@@ -82,7 +82,6 @@ const QLKhachHang = () => {
           </tbody>
         </table>
       )}
-    
     </div>
   );
 };
