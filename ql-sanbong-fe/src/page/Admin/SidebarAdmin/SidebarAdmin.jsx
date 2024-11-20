@@ -21,6 +21,11 @@ const SidebarAdmin = ({ onMenuClick }) => {
     fetchAdminInfo();
   }, []);
 
+  const handleSupplierClick = (e) => {
+    e.preventDefault();
+    alert("Chức năng này đang được phát triển.");
+  };
+
   return (
     <div className="sidebarAdmin">
       <div className="sidebar-header">
@@ -44,7 +49,7 @@ const SidebarAdmin = ({ onMenuClick }) => {
           <a onClick={() => onMenuClick("orders")}>Quản lý đơn đặt</a>
         </li>
         <li>
-          <a onClick={() => onMenuClick("suppliers")}>Quản lý nhà cung cấp</a>
+          <a onClick={handleSupplierClick}>Quản lý nhà cung cấp</a>
         </li>
       </ul>
     </div>

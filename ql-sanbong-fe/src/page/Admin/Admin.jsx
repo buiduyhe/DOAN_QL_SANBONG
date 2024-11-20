@@ -275,6 +275,19 @@ const Admin = () => {
             </div>
           </div>
         )}
+        <div className="gohome" style={{ textAlign: "end" }}>
+          <a
+            href="/Home"
+            style={{
+              textDecoration: "none",
+              color: "#000",
+              fontSize: "20px",
+              fontWeight: "600",
+            }}
+          >
+            Về Trang Chủ
+          </a>
+        </div>
       </div>
     </div>
   );

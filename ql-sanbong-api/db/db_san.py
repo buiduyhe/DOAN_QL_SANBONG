@@ -1,8 +1,10 @@
-from routers.schemas import PostBase, TimeSlotDisplay, TimeSlotRequest,TimeSlotResponse
+import random
+import string
+from routers.schemas import HoaDonDisplay, PostBase, TimeSlotDisplay, TimeSlotRequest,TimeSlotResponse
 from sqlalchemy.orm.session import Session
 import datetime
 from fastapi import HTTPException, status
-from db.models import DatSan, DichVu, DichVu_LoaiDichVu, SanBong,LoaiSanBong, TimeSlot
+from db.models import DatSan, DichVu, DichVu_LoaiDichVu, SanBong,LoaiSanBong, SysUser, TimeSlot,ChiTietHoaDon,HoaDon
 from routers import schemas
 
 
@@ -48,9 +50,30 @@ def dat_san(request, db: Session):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Không tìm thấy time slot.")
     if not time_slot.is_available:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Khung giờ đã được đặt trước.")
-    time_slot.is_available = False
+    
+    create_dat = create_dat_san(db, request)
+    
+    if create_dat:
+        new_hoadon = HoaDon(
+            ma_hoa_don = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6)),
+            id_user = request.user_id,
+            ngay_tao = datetime.datetime.now(),
+            trang_thai = 0,##chưa thanh toán
+            tong_tien = request.gia
+        )
+        db.add(new_hoadon)
+        db.flush()
+        
+        new_chitiet = ChiTietHoaDon(
+            hoa_don_id = new_hoadon.id,
+            dat_san_id = create_dat.id,
+            so_luong = 1
+        )
+        db.add(new_chitiet)
+        time_slot.is_available = False
     db.commit()
-    return create_dat_san(db, request)
+    
+    return create_dat
 
 def create_dat_san(db, request):
     new_dat_san = DatSan(
@@ -59,8 +82,8 @@ def create_dat_san(db, request):
         gia=request.gia
     )
     db.add(new_dat_san)
-    db.commit()
-    return {"detail": "Đặt sân thành công."}
+    db.flush()
+    return new_dat_san
 
 def get_san_available(request:TimeSlotRequest, db: Session):
     san_available = db.query(TimeSlot).filter( TimeSlot.start_time == request.batdau, TimeSlot.date == request.ngay_dat).all()
@@ -75,3 +98,28 @@ def get_san_available(request:TimeSlotRequest, db: Session):
             tinhtrang=san.is_available
         ))
     return san_available_responses
+def get_user_by_id(db: Session, id: int):
+    user = db.query(SysUser).filter(SysUser.id == id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Không tìm thấy người dùng.")
+    return user
+def get_ds_hoadon(db: Session):
+    hoadon_list = db.query(HoaDon).all()
+    if not hoadon_list:
+        raise HTTPException(status_code=404, detail="Không tìm thấy hóa đơn nào.")
+    hoadon_display_list = []
+    for hd in hoadon_list:
+        user_name = get_user_by_id(db, hd.id_user)
+        hoadon_display_list.append(
+            HoaDonDisplay(
+                id=hd.id,
+                ma_hoa_don=hd.ma_hoa_don,
+                id_nguoi_dat=hd.id_user,
+                ngay_tao=hd.ngay_tao,
+                trangthai=hd.trang_thai,
+                tongtien=hd.tong_tien,
+                ten_nguoi_dat=user_name.full_name
+            )
+        )
+    return hoadon_display_list
+
