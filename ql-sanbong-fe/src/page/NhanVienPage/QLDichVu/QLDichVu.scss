@@ -1,0 +1,39 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  thead th {
+    position: sticky;
+    top: 0;
+    background-color: #f9f9f9; /* Giữ header cố định khi cuộn */
+    z-index: 1;
+  }
+  
+  tbody {
+    display: block;
+    max-height: 500px; /* Chiều cao tối đa của tbody */
+    overflow-y: scroll; /* Cho phép cuộn dọc */
+  }
+  tbody::-webkit-scrollbar {
+    display: none; /* Ẩn thanh cuộn */
+  }
+  
+  tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed; /* Duy trì căn chỉnh cột */
+  }
+  
+  thead, tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  td, th {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  

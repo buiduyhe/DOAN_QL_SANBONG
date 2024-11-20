@@ -1,6 +1,6 @@
 
 .sidebarNV {
-    
+    height: 100vh;
     color: white;
     display: flex;
     flex-direction: column;
@@ -30,6 +30,7 @@
             transition: background-color 0.3s ease, transform 0.3s ease;
             border-radius: 5px;
             cursor: pointer;
+            padding: 10px;
         }
         a:hover {
             background-color: #555; 

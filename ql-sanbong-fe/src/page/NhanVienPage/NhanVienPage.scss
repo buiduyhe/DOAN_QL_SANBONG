@@ -1,8 +1,10 @@
 .NVPage {
+  max-width: 100%;
+  height: auto;
   .NV-left{
     background-color: #333;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-    height: 1300px;
+    
   }
     .add-form {
         background: #f9f9f9;
@@ -74,6 +76,7 @@
         background: #0056b3;
       }
     .NV-right {
+      padding-bottom: 20px;
       display: flex;
       flex-direction: column;
       gap: 30px;
@@ -164,8 +167,16 @@
     }
   
     .gohome {
-      text-align: end;
-      margin-top: 20px;
+      padding: 20px 20px;
+     a{
+      border-radius: 15px;
+      border: 1px solid #000000;
+      padding: 20px;
+     }
+     a:hover {
+      background-color: #0056b3;
+     }
     }
+    
   }
   
