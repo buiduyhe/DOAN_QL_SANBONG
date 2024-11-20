@@ -60,7 +60,7 @@ def dat_san(request, db: Session):
             ngay_tao = datetime.datetime.now(),
             trang_thai = 0,##chưa thanh toán
             tong_tien = request.gia
-        )
+        ) 
         db.add(new_hoadon)
         db.flush()
         
@@ -78,6 +78,7 @@ def dat_san(request, db: Session):
 def create_dat_san(db, request):
     new_dat_san = DatSan(
         user_id=request.user_id,
+        id_san=request.san_id,
         timeslot_id=request.timeslot_id,
         gia=request.gia
     )
@@ -123,3 +124,8 @@ def get_ds_hoadon(db: Session):
         )
     return hoadon_display_list
 
+# def get_ct_hoadon_by_mahd(hoadon_id:int,db:Session):
+#     chitiet_list = db.query(ChiTietHoaDon).filter(ChiTietHoaDon.hoa_don_id == hoadon_id).all()
+#     if not chitiet_list:
+#         raise HTTPException(status_code=404, detail="Không tìm thấy chi tiết hóa đơn nào.")
+#     chitiet_display_list = []

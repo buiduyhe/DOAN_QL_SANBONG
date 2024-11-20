@@ -56,3 +56,9 @@ def get_san_available(request:TimeSlotRequest,db: Session = Depends(get_db)):
 @router.get('/get_ds_hoadon')
 def get_ds_hoadon(db: Session = Depends(get_db)):
     return db_san.get_ds_hoadon(db)
+
+
+
+# @router.get('/get_ct_hoadon_by_mahd/{hoadon_id}')
+# def get_ct_hoadon_by_mahd(hoadon_id:int,db: Session = Depends(get_db)):
+#     return db_san.get_ct_hoadon_by_mahd(hoadon_id,db)
