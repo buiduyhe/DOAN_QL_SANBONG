@@ -5,10 +5,11 @@ import Search from "./Search/Search";
 import Popular from "./ProductPopular/Popular";
 import San from "./San/San";
 import Booksan from "./BookSan/Booksan";
+import "./Home.scss";
 import Footer from "../../component/Footer/Footer";
 const Home = () => {
   return (
-    <div>
+    <div className="Home">
       <Navbar />
       <Carousel />
       <Search />
