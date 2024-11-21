@@ -173,6 +173,7 @@ class DichVuDisplayQL(BaseModel):
         orm_mode = True
         
 class HoaDonDisplay(BaseModel):
+    STT:int
     id: int
     ma_hoa_don: str
     id_nguoi_dat:int
