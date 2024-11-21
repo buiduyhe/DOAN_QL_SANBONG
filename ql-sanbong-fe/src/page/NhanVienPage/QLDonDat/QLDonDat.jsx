@@ -8,6 +8,8 @@ const QLDonDat = () => {
   const [sanPhams, setSanPhams] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [quantities, setQuantities] = useState({});
+
 
   useEffect(() => {
     fetch("http://127.0.0.1:8000/san/get_ds_hoadon")
@@ -43,24 +45,37 @@ const QLDonDat = () => {
 
   const handleRowClick = (ma_hoa_don) => {
     setSelectedId(ma_hoa_don);
-    fetchChiTietHoaDon(ma_hoa_don); // Gọi API để lấy chi tiết hóa đơn
+    fetchChiTietHoaDon(ma_hoa_don);
+  };
+
+  const handleQuantityChange = (productId, value) => {
+    setQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [productId]: value, // Cập nhật số lượng cho sản phẩm theo ID
+    }));
   };
   const handleCloseForm = () => {
     setIsFormOpen(false);
     window.location.reload();
   };
   const handleAddProduct = (product) => {
-    const newProduct = {
-      dichvu_id: product.id,
-      soluong: 1,
-    };
-
     if (!selectedId) {
       alert("Vui lòng chọn hóa đơn trước khi thêm sản phẩm!");
       return;
     }
 
-    // Gửi dữ liệu đến API
+    const quantity = quantities[product.id] || 1; // Lấy số lượng từ state, mặc định là 1
+
+    if (quantity <= 0) {
+      alert("Vui lòng nhập số lượng hợp lệ!");
+      return;
+    }
+
+    const newProduct = {
+      dichvu_id: product.id,
+      soluong: quantity,
+    };
+
     fetch(`http://localhost:8000/dichvu/dat_dv_By_HoaDon/${selectedId}`, {
       method: "POST",
       headers: {
@@ -70,22 +85,36 @@ const QLDonDat = () => {
     })
       .then((response) => response.json())
       .then((data) => {
+        // Log dữ liệu trả về từ API để kiểm tra chi tiết
+        console.log("Response from API:", data);
+        
         if (data.success) {
-          setChiTietHoaDon([...chiTietHoaDon, newProduct]);
-          setIsFormOpen(false); // Đóng form
+          // Cập nhật danh sách chi tiết hóa đơn sau khi thêm sản phẩm
+          setChiTietHoaDon([
+            ...chiTietHoaDon,
+            { ...product, soluong: quantity },
+          ]);
+          setIsFormOpen(false);
+          
         } else {
-          alert("Thêm sản phẩm thất bại!");
+          alert("Thêm sản phẩm thất bại! Lý do: " + (data.message || "Không rõ"));
         }
       })
-      .catch((error) => console.error("Error adding product:", error));
+      .catch((error) => {
+        console.error("Error adding product:", error);
+        alert("Có lỗi khi thêm sản phẩm!");
+      });
   };
+
 
   const filteredSanPhams = sanPhams.filter((sp) =>
     sp.ten_dv.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
   return (
     <div>
       <h4>Quản lý Đơn Đặt</h4>
+      {/* Bảng hóa đơn */}
       <table>
         <thead>
           <tr>
@@ -104,9 +133,9 @@ const QLDonDat = () => {
                 <input
                   type="radio"
                   name="hoadon"
-                  onChange={() => handleRowClick(hoaDon.id)}
                   checked={selectedId === hoaDon.id}
-                  onClick={(e) => e.stopPropagation()} // Ngăn chặn sự kiện onClick của <tr>
+                  onChange={() => handleRowClick(hoaDon.id)}
+                  onClick={(e) => e.stopPropagation()}
                 />
               </td>
               <td>{hoaDon.ma_hoa_don}</td>
@@ -121,7 +150,7 @@ const QLDonDat = () => {
         </tbody>
       </table>
 
-      {/* Form chi tiết hóa đơn */}
+      {/* Chi tiết hóa đơn */}
       {selectedId && chiTietHoaDon.length > 0 && (
         <div className="chitiet-hoa-don">
           <h5>Chi Tiết Hóa Đơn</h5>
@@ -153,18 +182,12 @@ const QLDonDat = () => {
           </div>
         </div>
       )}
+
+      {/* Form thêm sản phẩm */}
       {isFormOpen && (
         <div className="form-them-san-pham">
           <div className="TT">
             <h5>Chọn Sản Phẩm</h5>
-            <button
-              onClick={() => {
-                setIsFormOpen(false); // Đóng form
-                refreshData(); // Làm mới dữ liệu
-              }}
-            >
-              Thoát
-            </button>
           </div>
           <input
             type="text"
@@ -178,6 +201,7 @@ const QLDonDat = () => {
                 <th>Hình Ảnh</th>
                 <th>Tên Sản Phẩm</th>
                 <th>Giá</th>
+                <th>Số Lượng</th>
                 <th>Thao Tác</th>
               </tr>
             </thead>
@@ -199,14 +223,36 @@ const QLDonDat = () => {
                   <td>{product.ten_dv}</td>
                   <td>{product.gia_dv}</td>
                   <td>
-                    <button onClick={() => handleAddProduct(product)}>
-                      Thêm
-                    </button>
+                    <input
+                      type="number"
+                      min="1"
+                      value={quantities[product.id]} // Lấy số lượng từ state
+                      onChange={(e) =>
+                        handleQuantityChange(product.id, Number(e.target.value))
+                      }
+                      style={{
+                        width: "50px",
+                        textAlign: "center",
+                      }}
+                    />
+                  </td>
+                  <td>
+                  <button onClick={() => {
+                    handleAddProduct(product);
+                    handleCloseForm();
+                  }}>
+                    Thêm
+                  </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+          <div className="btn-actions">
+            <button onClick={() => {
+                setIsFormOpen(false);
+              refreshData();}}>Hủy</button>
+          </div>
         </div>
       )}
     </div>
