@@ -5,7 +5,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime, timedelta ,date
 from sqlalchemy.orm import Session
 from db.database import SessionLocal, get_db
-from db.models import SanBong, TimeSlot
+from db.models import DatSan, SanBong, TimeSlot
     
 # Hàm tạo khung giờ hàng ngày cho tất cả các sân
 def create_time_slots_for_day(db, san_id, today):
@@ -80,12 +80,58 @@ def update_time_slots_status():
         db.close()
         logging.info("update_time_slots_status completed.")
 
+#cập nhật trạng thái sân nếu như thời gian đó có người đặt sân tới thời điểm đó chuyển trạng thái sân thành đang sử dụng ở trong bảng đặt sân
+def update_sanbong_status_used():
+    db: Session = SessionLocal()
+    try:
+        current_date = datetime.now().date()
+        current_time = datetime.now().time()
 
-# Cấu hình scheduler
+        # Truy vấn các bản ghi trong DatSan thỏa mãn điều kiện
+        dat_san_records = (
+            db.query(DatSan)
+            .join(TimeSlot, DatSan.timeslot_id == TimeSlot.id)
+            .filter(TimeSlot.date == current_date)  # Ngày hiện tại
+            .filter(TimeSlot.start_time <= current_time)  # Giờ bắt đầu trước hoặc bằng giờ hiện tại
+            .filter(TimeSlot.end_time >= current_time)  # Giờ kết thúc sau hoặc bằng giờ hiện tại
+            .all()
+        )
+
+        # Cập nhật trạng thái của sân bóng
+        for record in dat_san_records:
+            san_bong = db.query(SanBong).filter(SanBong.id == record.id_san).first()
+            if san_bong:
+                san_bong.trang_thai = 0  # Đang sử dụng
+                db.add(san_bong)
+                logging.info(f"Sân bóng ID {san_bong.id} đã được cập nhật trạng thái sử dụng ")  # Log ID sân bóng
+
+        # Cập nhật trạng thái sân bóng khi khung giờ đã qua
+        past_time_slots = (
+            db.query(DatSan)
+            .join(TimeSlot, DatSan.timeslot_id == TimeSlot.id)
+            .filter(TimeSlot.date == current_date)
+            .filter(TimeSlot.end_time < current_time)
+            .all()
+        )
+
+        for slot in past_time_slots:
+            san_bong = db.query(SanBong).filter(SanBong.id == slot.id_san).first()
+            if san_bong:
+                san_bong.trang_thai = 1  # Không sử dụng
+                db.add(san_bong)
+                logging.info(f"Sân bóng ID {san_bong.id} đã được cập nhật trạng thái không sử dụng")  # Log ID sân bóng
+
+        db.commit()
+    finally:
+        db.close()
+        logging.info("update_sanbong_status completed.")
+
 def start_scheduler():
     scheduler = BackgroundScheduler()
     create_daily_time_slots()  # Tạo khung giờ ngay khi server khởi động
     update_time_slots_status()
+    update_sanbong_status_used()
+    scheduler.add_job(update_sanbong_status_used, 'interval', seconds=30)  # Cập nhật trạng thái mỗi 30 giây
     scheduler.add_job(create_daily_time_slots, 'cron', hour=0, minute=0)  # Chạy vào 00:00 hàng ngày
     scheduler.add_job(update_time_slots_status, 'interval', minutes=1)  # Cập nhật trạng thái mỗi phút
     scheduler.start()

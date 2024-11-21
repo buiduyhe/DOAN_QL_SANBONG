@@ -119,7 +119,7 @@ const ThanhToan = () => {
         setIsSuccess(true);
         console.log("Success:", await response.json()); // In phản hồi từ API khi cập nhật thành công
         alert('Đặt sân thành công!');
-        window.location.href = '/'; // Chuyển hướng về trang /datsan
+        window.location.href = '/datsan'; // Chuyển hướng về trang /datsan
       } else {
         console.log("Failed Response:", await response.text()); // In lỗi nếu có
         alert('Đặt sân không thành công, vui lòng thử lại.'+data.timeslot_id +data.gia +data.user_id);
