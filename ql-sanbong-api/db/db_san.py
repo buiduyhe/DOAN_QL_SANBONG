@@ -109,11 +109,10 @@ def get_ds_hoadon(db: Session):
     if not hoadon_list:
         raise HTTPException(status_code=404, detail="Không tìm thấy hóa đơn nào.")
     hoadon_display_list = []
-    for index, hd in enumerate(hoadon_list, start=1):
+    for hd in hoadon_list:
         user_name = get_user_by_id(db, hd.id_user)
         hoadon_display_list.append(
             HoaDonDisplay(
-                STT=index,
                 id=hd.id,
                 ma_hoa_don=hd.ma_hoa_don,
                 id_nguoi_dat=hd.id_user,
@@ -129,4 +128,4 @@ def get_ds_hoadon(db: Session):
 #     chitiet_list = db.query(ChiTietHoaDon).filter(ChiTietHoaDon.hoa_don_id == hoadon_id).all()
 #     if not chitiet_list:
 #         raise HTTPException(status_code=404, detail="Không tìm thấy chi tiết hóa đơn nào.")
-#     chitiet_display_list = [] 
+#     chitiet_display_list = []
