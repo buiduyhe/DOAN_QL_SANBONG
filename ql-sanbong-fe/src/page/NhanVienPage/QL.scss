@@ -130,12 +130,23 @@ td, th {
   border: 1px solid #ccc;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); // Đổ bóng
-
-  h5 {
-    text-align: center; // Canh giữa tiêu đề
-    color: #333;
-    margin-bottom: 15px;
+  .TT {
+    display: flex;
+    justify-content: space-between;
+    h5 {
+      text-align: center; // Canh giữa tiêu đề
+      color: #333;
+      margin-bottom: 15px;
+    }
+    button {
+      width: 100px;
+      background-color: red;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      color: #333;
+    }
   }
+
 
   input[type="text"] {
     width: 100%;

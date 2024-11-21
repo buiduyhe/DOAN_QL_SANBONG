@@ -10,54 +10,67 @@ const QLDonDat = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/san/get_ds_hoadon')
-      .then(response => response.json())
-      .then(data => setHoaDons(data))
-      .catch(error => console.error('Error fetching data:', error));
+    fetch("http://127.0.0.1:8000/san/get_ds_hoadon")
+      .then((response) => response.json())
+      .then((data) => setHoaDons(data))
+      .catch((error) => console.error("Error fetching data:", error));
 
-    fetch('http://localhost:8000/dichvu/dichvu_QL')
-      .then(response => response.json())
-      .then(data => setSanPhams(data))
-      .catch(error => console.error('Error fetching products:', error));
+    fetch("http://localhost:8000/dichvu/dichvu_QL")
+      .then((response) => response.json())
+      .then((data) => setSanPhams(data))
+      .catch((error) => console.error("Error fetching products:", error));
   }, []);
-
-  
 
   const fetchChiTietHoaDon = (ma_hoa_don) => {
     fetch(`http://localhost:8000/dichvu/get_chi_tiet_hoadon/${ma_hoa_don}`)
-      .then(response => response.json())
-      .then(data => setChiTietHoaDon(data))
-      .catch(error => console.error('Error fetching chi tiết hóa đơn:', error));
+      .then((response) => response.json())
+      .then((data) => setChiTietHoaDon(data))
+      .catch((error) =>
+        console.error("Error fetching chi tiết hóa đơn:", error)
+      );
+  };
+  const refreshData = () => {
+    fetch("http://127.0.0.1:8000/san/get_ds_hoadon")
+      .then((response) => response.json())
+      .then((data) => setHoaDons(data))
+      .catch((error) => console.error("Error refreshing data:", error));
+
+    // Nếu đã chọn hóa đơn, làm mới chi tiết hóa đơn
+    if (selectedId) {
+      fetchChiTietHoaDon(selectedId);
+    }
   };
 
   const handleRowClick = (ma_hoa_don) => {
     setSelectedId(ma_hoa_don);
     fetchChiTietHoaDon(ma_hoa_don); // Gọi API để lấy chi tiết hóa đơn
   };
-
+  const handleCloseForm = () => {
+    setIsFormOpen(false);
+    window.location.reload();
+  };
   const handleAddProduct = (product) => {
     const newProduct = {
       dichvu_id: product.id,
       soluong: 1,
     };
-    
+
     if (!selectedId) {
       alert("Vui lòng chọn hóa đơn trước khi thêm sản phẩm!");
       return;
     }
-  
-    // Gửi dữ liệu đến API, now sending an array
+
+    // Gửi dữ liệu đến API
     fetch(`http://localhost:8000/dichvu/dat_dv_By_HoaDon/${selectedId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify([newProduct]), // Wrap newProduct in an array
+      body: JSON.stringify([newProduct]),
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
-          // Cập nhật danh sách chi tiết hóa đơn
           setChiTietHoaDon([...chiTietHoaDon, newProduct]);
           setIsFormOpen(false); // Đóng form
         } else {
@@ -66,10 +79,8 @@ const QLDonDat = () => {
       })
       .catch((error) => console.error("Error adding product:", error));
   };
-  
-  
 
-  const filteredSanPhams = sanPhams.filter(sp =>
+  const filteredSanPhams = sanPhams.filter((sp) =>
     sp.ten_dv.toLowerCase().includes(searchTerm.toLowerCase())
   );
   return (
@@ -87,7 +98,7 @@ const QLDonDat = () => {
           </tr>
         </thead>
         <tbody>
-          {hoaDons.map(hoaDon => (
+          {hoaDons.map((hoaDon) => (
             <tr key={hoaDon.id} onClick={() => handleRowClick(hoaDon.id)}>
               <td>
                 <input
@@ -101,7 +112,9 @@ const QLDonDat = () => {
               <td>{hoaDon.ma_hoa_don}</td>
               <td>{hoaDon.ten_nguoi_dat}</td>
               <td>{new Date(hoaDon.ngay_tao).toLocaleDateString()}</td>
-              <td>{hoaDon.trangthai === 0 ? 'Chưa thanh toán' : 'Đã thanh toán'}</td>
+              <td>
+                {hoaDon.trangthai === 0 ? "Chưa thanh toán" : "Đã thanh toán"}
+              </td>
               <td>{hoaDon.tongtien}</td>
             </tr>
           ))}
@@ -135,14 +148,24 @@ const QLDonDat = () => {
             </tbody>
           </table>
           <div className="btn-chi-tiet-sp">
-          <button onClick={() => setIsFormOpen(true)}>Thêm Sản Phẩm</button>
-          <button>Thanh Toán</button>
+            <button onClick={() => setIsFormOpen(true)}>Thêm Sản Phẩm</button>
+            <button>Thanh Toán</button>
           </div>
         </div>
       )}
       {isFormOpen && (
         <div className="form-them-san-pham">
-          <h5>Chọn Sản Phẩm</h5>
+          <div className="TT">
+            <h5>Chọn Sản Phẩm</h5>
+            <button
+              onClick={() => {
+                setIsFormOpen(false); // Đóng form
+                refreshData(); // Làm mới dữ liệu
+              }}
+            >
+              Thoát
+            </button>
+          </div>
           <input
             type="text"
             placeholder="Tìm kiếm sản phẩm..."
@@ -159,22 +182,26 @@ const QLDonDat = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredSanPhams.map(product => (
+              {filteredSanPhams.map((product) => (
                 <tr key={product.id}>
-                  <td style={{ textAlign: "center" }}><img
-                  src={`http://localhost:8000/${product.image_dv}`}
-                  alt={product.ten_dv}
-                  style={{
-                    width: "50px",
-                    height: "50px",
-                    objectFit: "cover",
-                    alignItems: "center",
-                  }}
-                /></td>
+                  <td style={{ textAlign: "center" }}>
+                    <img
+                      src={`http://localhost:8000/${product.image_dv}`}
+                      alt={product.ten_dv}
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        objectFit: "cover",
+                        alignItems: "center",
+                      }}
+                    />
+                  </td>
                   <td>{product.ten_dv}</td>
                   <td>{product.gia_dv}</td>
                   <td>
-                    <button onClick={() => handleAddProduct(product)}>Thêm</button>
+                    <button onClick={() => handleAddProduct(product)}>
+                      Thêm
+                    </button>
                   </td>
                 </tr>
               ))}
