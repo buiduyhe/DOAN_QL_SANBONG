@@ -54,23 +54,23 @@ const QLDonDat = () => {
       [productId]: value, // Cập nhật số lượng cho sản phẩm theo ID
     }));
   };
-  const handleCloseForm = () => {
-    setIsFormOpen(false);
-    window.location.reload();
-  };
+  
   const handleAddProduct = (product) => {
     if (!selectedId) {
       alert("Vui lòng chọn hóa đơn trước khi thêm sản phẩm!");
       return;
     }
 
-    const quantity = quantities[product.id] || 1; // Lấy số lượng từ state, mặc định là 1
+    const quantity = quantities[product.id] || 0; // Lấy số lượng từ state, mặc định là 0
 
     if (quantity <= 0) {
       alert("Vui lòng nhập số lượng hợp lệ!");
       return;
     }
-
+    setQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [product.id]: 0, // Reset to 1 or any default value
+    }));
     const newProduct = {
       dichvu_id: product.id,
       soluong: quantity,
@@ -95,9 +95,9 @@ const QLDonDat = () => {
             { ...product, soluong: quantity },
           ]);
           setIsFormOpen(false);
-          
+          alert(data.message); // Thông báo thành công
         } else {
-          alert("Thêm sản phẩm thất bại! Lý do: " + (data.message || "Không rõ"));
+          alert(data.message); // Thông báo lỗi từ server
         }
       })
       .catch((error) => {
@@ -118,7 +118,7 @@ const QLDonDat = () => {
       <table>
         <thead>
           <tr>
-            <th></th>
+            <th>STT</th>
             <th>Mã Đơn</th>
             <th>Tên người đặt</th>
             <th>Ngày Tạo</th>
@@ -136,7 +136,7 @@ const QLDonDat = () => {
                   checked={selectedId === hoaDon.id}
                   onChange={() => handleRowClick(hoaDon.id)}
                   onClick={(e) => e.stopPropagation()}
-                />
+                />{hoaDon.STT}
               </td>
               <td>{hoaDon.ma_hoa_don}</td>
               <td>{hoaDon.ten_nguoi_dat}</td>
@@ -226,7 +226,7 @@ const QLDonDat = () => {
                     <input
                       type="number"
                       min="1"
-                      value={quantities[product.id]} // Lấy số lượng từ state
+                      value={quantities[product.id]||0} // Lấy số lượng từ state
                       onChange={(e) =>
                         handleQuantityChange(product.id, Number(e.target.value))
                       }
@@ -239,7 +239,6 @@ const QLDonDat = () => {
                   <td>
                   <button onClick={() => {
                     handleAddProduct(product);
-                    handleCloseForm();
                   }}>
                     Thêm
                   </button>
@@ -250,8 +249,8 @@ const QLDonDat = () => {
           </table>
           <div className="btn-actions">
             <button onClick={() => {
-                setIsFormOpen(false);
-              refreshData();}}>Hủy</button>
+              refreshData();
+              setIsFormOpen(false);}}>Thoát</button>
           </div>
         </div>
       )}
