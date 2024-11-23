@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import SidebarAdmin from "./SidebarAdmin/SidebarAdmin";
 import QLKhachHang from "../NhanVienPage/QLKhachHang/QLKhachHang";
 import QLDichVu from "../NhanVienPage/QLDichVu/QLDichVu";
@@ -13,6 +13,8 @@ const Admin = () => {
   const [activeContent, setActiveContent] = useState(null); // Nội dung hiển thị
   const [showAddForm, setShowAddForm] = useState(false); // Hiển thị form thêm
   const [formType, setFormType] = useState(""); // Loại form (employees, customers, services, ...)
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -28,6 +30,22 @@ const Admin = () => {
   });
 
   const username = Cookies.get("username"); // Lấy thông tin người dùng từ Cookies
+
+  const [serviceTypes, setServiceTypes] = useState([]);
+  useEffect(() => {
+    const fetchServiceTypes = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/dichvu/loaidichvu');
+        const data = await response.json();
+        const serviceTypeNames = data.map((type) => ({ id: type.id, name: type.ten_loai_dv }));
+        setServiceTypes(serviceTypeNames);
+      } catch (error) {
+        console.error('Error fetching service types:', error);
+      }
+    };
+
+    fetchServiceTypes();
+  }, []);
 
   const handleMenuClick = (content) => {
     setActiveContent(content);
@@ -78,28 +96,70 @@ const Admin = () => {
       image: file,
     }));
   };
-
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     console.log(`Dữ liệu form (${formType}):`, formData);
 
-    // Xử lý logic gửi dữ liệu tới API hoặc lưu trữ tại đây
-    // Ví dụ: gửi form dữ liệu
-    if (formType === "services") {
-      const serviceData = new FormData();
-      serviceData.append("serviceName", formData.serviceName);
-      serviceData.append("serviceType", formData.serviceType);
-      serviceData.append("price", formData.price);
-      serviceData.append("quantity", formData.quantity);
-      serviceData.append("description", formData.description);
-      serviceData.append("image", formData.image);
+    setMessage('');
+    setError('');
 
-      console.log("Dịch vụ được gửi đi:", serviceData);
+    let apiUrl = '';
+    let requestData = new FormData();
+
+    if (formType === 'services') {
+      apiUrl = 'http://127.0.0.1:8000/dichvu/dichvu';
+        requestData.append('ten_dv', formData.serviceName);
+        requestData.append('loaidichvu_id', formData.serviceType);
+        requestData.append('gia_dv', formData.price);
+        requestData.append('soluong', formData.quantity);
+        requestData.append('mota', formData.description);
+        requestData.append('image', formData.image);
+    } else if (formType === 'customers') {
+      apiUrl = 'http://127.0.0.1:8000/register';
+        requestData.append('fullname', formData.name);
+        requestData.append('email', formData.email);
+        requestData.append('phone', formData.phone);
+        requestData.append('password', formData.password);
+        requestData.append('gender', formData.gender);
+    } else if (formType === 'employees') {
+      apiUrl = 'http://127.0.0.1:8000/register-nhanvien';
+        requestData.append('fullname', formData.name);
+        requestData.append('email', formData.email);
+        requestData.append('phone', formData.phone);
+        requestData.append('password', formData.password);
+        requestData.append('gender', formData.gender);
+    }
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        body: requestData,
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.detail || 'Đăng ký không thành công!'); // Lỗi từ API
+      }
+
+      setMessage(data.detail);
+      refreshData(); // Lưu thông báo thành công
+    } catch (error) {
+      setError(error.message); // Lưu thông báo lỗi
     }
 
     setShowAddForm(false); // Đóng form sau khi xử lý
   };
-
+  const refreshData = () => {
+    // Logic to refresh data
+    if (activeContent === "employees") {
+      // Fetch and update employees data
+    } else if (activeContent === "customers") {
+      // Fetch and update customers data
+    } else if (activeContent === "services") {
+      // Fetch and update services data
+    }
+  };
+  
   return (
     <div className="AdminPage row">
       <div className="Admin-left col-md-2">
@@ -123,7 +183,7 @@ const Admin = () => {
 
         <div className="btn">
           <button onClick={handleAddClick}>Thêm</button>
-          <button>Xóa</button>
+          <button >Xóa</button>
           <button>Sửa</button>
         </div>
 
@@ -136,11 +196,13 @@ const Admin = () => {
                     ? "Thêm Nhân Viên"
                     : formType === "customers"
                     ? "Thêm Khách Hàng"
-                    : "Thêm Dịch Vụ"}
+                    : formType === "services"
+                    ? "Thêm Dịch Vụ"
+                    : "Thêm"
+                  }
                 </h3>
 
-                {/* Nhập dữ liệu cho form nhân viên/khách hàng */}
-                {(formType === "employees" || formType === "customers") && (
+                {(formType === "employees") && (
                   <>
                     <div>
                       <label>Họ Tên:</label>
@@ -162,7 +224,7 @@ const Admin = () => {
                         required
                       />
                     </div>
-                    {formType === "employees" && (
+                    
                       <div>
                         <label>Mật Khẩu:</label>
                         <input
@@ -173,7 +235,66 @@ const Admin = () => {
                           required
                         />
                       </div>
-                    )}
+                    <div>
+                      <label>Số Điện Thoại nhân viên:</label>
+                      <input
+                        type="text"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label>Giới Tính:</label>
+                      <select
+                        name="gender"
+                        value={formData.gender}
+                        onChange={handleInputChange}
+                        required
+                      >
+                        <option value="">Chọn</option>
+                        <option value="male">Nam</option>
+                        <option value="female">Nữ</option>
+                        <option value="other">Khác</option>
+                      </select>
+                    </div>
+                  </>
+                )}
+
+                {(formType === "customers") && (
+                  <>
+                    <div>
+                      <label>Họ Tên:</label>
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label>Email:</label>
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    
+                      <div>
+                        <label>Mật Khẩu:</label>
+                        <input
+                          type="password"
+                          name="password"
+                          value={formData.password}
+                          onChange={handleInputChange}
+                          required
+                        />
+                      </div>
                     <div>
                       <label>Số Điện Thoại:</label>
                       <input
@@ -216,13 +337,19 @@ const Admin = () => {
                     </div>
                     <div>
                       <label>Loại Dịch Vụ:</label>
-                      <input
-                        type="text"
-                        name="serviceType"
-                        value={formData.serviceType}
-                        onChange={handleInputChange}
-                        required
-                      />
+                      <select
+                      name="serviceType"
+                      value={formData.serviceType}
+                      onChange={handleInputChange}
+                      required
+                      >
+                      <option value="">Chọn</option>
+                      {serviceTypes.map((type) => (
+                        <option key={type.id} value={type.id}>
+                        {type.name}
+                        </option>
+                      ))}
+                      </select>
                     </div>
                     <div>
                       <label>Giá Dịch Vụ:</label>
@@ -275,6 +402,8 @@ const Admin = () => {
             </div>
           </div>
         )}
+         {message && <p style={{ color: 'green' }}>{message}</p>}
+         {error && <p style={{ color: 'red' }}>{error}</p>}
         <div className="gohome" style={{ textAlign: "end" }}>
           <a
             href="/Home"

@@ -148,3 +148,27 @@ def create_nv( db: Session, userDTO: CreateUserDTO):
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE, 
             detail="lỗi tạo tài khoản"  # Replace with appropriate error message
          )
+        
+def delete_SysUser(db: Session, user_id: int):
+    try:
+        user = db.query(SysUser).filter(SysUser.id == user_id).first()
+        if user is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found"
+            )
+        user_roles = db.query(SysUserRole).filter(SysUserRole.user_id == user_id).all()
+        for role in user_roles:
+            db.delete(role)
+        db.delete(user)
+        db.commit()
+        return {"message": "User deleted"}
+    except Exception as e:
+        if isinstance(e, HTTPException) and e.status_code == status.HTTP_404_NOT_FOUND:
+            raise e
+        else:
+            print(f"[error][db_user][delete]: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE, 
+                detail="lỗi xóa tài khoản"  # Replace with appropriate error message
+            )

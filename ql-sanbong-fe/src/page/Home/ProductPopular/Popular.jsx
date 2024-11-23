@@ -35,7 +35,7 @@ const Popular = () => {
           {services.slice(0, 8).map((service, index) => ( // Display only first 8 items
             <div className="col-md-3 image-container" key={index}>
               <img src={`http://localhost:8000/${service.image_dv}`} alt={service.tendichvu} />
-              <button className="view-button">Xem ngay</button>
+              <button onClick={handleViewMore} className="view-button">Xem ngay</button>
             </div>
           ))}
         </div>

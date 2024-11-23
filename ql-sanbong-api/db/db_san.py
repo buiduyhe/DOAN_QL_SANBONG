@@ -120,7 +120,7 @@ def get_ds_hoadon(db: Session):
                 ngay_tao=hd.ngay_tao,
                 trangthai=hd.trang_thai,
                 tongtien=hd.tong_tien,
-                ten_nguoi_dat=user_name.full_name
+                ten_nguoi_dat=user_name.email
             )
         )
     return hoadon_display_list

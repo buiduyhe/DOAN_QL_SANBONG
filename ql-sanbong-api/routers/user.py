@@ -36,3 +36,10 @@ async def get_SysUser(
             gender=user_role.gender
         ))
     return user_responses
+
+@router.delete('/delete_SysUser/{user_id}')
+def delete_SysUser(
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+    return  db_user.delete_SysUser(db=db, user_id=user_id)

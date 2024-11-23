@@ -8,12 +8,19 @@ function RegisterForm() {
   const [message, setMessage] = useState('');
   const [gender, setGender] = useState('');
   const [error, setError] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setMessage('');
     setError('');
 
+     // Check if password and confirm password match
+     if (password !== confirmPassword) {
+      setError('Mật khẩu và xác nhận mật khẩu không khớp!');
+      return;
+    }
+    
     const formData = new FormData();
     formData.append('fullname', fullname);
     formData.append('email', email);
@@ -73,11 +80,20 @@ function RegisterForm() {
         <div className='MK'>
           <label>Mật khẩu:</label>
           <input
-            type="text"
+            type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             
+          />
+        </div>
+        <div className='MK'>
+          <label>Xác nhận mật khẩu:</label>
+          <input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
           />
         </div>
         <div className='SDT'>
