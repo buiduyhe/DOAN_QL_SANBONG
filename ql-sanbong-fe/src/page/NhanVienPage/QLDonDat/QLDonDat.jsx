@@ -120,7 +120,7 @@ const QLDonDat = () => {
           <tr>
             <th>STT</th>
             <th>Mã Đơn</th>
-            <th>Tên người đặt</th>
+            <th>Email người đặt</th>
             <th>Ngày Tạo</th>
             <th>Trạng Thái</th>
             <th>Tổng Tiền</th>
@@ -136,11 +136,22 @@ const QLDonDat = () => {
                   checked={selectedId === hoaDon.id}
                   onChange={() => handleRowClick(hoaDon.id)}
                   onClick={(e) => e.stopPropagation()}
+                  style={{ marginRight: "5px" }}
                 />{hoaDon.STT}
               </td>
               <td>{hoaDon.ma_hoa_don}</td>
               <td>{hoaDon.ten_nguoi_dat}</td>
-              <td>{new Date(hoaDon.ngay_tao).toLocaleDateString()}</td>
+              <td>
+                {new Intl.DateTimeFormat('en-US', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
+                  hour12: true, // Set to false for 24-hour format
+                }).format(new Date(hoaDon.ngay_tao))}
+              </td>
               <td>
                 {hoaDon.trangthai === 0 ? "Chưa thanh toán" : "Đã thanh toán"}
               </td>

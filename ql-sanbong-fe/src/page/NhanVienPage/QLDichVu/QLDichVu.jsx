@@ -40,17 +40,16 @@ const QLDichVu = () => {
       <table>
         <thead>
           <tr>
-            <th>
-              <input
+            <th><input
                 type="checkbox"
                 onChange={handleSelectAll}
                 checked={
                   dichVuList.length > 0 &&
                   selectedIds.length === dichVuList.length
                 }
-              />
-            </th>
-            <th>Mã Dịch Vụ</th>
+                style={{ marginRight: "5px" }}
+
+              />Mã Dịch Vụ</th>
             <th>Tên Dịch Vụ</th>
             <th>Loại Dịch Vụ</th>
             <th>Giá</th>
@@ -62,14 +61,12 @@ const QLDichVu = () => {
         <tbody>
           {dichVuList.map((dichVu) => (
             <tr key={dichVu.id}>
-              <td>
-                <input
+              <td><input
                   type="checkbox"
                   onChange={() => handleCheckboxChange(dichVu.id)}
                   checked={selectedIds.includes(dichVu.id)}
-                />
-              </td>
-              <td>{dichVu.id}</td>
+                  style={{ marginRight: "5px" }}
+                />{dichVu.id}</td>
               <td>{dichVu.ten_dv}</td>
               <td>{dichVu.ten_loai_dv}</td>
               <td>{dichVu.gia_dv.toLocaleString()} VND</td>

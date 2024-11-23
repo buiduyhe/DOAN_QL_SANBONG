@@ -51,8 +51,7 @@ def create_dichvu(
     loaidichvu_id: int = Form(...),
     image: UploadFile = File(None),
     mota: str = Form(None),
-    db: Session = Depends(get_db),
-    current_user: SysUser = Depends(get_current_user)
+    db: Session = Depends(get_db)
 ):
     try:
         # Kiểm tra xem tên dịch vụ đã tồn tại chưa
@@ -89,9 +88,7 @@ def create_dichvu(
 @router.delete('/delete/{id}')
 def delete(
     id : int, 
-    db:Session =Depends(get_db),
-    current_user: SysUser = Depends(get_current_user)
-    
+    db:Session =Depends(get_db)
 ):
     return db_dichvu.delete(db,id)
 
@@ -100,8 +97,7 @@ def delete(
 def create_loaidichvu(
     ten_loai_dv: str = Form(...),
     image: UploadFile = File(None),
-    db: Session = Depends(get_db),
-    current_user: SysUser = Depends(get_current_user)
+    db: Session = Depends(get_db)
 ):
     try:
         image_url = None

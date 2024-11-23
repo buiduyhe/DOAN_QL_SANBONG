@@ -47,7 +47,6 @@ const QLKhachHang = () => {
         <table>
           <thead>
             <tr>
-              <th></th>
               <th>Mã Khách Hàng</th>
               <th>Tên Khách Hàng</th>
               <th>Email</th>
@@ -59,15 +58,14 @@ const QLKhachHang = () => {
             {customer && customer.length > 0 ? (
               customer.map((cus) => (
                 <tr key={cus.id}>
-                  <td>
-                    <input
+                  <td> <input
                       type="radio"
                       name="customer"
                       onChange={() => handleRadioChange(cus.id)}
                       checked={selectedId === cus.id}
+                      style={{ marginRight: "5px" }}
                     />
-                  </td>
-                  <td>{cus.id}</td>
+                    {cus.id}</td>
                   <td>{cus.full_name}</td>
                   <td>{cus.email}</td>
                   <td>{cus.phone}</td>
