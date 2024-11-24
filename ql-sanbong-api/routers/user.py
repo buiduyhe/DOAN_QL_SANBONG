@@ -1,6 +1,6 @@
 from fastapi import APIRouter ,Depends
 from sqlalchemy.orm.session import Session
-from routers.schemas import  UserDisplay,UserBase
+from routers.schemas import  UserDisplay,UserBase, UserRequest
 from db.database import get_db
 from db import db_user
 from db.models import SysUser
@@ -43,3 +43,11 @@ def delete_SysUser(
     db: Session = Depends(get_db)
 ):
     return  db_user.delete_SysUser(db=db, user_id=user_id)
+
+@router.put('/update_SysUser/{user_id}')
+def update_SysUser(
+    user_id: int,
+    user: UserRequest,
+    db: Session = Depends(get_db)
+):
+    return db_user.update_SysUser(db=db, user_id=user_id, user=user)

@@ -15,6 +15,8 @@ const Admin = () => {
   const [formType, setFormType] = useState(""); // Loại form (employees, customers, services, ...)
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [selectedId, setSelectedId] = useState(null);
+  const [selectedIds, setSelectedIds] = useState([null]);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -96,6 +98,62 @@ const Admin = () => {
       image: file,
     }));
   };
+  const handleSelect = (id) => {
+    setSelectedId(id); // Lưu id được chọn
+    console.log("Selected ID:", id); // Xử lý logic tùy ý
+    if (activeContent === "employees") setFormType("employees");
+    else if (activeContent === "customers") setFormType("customers");
+  };
+  const handleSelectIds = (ids) => {
+    setSelectedIds(ids);
+    console.log("Selected IDs in Admin:", ids); // You can use the selected IDs for any purpose
+    if (activeContent === "services") setFormType("services");
+  };
+  const handleFormDelete = async () => {
+    console.log(`Xóa ID:`, selectedId, selectedIds, formType); // Log ID cần xóa
+    
+    setMessage('');
+    setError('');
+    
+    let apiUrl = '';
+    let requestData = [];
+    
+    if (formType === 'services') {
+      apiUrl = 'http://127.0.0.1:8000/dichvu/delete_dv';
+      requestData = selectedIds.filter(id => id !== null); // Chỉ truyền mảng selectedIds
+    } else if (formType === 'customers' || formType === 'employees') {
+      apiUrl = `http://127.0.0.1:8000/user/delete_SysUser/${selectedId}`;
+    } else {
+      console.error('Invalid form type:', formType); // Log chi tiết lỗi
+      setError('Invalid form type. Please check your form configuration.');
+      return; // Dừng xử lý nếu form type không hợp lệ
+    }
+  
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData), // Truyền mảng trực tiếp, không cần bao trong đối tượng
+      });
+  
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.detail || 'Xóa không thành công!'); // Lỗi từ API
+      }
+  
+      setMessage('Xóa thành công!');
+      refreshData(); // Lưu thông báo thành công
+    } catch (error) {
+      console.error('Error during delete:', error); // Log lỗi chi tiết
+      setError(error.message); // Lưu thông báo lỗi
+    }
+  
+    setShowAddForm(false); // Đóng form sau khi xử lý
+  };
+  
+  
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     console.log(`Dữ liệu form (${formType}):`, formData);
@@ -150,15 +208,12 @@ const Admin = () => {
     setShowAddForm(false); // Đóng form sau khi xử lý
   };
   const refreshData = () => {
-    // Logic to refresh data
-    if (activeContent === "employees") {
-      // Fetch and update employees data
-    } else if (activeContent === "customers") {
-      // Fetch and update customers data
-    } else if (activeContent === "services") {
-      // Fetch and update services data
-    }
+    window.location.reload(); // Reload the page
+    setTimeout(() => {
+      handleMenuClick(formType); // Reopen the active content after redirect
+    }, 100); // Adjust the timeout as needed
   };
+  
   
   return (
     <div className="AdminPage row">
@@ -173,9 +228,9 @@ const Admin = () => {
         </div>
 
         <div className="content">
-          {activeContent === "employees" && <QLNhanVien />}
-          {activeContent === "customers" && <QLKhachHang />}
-          {activeContent === "services" && <QLDichVu />}
+          {activeContent === "employees" && <QLNhanVien onSelectId={handleSelect} />}
+          {activeContent === "customers" && <QLKhachHang onSelectId={handleSelect} />}
+          {activeContent === "services" && <QLDichVu onSelectIds={handleSelectIds} />}
           {activeContent === "orders" && <QLDonDat />}
           {activeContent === "courts" && <QLSan />}
           {activeContent === "suppliers" && <QLNhaCungCap />}
@@ -183,7 +238,7 @@ const Admin = () => {
 
         <div className="btn">
           <button onClick={handleAddClick}>Thêm</button>
-          <button >Xóa</button>
+          <button onClick={handleFormDelete}>Xóa</button>
           <button>Sửa</button>
         </div>
 
@@ -393,7 +448,7 @@ const Admin = () => {
                 )}
 
                 <div className="modal-buttons">
-                  <button type="submit">Lưu</button>
+                  <button type="submit" onClick={() => refreshData()} >Lưu </button>
                   <button type="button" onClick={() => setShowAddForm(false)}>
                     Hủy
                   </button>

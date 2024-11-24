@@ -1,4 +1,4 @@
-from fastapi import APIRouter , Depends,File ,HTTPException,status,UploadFile,Form
+from fastapi import APIRouter , Depends,File ,HTTPException,status,UploadFile,Form, Body
 from sqlalchemy.orm import Session
 from routers.schemas import ChiTietHoaDonDisplay, DatDichVuRequest, DichVuDisplayQL, DichVuResponse, LoaiDichVuDisplay, PostBase, PostDisplay
 from db.database import get_db
@@ -178,3 +178,17 @@ def dat_dv(
 def get_chi_tiet_hoadon(hoadon_id: int, db: Session = Depends(get_db)):
     chi_tiet_hoa_don = db_dichvu.get_chi_tiet_hoa_don(db, hoa_don_id=hoadon_id)
     return chi_tiet_hoa_don
+
+@router.delete('/delete_dv')
+def delete_dv(
+    ids: List[int] = Body(...),
+    db: Session = Depends(get_db)
+):
+    try:
+        for id in ids:
+            db_dichvu.delete_dv(db, id)
+        return {"message": "Xóa các dịch vụ thành công."}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Lỗi khi xóa dịch vụ: {str(e)}")
+    
+    

@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 
-const QLNhanVien = () => {
-  const [nhanVienList, setNhanVienList] = useState([]); // State để lưu danh sách nhân viên
+const QLNhanVien = ({ onSelectId = () => {} }) => {
+  const [nhanVienList, setNhanVienList] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
-  
-  // Gọi API khi component được render
+
   useEffect(() => {
     fetch("http://127.0.0.1:8000/user/get_SysUser/2")
       .then((response) => {
@@ -19,6 +18,7 @@ const QLNhanVien = () => {
 
   const handleCheckboxChange = (id) => {
     setSelectedId(id);
+    onSelectId(id); // Gọi callback để truyền ID
   };
 
   return (
@@ -36,18 +36,17 @@ const QLNhanVien = () => {
         </thead>
         <tbody>
           {nhanVienList.map((nhanVien) => (
-            <tr key={nhanVien.id}>
-              
+            <tr key={nhanVien.id} onClick={() => handleCheckboxChange(nhanVien.id)}>
               <td>
-              <input
-                  type="radio" // Đổi từ checkbox thành radio
-                  name="nhanVien" // Cùng một tên để đảm bảo chỉ chọn được một
+                <input
+                  type="radio"
+                  name="nhanVien"
                   onChange={() => handleCheckboxChange(nhanVien.id)}
                   checked={selectedId === nhanVien.id}
                   style={{ marginRight: "5px" }}
-
                 />
-                {nhanVien.id}</td>
+                {nhanVien.id}
+              </td>
               <td>{nhanVien.full_name}</td>
               <td>{nhanVien.email}</td>
               <td>{nhanVien.phone}</td>
@@ -61,3 +60,4 @@ const QLNhanVien = () => {
 };
 
 export default QLNhanVien;
+

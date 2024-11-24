@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../QL.scss";
 import "./QLDichVu.scss";
 
-const QLDichVu = () => {
+const QLDichVu = ({ onSelectIds }) => {
   const [dichVuList, setDichVuList] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
 
@@ -18,12 +18,16 @@ const QLDichVu = () => {
       .catch((error) => console.error("Có lỗi xảy ra:", error));
   }, []);
 
+  useEffect(() => {
+    onSelectIds(selectedIds); // Pass the selected IDs to parent whenever it changes
+  }, [selectedIds]);
+
   const handleCheckboxChange = (id) => {
-    if (selectedIds.includes(id)) {
-      setSelectedIds(selectedIds.filter((selectedId) => selectedId !== id));
-    } else {
-      setSelectedIds([...selectedIds, id]);
-    }
+    setSelectedIds((prevSelectedIds) =>
+      prevSelectedIds.includes(id)
+        ? prevSelectedIds.filter((selectedId) => selectedId !== id)
+        : [...prevSelectedIds, id]
+    );
   };
 
   const handleSelectAll = (e) => {
@@ -34,22 +38,25 @@ const QLDichVu = () => {
     }
   };
 
+  const handleRowClick = (id) => {
+    handleCheckboxChange(id);
+  };
+
   return (
     <div>
       <h4>Quản lý Dịch Vụ</h4>
       <table>
         <thead>
           <tr>
-            <th><input
+            <th>
+              <input
                 type="checkbox"
                 onChange={handleSelectAll}
-                checked={
-                  dichVuList.length > 0 &&
-                  selectedIds.length === dichVuList.length
-                }
+                checked={dichVuList.length > 0 && selectedIds.length === dichVuList.length}
                 style={{ marginRight: "5px" }}
-
-              />Mã Dịch Vụ</th>
+              />
+              Mã Dịch Vụ
+            </th>
             <th>Tên Dịch Vụ</th>
             <th>Loại Dịch Vụ</th>
             <th>Giá</th>
@@ -60,13 +67,16 @@ const QLDichVu = () => {
         </thead>
         <tbody>
           {dichVuList.map((dichVu) => (
-            <tr key={dichVu.id}>
-              <td><input
+            <tr key={dichVu.id} onClick={() => handleRowClick(dichVu.id)} style={{ cursor: "pointer" }}>
+              <td>
+                <input
                   type="checkbox"
                   onChange={() => handleCheckboxChange(dichVu.id)}
                   checked={selectedIds.includes(dichVu.id)}
                   style={{ marginRight: "5px" }}
-                />{dichVu.id}</td>
+                />
+                {dichVu.id}
+              </td>
               <td>{dichVu.ten_dv}</td>
               <td>{dichVu.ten_loai_dv}</td>
               <td>{dichVu.gia_dv.toLocaleString()} VND</td>

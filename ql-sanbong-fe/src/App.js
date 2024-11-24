@@ -29,8 +29,10 @@ function App() {
           <Route path="/DatSan" element={<DatSan />} />
           <Route path="/cart" element={<GioHang />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/thanh-toan" element={<ThanhToan />} />
+          
+
           {/* Protected Routes */}
-          <Route path="/thanh-toan" element={<PrivateRoute allowedRoles={['admin', 'user', 'supadmin']}><ThanhToan /></PrivateRoute>} />
           <Route path="/admin" element={<PrivateRoute allowedRole="admin"><NhanVienPage /></PrivateRoute>} />
           <Route path="/supadmin" element={<PrivateRoute allowedRole="supadmin"><Admin /></PrivateRoute>} />
         </Routes>

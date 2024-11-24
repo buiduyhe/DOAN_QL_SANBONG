@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../QL.scss";
 
-const QLKhachHang = () => {
+const QLKhachHang = ({ onSelectId = () => {} }) => {
   const [customer, setCustomer] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedId, setSelectedId] = useState(null);
@@ -36,8 +36,9 @@ const QLKhachHang = () => {
 
   const handleRadioChange = (id) => {
     setSelectedId(id); // Gán ID của khách hàng được chọn
+    onSelectId(id); // Gọi callback để truyền ID
   };
-
+  
   return (
     <div>
       <h4>Quản lý khách hàng</h4>
@@ -57,7 +58,7 @@ const QLKhachHang = () => {
           <tbody>
             {customer && customer.length > 0 ? (
               customer.map((cus) => (
-                <tr key={cus.id}>
+                <tr key={cus.id} onClick={() => handleRadioChange(cus.id)}>
                   <td> <input
                       type="radio"
                       name="customer"

@@ -209,3 +209,11 @@ class ChiTietHoaDonDisplay(BaseModel):
 
     class Config:
         orm_mode = True
+        
+        
+class UserRequest(BaseModel):
+    hoten: Optional[str] = None
+    phone: Optional[str] = None
+    password: Optional[str] = None
+    gender: Optional[str] = None
+    

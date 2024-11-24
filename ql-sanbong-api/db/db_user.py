@@ -1,4 +1,4 @@
-from  routers.schemas  import UserBase,CreateUserDTO
+from  routers.schemas  import UserBase,CreateUserDTO, UserRequest
 from sqlalchemy.orm.session import Session
 from db.hashing import Hash
 from fastapi import HTTPException, status,Depends,Security
@@ -172,3 +172,34 @@ def delete_SysUser(db: Session, user_id: int):
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE, 
                 detail="lỗi xóa tài khoản"  # Replace with appropriate error message
             )
+
+def update_SysUser(db: Session, user_id: int, user: UserRequest):
+    try:
+        existing_user = db.query(SysUser).filter(SysUser.id == user_id).first()
+        if existing_user is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found"
+            )
+        
+        # Check if the email already exists
+        if user.hoten:
+            existing_user.full_name = user.hoten
+        if user.phone:
+            existing_user.phone = user.phone
+        if user.password:
+            user.password = Hash.bcrypt(user.password)
+            existing_user.hash_password = user.password
+        if user.gender:
+            existing_user.gender = user.gender
+        
+        db.commit()
+        db.refresh(existing_user)
+        
+        return existing_user
+    except Exception as e:
+        print(f"[error][db_user][update]: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE, 
+            detail="lỗi cập nhật tài khoản"  # Replace with appropriate error message
+        )

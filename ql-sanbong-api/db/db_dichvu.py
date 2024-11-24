@@ -168,3 +168,15 @@ def dat_dv(db:Session,request: list[DatDichVuRequest],user_id:int):
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
+def delete_dv(db: Session, id: int):
+    db_dichvu = db.query(DichVu).filter(DichVu.id == id).first()
+    if db_dichvu is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'Dịch vụ với id {id} không tồn tại.')
+    loaidichvu = db.query(DichVu_LoaiDichVu).filter(DichVu_LoaiDichVu.dichvu_id == id).all()
+    
+    db.delete(db_dichvu)
+    for ldv in loaidichvu:
+        db.delete(ldv)
+    db.commit()
+    return {"message": "Xóa dịch vụ thành công."}
