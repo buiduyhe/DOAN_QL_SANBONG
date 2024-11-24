@@ -114,3 +114,22 @@ async def register(
         )
     
     return {"detail": "Đăng kí tài khoản thành công"} 
+
+@router.put('/change-password')
+async def change_password(
+    user_id: int = Form(...),
+    password: str = Form(...),
+    new_password: str = Form(...),
+    db: Session = Depends(get_db),
+
+):
+    user = db.query(models.SysUser).filter(models.SysUser.id == user_id).first()
+    if not Hash.verify(user.hash_password, password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Sai mật khẩu"
+        )
+    new_hashed_password = Hash.bcrypt(new_password)
+    user.hash_password = new_hashed_password
+    db.commit()
+    return {"message": "Đổi mật khẩu thành công"}

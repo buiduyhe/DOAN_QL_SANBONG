@@ -6,7 +6,7 @@ import logo from "../../assets/Home/logo.jpg";
 import Cookies from "js-cookie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
-
+import { useState } from "react";
 // Lấy thông tin từ Cookies
 const token = Cookies.get("access_token");
 const username = Cookies.get("username");
@@ -16,7 +16,15 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { getTotalQuantity } = useCart();  // Lấy hàm getTotalQuantity từ CartContext
   const cartCount = getTotalQuantity(); // Lấy số lượng sản phẩm trong giỏ hàng
+  const [showDropdown, setShowDropdown] = useState(false); // Trạng thái hiển thị menu
 
+  const handleMouseEnter = () => {
+    setShowDropdown(true); // Hiển thị menu khi hover
+  };
+
+  const handleMouseLeave = () => {
+    setShowDropdown(false); // Ẩn menu khi rời chuột
+  };
   const handleRegisterClick = () => {
     navigate("/register");
   };
@@ -68,8 +76,19 @@ const Navbar = () => {
           </li>
           {token ? (
             <>
-              <li className="menu-item">
+              <li
+                className="menu-item"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
                 <span>Chào, {username}</span>
+                {showDropdown && (
+                  <ul className="dropdown-menu">
+                    <li >Đổi mật khẩu</li>
+                    <li >Thông tin cá nhân</li>
+                    <li >Đơn đặt</li>
+                  </ul>
+                )}
               </li>
               <li className="menu-item">
                 <a href="" onClick={handleLogoutClick}>Đăng Xuất</a>

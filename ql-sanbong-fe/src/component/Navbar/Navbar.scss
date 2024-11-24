@@ -54,3 +54,42 @@
       }
     }
 }
+.menu-item {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%; /* Hiển thị ngay dưới mục chính */
+  left: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  list-style: none;
+  padding: 4px 0; /* Giảm padding tổng thể */
+  margin: 0;
+  width: 160px; /* Đặt chiều rộng của menu */
+  display: none; /* Ẩn menu theo mặc định */
+  z-index: 10;
+  flex-direction: column; /* Hiển thị các mục theo hàng dọc */
+}
+
+
+.menu-item:hover .dropdown-menu {
+  display: flex; /* Hiển thị menu */
+}
+
+.dropdown-menu li {
+  padding: 6px 12px; /* Giảm khoảng cách trong các mục */
+  cursor: pointer;
+  text-align: left; /* Văn bản căn trái */
+  margin: 2px 0; /* Tạo khoảng cách nhỏ giữa các mục */
+}
+
+.dropdown-menu li:hover {
+  background-color: #f0f0f0; /* Đổi màu nền khi hover */
+}
+
