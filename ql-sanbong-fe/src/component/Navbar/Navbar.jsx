@@ -84,7 +84,7 @@ const Navbar = () => {
                 <span>Chào, {username}</span>
                 {showDropdown && (
                   <ul className="dropdown-menu">
-                    <li >Đổi mật khẩu</li>
+                    <li onClick={() => navigate("/change-password")}>Đổi mật khẩu</li>
                     <li >Thông tin cá nhân</li>
                     <li >Đơn đặt</li>
                   </ul>

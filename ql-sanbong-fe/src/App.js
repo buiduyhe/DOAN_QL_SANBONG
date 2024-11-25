@@ -13,6 +13,7 @@ import Admin from "./page/Admin/Admin";
 import GioHang from "./page/GioHang/GioHang";
 import { CartProvider } from './CartContext';  // Import CartProvider
 import Checkout from "./page/GioHang/ThanhToan/Checkout";
+import ChangePasswordForm from "./ChangePasswordForm";
 
 function App() {
   return (
@@ -30,7 +31,7 @@ function App() {
           <Route path="/cart" element={<GioHang />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/thanh-toan" element={<ThanhToan />} />
-          
+          <Route path="/change-password" element={<ChangePasswordForm/>}/>
 
           {/* Protected Routes */}
           <Route path="/admin" element={<PrivateRoute allowedRole="admin"><NhanVienPage /></PrivateRoute>} />
