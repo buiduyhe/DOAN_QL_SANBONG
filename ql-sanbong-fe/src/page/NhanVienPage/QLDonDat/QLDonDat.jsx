@@ -9,7 +9,7 @@ const QLDonDat = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [quantities, setQuantities] = useState({});
-
+  const [selectedHoaDon, setSelectedHoaDon] = useState(null);
 
   useEffect(() => {
     fetch("http://127.0.0.1:8000/san/get_ds_hoadon")
@@ -31,46 +31,49 @@ const QLDonDat = () => {
         console.error("Error fetching chi tiết hóa đơn:", error)
       );
   };
+
   const refreshData = () => {
     fetch("http://127.0.0.1:8000/san/get_ds_hoadon")
       .then((response) => response.json())
       .then((data) => setHoaDons(data))
       .catch((error) => console.error("Error refreshing data:", error));
 
-    // Nếu đã chọn hóa đơn, làm mới chi tiết hóa đơn
     if (selectedId) {
       fetchChiTietHoaDon(selectedId);
     }
   };
 
-  const handleRowClick = (ma_hoa_don) => {
-    setSelectedId(ma_hoa_don);
-    fetchChiTietHoaDon(ma_hoa_don);
+  const handleRowClick = (hoaDon) => {
+    setSelectedId(hoaDon.id);
+    setSelectedHoaDon(hoaDon);
+    fetchChiTietHoaDon(hoaDon.id);
   };
 
   const handleQuantityChange = (productId, value) => {
     setQuantities((prevQuantities) => ({
       ...prevQuantities,
-      [productId]: value, // Cập nhật số lượng cho sản phẩm theo ID
+      [productId]: value,
     }));
   };
-  
+
   const handleAddProduct = (product) => {
     if (!selectedId) {
       alert("Vui lòng chọn hóa đơn trước khi thêm sản phẩm!");
       return;
     }
 
-    const quantity = quantities[product.id] || 0; // Lấy số lượng từ state, mặc định là 0
+    const quantity = quantities[product.id] || 0;
 
     if (quantity <= 0) {
       alert("Vui lòng nhập số lượng hợp lệ!");
       return;
     }
+
     setQuantities((prevQuantities) => ({
       ...prevQuantities,
-      [product.id]: 0, // Reset to 1 or any default value
+      [product.id]: 0,
     }));
+
     const newProduct = {
       dichvu_id: product.id,
       soluong: quantity,
@@ -85,19 +88,17 @@ const QLDonDat = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        // Log dữ liệu trả về từ API để kiểm tra chi tiết
         console.log("Response from API:", data);
-        
+
         if (data.success) {
-          // Cập nhật danh sách chi tiết hóa đơn sau khi thêm sản phẩm
           setChiTietHoaDon([
             ...chiTietHoaDon,
             { ...product, soluong: quantity },
           ]);
           setIsFormOpen(false);
-          alert(data.message); // Thông báo thành công
+          alert(data.message);
         } else {
-          alert(data.message); // Thông báo lỗi từ server
+          alert(data.message);
         }
       })
       .catch((error) => {
@@ -105,7 +106,36 @@ const QLDonDat = () => {
         alert("Có lỗi khi thêm sản phẩm!");
       });
   };
+  const handlePayment = () => {
+    if (!selectedId) {
+      alert("Vui lòng chọn hóa đơn trước khi thanh toán!");
+      return;
+    }
 
+    if (window.confirm("Bạn có chắc chắn muốn thanh toán hóa đơn này?")) {
+      fetch(`http://127.0.0.1:8000/san/in_hoadon_excel?hoa_don_id=${selectedId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.blob())
+        .then((blob) => {
+          const url = window.URL.createObjectURL(new Blob([blob]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", `hoadon_${selectedId}.xlsx`);
+          document.body.appendChild(link);
+          link.click();
+          link.parentNode.removeChild(link);
+          refreshData();
+        })
+        .catch((error) => {
+          console.error("Error printing invoice:", error);
+          alert("Có lỗi khi in hóa đơn!");
+        });
+    }
+  };
 
   const filteredSanPhams = sanPhams.filter((sp) =>
     sp.ten_dv.toLowerCase().includes(searchTerm.toLowerCase())
@@ -114,7 +144,6 @@ const QLDonDat = () => {
   return (
     <div>
       <h4>Quản lý Đơn Đặt</h4>
-      {/* Bảng hóa đơn */}
       <table>
         <thead>
           <tr>
@@ -128,13 +157,17 @@ const QLDonDat = () => {
         </thead>
         <tbody>
           {hoaDons.map((hoaDon) => (
-            <tr key={hoaDon.id} onClick={() => handleRowClick(hoaDon.id)}>
+            <tr
+              key={hoaDon.id}
+              onClick={() => handleRowClick(hoaDon)}
+              className={hoaDon.trangthai === 1 ? "paid" : ""}
+            >
               <td>
                 <input
                   type="radio"
                   name="hoadon"
                   checked={selectedId === hoaDon.id}
-                  onChange={() => handleRowClick(hoaDon.id)}
+                  onChange={() => handleRowClick(hoaDon)}
                   onClick={(e) => e.stopPropagation()}
                   style={{ marginRight: "5px" }}
                 />{hoaDon.STT}
@@ -149,7 +182,7 @@ const QLDonDat = () => {
                   hour: '2-digit',
                   minute: '2-digit',
                   second: '2-digit',
-                  hour12: true, // Set to false for 24-hour format
+                  hour12: true,
                 }).format(new Date(hoaDon.ngay_tao))}
               </td>
               <td>
@@ -161,7 +194,6 @@ const QLDonDat = () => {
         </tbody>
       </table>
 
-      {/* Chi tiết hóa đơn */}
       {selectedId && chiTietHoaDon.length > 0 && (
         <div className="chitiet-hoa-don">
           <h5>Chi Tiết Hóa Đơn</h5>
@@ -188,13 +220,19 @@ const QLDonDat = () => {
             </tbody>
           </table>
           <div className="btn-chi-tiet-sp">
-            <button onClick={() => setIsFormOpen(true)}>Thêm Sản Phẩm</button>
-            <button>Thanh Toán</button>
+            <button
+              onClick={() => setIsFormOpen(true)}
+              disabled={selectedHoaDon?.trangthai !== 0}
+            >
+              Thêm Sản Phẩm
+            </button>
+          <button onClick={handlePayment} disabled={selectedHoaDon?.trangthai !== 0}>
+            Thanh Toán
+          </button>
           </div>
         </div>
       )}
 
-      {/* Form thêm sản phẩm */}
       {isFormOpen && (
         <div className="form-them-san-pham">
           <div className="TT">
@@ -237,7 +275,7 @@ const QLDonDat = () => {
                     <input
                       type="number"
                       min="1"
-                      value={quantities[product.id]||0} // Lấy số lượng từ state
+                      value={quantities[product.id] || 0}
                       onChange={(e) =>
                         handleQuantityChange(product.id, Number(e.target.value))
                       }
@@ -248,20 +286,23 @@ const QLDonDat = () => {
                     />
                   </td>
                   <td>
-                  <button onClick={() => {
-                    handleAddProduct(product);
-                  }}>
-                    Thêm
-                  </button>
+                    <button onClick={() => handleAddProduct(product)}>
+                      Thêm
+                    </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
           <div className="btn-actions">
-            <button onClick={() => {
-              refreshData();
-              setIsFormOpen(false);}}>Thoát</button>
+            <button
+              onClick={() => {
+                refreshData();
+                setIsFormOpen(false);
+              }}
+            >
+              Thoát
+            </button>
           </div>
         </div>
       )}

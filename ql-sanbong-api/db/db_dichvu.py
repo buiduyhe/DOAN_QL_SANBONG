@@ -69,6 +69,12 @@ def dat_dv_By_HoaDon(db: Session, hoa_don_id: int, request: list[DatDichVuReques
         dichvu = db.query(DichVu).filter(DichVu.id == item.dichvu_id).first()
         if not dichvu:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Không tìm thấy dịch vụ với id {item.dichvu_id}.")
+        
+        if dichvu.soluong < item.soluong:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Số lượng dịch vụ với id {item.dichvu_id} không đủ.")
+        
+        dichvu.soluong -= item.soluong
+        
         new_ct_hoadon = ChiTietHoaDon(
             hoa_don_id=hoa_don_id,
             dich_vu_id=item.dichvu_id,
@@ -138,7 +144,7 @@ def dat_dv(db:Session,request: list[DatDichVuRequest],user_id:int):
                 ma_hoa_don = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6)),
                 id_user = user_id,
                 ngay_tao = datetime.datetime.now(),
-                trang_thai = 0,##chưa thanh toán
+                trang_thai = 0,  # chưa thanh toán
                 tong_tien = 0
             ) 
         db.add(new_hoadon)
@@ -148,6 +154,11 @@ def dat_dv(db:Session,request: list[DatDichVuRequest],user_id:int):
             dichvu = db.query(DichVu).filter(DichVu.id == item.dichvu_id).first()
             if not dichvu:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Không tìm thấy dịch vụ với id {item.dichvu_id}.")
+            
+            if dichvu.soluong < item.soluong:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Số lượng dịch vụ với id {item.dichvu_id} không đủ.")
+            
+            dichvu.soluong -= item.soluong
             
             new_ct_hoadon = ChiTietHoaDon(
                 hoa_don_id=new_hoadon.id,
@@ -161,7 +172,6 @@ def dat_dv(db:Session,request: list[DatDichVuRequest],user_id:int):
         gia = get_chi_tiet_hoa_don(db,new_hoadon.id)
         tong_tien = sum(item['tong_tien'] for item in gia)
         new_hoadon.tong_tien = tong_tien
-            
             
         db.commit()
         return {"message": "Đặt dịch vụ thành công."}

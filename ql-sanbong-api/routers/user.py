@@ -51,3 +51,10 @@ def update_SysUser(
     db: Session = Depends(get_db)
 ):
     return db_user.update_SysUser(db=db, user_id=user_id, user=user)
+
+@router.get('/get_user_by_id/{user_id}')
+def get_user_by_id(
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+    return db_user.get_user_by_id(db=db, user_id=user_id)

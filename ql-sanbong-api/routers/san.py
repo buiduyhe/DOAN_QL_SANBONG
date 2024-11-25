@@ -58,7 +58,14 @@ def get_ds_hoadon(db: Session = Depends(get_db)):
     return db_san.get_ds_hoadon(db)
 
 
+@router.post('/in_hoadon_excel')
+def in_hoadon_excel( hoa_don_id: int,db: Session = Depends(get_db)):
+    return db_san.in_hoadon_excel(db=db, hoa_don_id=hoa_don_id)
 
-# @router.get('/get_ct_hoadon_by_mahd/{hoadon_id}')
-# def get_ct_hoadon_by_mahd(hoadon_id:int,db: Session = Depends(get_db)):
-#     return db_san.get_ct_hoadon_by_mahd(hoadon_id,db)
+@router.get('/ThongKe_day')
+def ThongKe_30days(db: Session = Depends(get_db)):
+    return db_san.ThongKe_30days(db)
+
+@router.get('/ThongKe_month')
+def ThongKe_month(db: Session = Depends(get_db)):
+    return db_san.ThongKe_12months(db)

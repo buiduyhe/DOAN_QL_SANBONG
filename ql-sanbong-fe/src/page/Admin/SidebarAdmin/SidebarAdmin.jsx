@@ -1,11 +1,13 @@
 // src/SidebarAdmin/SidebarAdmin.js
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import "./SlidebarAdmin.scss"
+import "./SlidebarAdmin.scss";
 import adminIcon from "../../../assets/Home/stafficon.png";
+import cookies from "js-cookie";
 
 const SidebarAdmin = ({ onMenuClick }) => {
   const [adminName, setAdminName] = useState("");
+  const role = cookies.get("user_role");
 
   useEffect(() => {
     const fetchAdminInfo = async () => {
@@ -33,9 +35,11 @@ const SidebarAdmin = ({ onMenuClick }) => {
         <h2 className="admin-name">{adminName}</h2>
       </div>
       <ul className="sidebar-menu">
-        <li>
-          <a onClick={() => onMenuClick("employees")}>Quản lý nhân viên</a>
-        </li>
+        {role !== "admin" && (
+          <li>
+            <a onClick={() => onMenuClick("employees")}>Quản lý nhân viên</a>
+          </li>
+        )}
         <li>
           <a onClick={() => onMenuClick("customers")}>Quản lý khách hàng</a>
         </li>
@@ -48,9 +52,11 @@ const SidebarAdmin = ({ onMenuClick }) => {
         <li>
           <a onClick={() => onMenuClick("orders")}>Quản lý đơn đặt</a>
         </li>
-        <li>
-          <a onClick={handleSupplierClick}>Quản lý nhà cung cấp</a>
-        </li>
+        {role !== "admin" && (
+          <li>
+            <a onClick={handleSupplierClick}>Quản lý nhà cung cấp</a>
+          </li>
+        )}
         <li><a>Thống kê</a></li>
       </ul>
     </div>

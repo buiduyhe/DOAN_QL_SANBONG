@@ -223,7 +223,7 @@ const Admin = () => {
 
       <div className="Admin-right col-md-10">
         <div className="title">
-          <h5>Admin: {username}</h5>
+          <h5>Tên nhân viên: {username}</h5>
           <h5 onClick={handleLogoutClick}>Đăng xuất</h5>
         </div>
 

@@ -187,7 +187,7 @@ def update_SysUser(db: Session, user_id: int, user: UserRequest):
             existing_user.full_name = user.hoten
         if user.phone:
             existing_user.phone = user.phone
-        if user.password:
+        if user.password and user.password.strip():
             user.password = Hash.bcrypt(user.password)
             existing_user.hash_password = user.password
         if user.gender:
@@ -203,3 +203,12 @@ def update_SysUser(db: Session, user_id: int, user: UserRequest):
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE, 
             detail="lỗi cập nhật tài khoản"  # Replace with appropriate error message
         )
+        
+def get_user_by_id(db: Session, user_id: int):
+    user = db.query(SysUser).filter(SysUser.id == user_id).first()
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    return user
