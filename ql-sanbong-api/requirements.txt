@@ -9,3 +9,5 @@ bcrypt
 python-jose
 PyJWT
 APScheduler==3.10.4
+pandas
+xlsxwriter

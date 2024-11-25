@@ -5,7 +5,6 @@ import Cookies from 'js-cookie';  // Đảm bảo đã cài thư viện js-cooki
 import './SanPhamDaDat.scss';
 
 const SanPhamDaDat = () => {
-  const token = Cookies.get("access_token");
 
   // Lấy giỏ hàng và các hàm xử lý từ context
   const { cartItems, removeFromCart, updateCartItemQuantity } = useCart();
@@ -40,13 +39,14 @@ const SanPhamDaDat = () => {
       dichvu_id: item.id,
       soluong: item.quantity,
     }));
+    const token = Cookies.get("access_token") || '';
 
     try {
       const response = await fetch('http://127.0.0.1:8000/dichvu/dat_dv', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + localStorage.getItem('token'), // Add authorization header
+          'Authorization': 'Bearer ' + token, // Add authorization header
         },
         body: JSON.stringify(requestData),
       });

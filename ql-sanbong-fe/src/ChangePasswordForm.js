@@ -23,20 +23,20 @@ function ChangePasswordForm() {
     try {
       const accessToken = Cookies.get('access_token');
       if (!accessToken) {
-        throw new Error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+      throw new Error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
       }
 
       setLoading(true); // Bắt đầu tải
+      const formData = new FormData();
+      formData.append('password', currentPassword);
+      formData.append('new_password', newPassword);
+
       const response = await fetch('http://localhost:8000/change-password', {
-        method: 'PUT', // Đổi thành PUT
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({
-          current_password: currentPassword,
-          new_password: newPassword,
-        }),
+      method: 'PUT', // Đổi thành PUT
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      },
+      body: formData,
       });
       
 
@@ -51,6 +51,7 @@ function ChangePasswordForm() {
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
+      window.location.href = '/';
     } catch (error) {
       setError(error.message);
       setLoading(false);

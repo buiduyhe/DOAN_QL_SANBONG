@@ -174,6 +174,7 @@ def dat_dv(
 
 ):
     return db_dichvu.dat_dv(db=db, request=request,user_id=current_user.id)
+
 @router.get('/get_chi_tiet_hoadon/{hoadon_id}')
 def get_chi_tiet_hoadon(hoadon_id: int, db: Session = Depends(get_db)):
     chi_tiet_hoa_don = db_dichvu.get_chi_tiet_hoa_don(db, hoa_don_id=hoadon_id)

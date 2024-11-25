@@ -34,7 +34,6 @@ function App() {
           <Route path="/change-password" element={<ChangePasswordForm/>}/>
 
           {/* Protected Routes */}
-          <Route path="/admin" element={<PrivateRoute allowedRole="admin"><NhanVienPage /></PrivateRoute>} />
           <Route path="/supadmin" element={<PrivateRoute allowedRole="supadmin"><Admin /></PrivateRoute>} />
         </Routes>
       </Router>

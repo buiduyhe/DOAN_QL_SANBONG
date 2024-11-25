@@ -93,15 +93,10 @@ const Navbar = () => {
               <li className="menu-item">
                 <a href="" onClick={handleLogoutClick}>Đăng Xuất</a>
               </li>
-              {role === "admin" && (
+              {(role === "admin"||role === "supadmin") && (
                 <li className="menu-item">
-                  <a onClick={handleAdminClick}>Trang Nhân Viên</a>
-                </li>
-              )}
-              {role === "supadmin" && (
-                <li className="menu-item">
-                  <a onClick={handleSupAdminClick}>Trang Quản Lý</a>
-                </li>
+                <a onClick={handleSupAdminClick}>Trang Quản Lý</a>
+              </li>
               )}
               {/* Biểu tượng giỏ hàng */}
               <li className="menu-item cart-icon" onClick={handleCartClick}>

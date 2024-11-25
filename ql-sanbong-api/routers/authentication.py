@@ -8,7 +8,7 @@ from routers.schemas import LoginRequest, CreateUserDTO
 import bcrypt
 from typing import Optional
 from datetime import datetime
-
+from db.models import SysUser
 
 
 from auth.oauth2 import create_access_token
@@ -117,13 +117,13 @@ async def register(
 
 @router.put('/change-password')
 async def change_password(
-    user_id: int = Form(...),
     password: str = Form(...),
     new_password: str = Form(...),
+    current_user: SysUser = Depends(db_user.get_current_user_info),
     db: Session = Depends(get_db),
 
 ):
-    user = db.query(models.SysUser).filter(models.SysUser.id == user_id).first()
+    user = db_user.get_user_by_email(db=db, email=current_user.email)
     if not Hash.verify(user.hash_password, password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
