@@ -51,6 +51,7 @@ const SidebarAdmin = ({ onMenuClick }) => {
         <li>
           <a onClick={handleSupplierClick}>Quản lý nhà cung cấp</a>
         </li>
+        <li><a>Thống kê</a></li>
       </ul>
     </div>
   );
