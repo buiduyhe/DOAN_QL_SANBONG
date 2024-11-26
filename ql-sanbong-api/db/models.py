@@ -135,6 +135,45 @@ class ChiTietHoaDon(Base):
     hoa_don = relationship("HoaDon", back_populates="chi_tiet_hoa_dons")
     dich_vu = relationship("DichVu", back_populates="chi_tiet_hoa_dons")
 
+
+# Bảng Nhà Cung Cấp
+class NhaCungCap(Base):
+    __tablename__ = 'NHA_CUNG_CAP'
+    id = Column(Integer, primary_key=True, index=True)
+    ten_ncc = Column(String(255), nullable=False)
+    dia_chi = Column(String(255))
+    sdt = Column(String(15), nullable=False)
+    email = Column(String(255))
+
+    # Mối quan hệ với bảng NhapHang
+    nhap_hangs = relationship("NhapHang", back_populates="nha_cung_cap")
+
+# Bảng Nhập Hàng
+class NhapHang(Base):
+    __tablename__ = 'NHAP_HANG'
+    id = Column(Integer, primary_key=True, index=True)
+    ncc_id = Column(Integer, ForeignKey('NHA_CUNG_CAP.id'), nullable=False)
+    ngay_nhap = Column(DateTime, server_default=func.now(), nullable=False)
+    tong_tien = Column(Float, nullable=False)
+
+    # Mối quan hệ với bảng NhaCungCap và ChiTietNhapHang
+    nha_cung_cap = relationship("NhaCungCap", back_populates="nhap_hangs")
+    chi_tiet_nhap_hangs = relationship("ChiTietNhapHang", back_populates="nhap_hang")
+
+# Bảng Chi Tiết Nhập Hàng
+class ChiTietNhapHang(Base):
+    __tablename__ = 'CHI_TIET_NHAP_HANG'
+    id = Column(Integer, primary_key=True, index=True)
+    nhap_hang_id = Column(Integer, ForeignKey('NHAP_HANG.id'), nullable=False)
+    dich_vu_id = Column(Integer, ForeignKey('DICH_VU.id'))
+    so_luong = Column(Integer, nullable=False)
+    don_gia = Column(Float, nullable=False)
+    thanh_tien = Column(Float, nullable=False)
+
+    # Mối quan hệ với bảng NhapHang và DichVu
+    nhap_hang = relationship("NhapHang", back_populates="chi_tiet_nhap_hangs")
+    dich_vu = relationship("DichVu")
+
 # Thiết lập quan hệ với bảng DatSan
 DatSan.chi_tiet_hoa_dons = relationship("ChiTietHoaDon", back_populates="dat_san")
 

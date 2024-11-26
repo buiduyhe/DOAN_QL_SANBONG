@@ -10,10 +10,12 @@ import "./Admin.scss";
 import Cookies from "js-cookie";
 import ThongKe from "./ThongKe/ThongKe";
 import QLDuyeDat from "../NhanVienPage/QLDuyet/QLDuyetDat";
+import axios from "axios";
 
 const Admin = () => {
   const [activeContent, setActiveContent] = useState(null); // Nội dung hiển thị
   const [showAddForm, setShowAddForm] = useState(false); // Hiển thị form thêm
+  const [showEditForm, setShowEditForm] = useState(false); // Hiển thị form thêm
   const [formType, setFormType] = useState(""); // Loại form (employees, customers, services, ...)
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -54,8 +56,25 @@ const Admin = () => {
   const handleMenuClick = (content) => {
     setActiveContent(content);
     setShowAddForm(false); // Đóng form khi chọn menu khác
+    setShowEditForm(false); // Đóng form khi chọn menu khác
   };
-
+  const fetchUserData = async (selectedId) => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/user/get_user_by_id/${selectedId}`);
+      const user = response.data;
+      
+      // Cập nhật dữ liệu form với thông tin người dùng nhận được
+      setFormData({
+        name: user.full_name,
+        phone: user.phone,
+        gender: user.gender === "MALE" ? "male" : user.gender === "FEMALE" ? "female" : "other",
+        email: user.email,
+        password: "" // Không hiển thị mật khẩu trong form
+      });
+    } catch (error) {
+      console.error("Lỗi khi lấy dữ liệu người dùng:", error);
+    }
+  };
   const handleLogoutClick = () => {
     Cookies.remove("access_token");
     Cookies.remove("username");
@@ -84,7 +103,15 @@ const Admin = () => {
 
     setShowAddForm(true); // Mở form thêm mới
   };
-
+  const handleEditClick = () => {
+    if (selectedId) {
+      fetchUserData(selectedId);
+      setShowEditForm(true);   // Mở form chỉnh sửa
+      setFormType(activeContent === "employees" ? "employees" : "customers");
+    } else {
+      console.error("No selected ID found");
+    }
+  };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -216,6 +243,52 @@ const Admin = () => {
     }, 100); // Adjust the timeout as needed
   };
   
+  const handleFormEditSubmit = async (e) => {
+    e.preventDefault();
+    console.log(`Dữ liệu form (${formType}):`, formData);
+
+    setMessage('');
+    setError('');
+
+    let apiUrl = '';
+    let requestData = {
+      hoten: formData.name,
+      phone: formData.phone,
+      password: formData.password,
+      gender: formData.gender === "male" ? "Nam" : formData.gender === "female" ? "Nữ" : "Khác",
+    };
+
+    if (formType === 'employees' || formType === 'customers') {
+      apiUrl = `http://127.0.0.1:8000/user/update_SysUser/${selectedId}`;
+    } else {
+      console.error('Invalid form type:', formType); // Log chi tiết lỗi
+      setError('Invalid form type. Please check your form configuration.');
+      return; // Dừng xử lý nếu form type không hợp lệ
+    }
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.detail || 'Cập nhật không thành công!'); // Lỗi từ API
+      }
+
+      setMessage(data.detail);
+      refreshData(); // Lưu thông báo thành công
+    } catch (error) {
+      console.error('Error during update:', error); // Log lỗi chi tiết
+      setError(error.message); // Lưu thông báo lỗi
+    }
+
+    setShowEditForm(false); // Đóng form sau khi xử lý
+  };
   
   return (
     <div className="AdminPage row">
@@ -244,7 +317,83 @@ const Admin = () => {
           <div className="btn">
             {activeContent !== "courts" && <button onClick={handleAddClick}>Thêm</button>}
             {activeContent !== "courts" && <button onClick={handleFormDelete}>Xóa</button>}
-            <button>Sửa</button>
+            {activeContent !== "services" && <button onClick={handleEditClick}>Sửa</button>}
+          </div>
+        )}
+
+        {showEditForm && (
+          <div className="overlay">
+            <div className="modal">
+              <form className="add-form" onSubmit={handleFormEditSubmit}>
+                <h3>
+                {formType === "employees" ? "Sửa Nhân Viên" : formType === "customers" ? "Sửa Khách Hàng" : formType === "courts" ? "Sửa Sân Bóng" : ""}
+                </h3>
+
+                {(formType === "employees" || formType === "customers") && (
+                  <>
+                    <div>
+                      <label>Họ Tên:</label>
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label>Mật Khẩu:</label>
+                      <input
+                        type="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div>
+                      <label>Số Điện Thoại:</label>
+                      <input
+                        type="text"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label>Giới Tính:</label>
+                      <select
+                        name="gender"
+                        value={formData.gender}
+                        onChange={handleInputChange}
+                        required
+                      >
+                        <option value="">Chọn</option>
+                        <option value="male">Nam</option>
+                        <option value="female">Nữ</option>
+                        <option value="other">Khác</option>
+                      </select>
+                    </div>
+                  </>
+                )}
+                {(formType === "courts") && (
+                  <div>
+                  <label>Giá Thuê:</label>
+                  <input
+                    type="text"
+                    name="Gia"
+                    value={formData.gia}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                )}
+
+                <div className="modal-buttons">
+                  <button type="submit" onClick={() => refreshData()}>Lưu</button>
+                  <button type="button" onClick={() => setShowEditForm(false)}>Hủy</button>
+                </div>
+              </form>
+            </div>
           </div>
         )}
 

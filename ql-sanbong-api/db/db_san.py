@@ -336,3 +336,16 @@ def reject_dat_san(id: int, db: Session):
     time_slot.is_available = True
     db.commit()
     return {"message": "Từ chối đặt sân thành công."}
+
+
+def get_ds_dat_san_by_user(db: Session, user_id: int):
+    dat_san_list = db.query(DatSan).filter(DatSan.user_id == user_id).all()
+    if not dat_san_list:
+        raise HTTPException(status_code=404, detail="Không tìm thấy đặt sân nào.")
+    return dat_san_list
+
+def get_san_by_id(id: str, db: Session):
+    san = db.query(SanBong).filter(SanBong.id == id).first()
+    if not san:
+        raise HTTPException(status_code=404, detail="Không tìm thấy sân.")
+    return san
