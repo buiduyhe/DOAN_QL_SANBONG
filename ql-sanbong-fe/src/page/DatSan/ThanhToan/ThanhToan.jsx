@@ -12,6 +12,7 @@ const ThanhToan = () => {
   const { selectedField, selectedDate, timeSlot, loaiSanDescription, loaiSanName } = location.state || {};
   const { id, gia_thue } = selectedField || {};
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isExtraFeeTime, setIsExtraFeeTime] = useState(false); // State to store if extra fee is applied
 
   // Lấy user_id từ cookie
   const user_id = Cookies.get('user_id');
@@ -33,23 +34,18 @@ const ThanhToan = () => {
 
   // Tính toán thời gian checkout (GioCheckout) và chuyển đổi sang múi giờ Việt Nam
   const calculateCheckoutTime = (selectedDate) => {
-    // Chuyển selectedDate thành đối tượng Date nếu cần thiết
     const selectedDateObj = new Date(selectedDate);
-    
-    // Nếu selectedDate không hợp lệ, trả về lỗi
     if (isNaN(selectedDateObj)) {
       alert('Ngày không hợp lệ');
       return;
     }
-
-    // Sử dụng date-fns addMinutes để cộng 90 phút vào thời gian checkout
     const checkoutDate = addMinutes(selectedDateObj, 90);
-    
-    // Chuyển checkoutDate sang múi giờ Việt Nam
     const formattedCheckoutDate = format(checkoutDate, 'YYYY-MM-DD', { timeZone: 'Asia/Ho_Chi_Minh' });
     return formattedCheckoutDate;
   };
+  
   const formattedSelectedDate = format(new Date(selectedDate), 'yyyy-MM-dd', { timeZone: 'Asia/Ho_Chi_Minh' });
+  
   const getTimeslotId = async () => {
     const [start_time] = timeSlot.split(' - ');
     const requestData = {
@@ -85,7 +81,6 @@ const ThanhToan = () => {
   const handleDatSan = async () => {
     if (!id) return;
 
-    // Kiểm tra xem selectedDate có hợp lệ không
     if (!selectedDate) {
       alert('Ngày không hợp lệ!');
       return;
@@ -95,34 +90,38 @@ const ThanhToan = () => {
     const timeslot_id = await getTimeslotId();
     if (!timeslot_id) return;
 
-    // Tách start_time và end_time từ timeSlot
-    const [start_time, end_time] = timeSlot.split(' - ');
+    // Tách start_time và kiểm tra điều kiện nhân thêm 10% giá
+    const [start_time] = timeSlot?.split(' - ') || [];
+    const startHour = parseInt(start_time.split(':')[0], 10);
+    const startMinute = parseInt(start_time.split(':')[1], 10);
 
-    // Tạo đối tượng dữ liệu gửi API
+    const isExtraFee = startHour < 6 || (startHour === 6 && startMinute < 30) || startHour >= 18;
+    setIsExtraFeeTime(isExtraFee); // Set the state for extra fee time
+
+    const adjustedPrice = isExtraFee ? gia_thue * 1.1 : gia_thue;
+
     const data = {
       user_id,
       san_id: id,
       timeslot_id,
-      gia: gia_thue
+      gia: adjustedPrice, // Sử dụng giá đã điều chỉnh
     };
 
     try {
       const response = await fetch(`http://127.0.0.1:8000/san/dat_san`, {
-        method: 'POST', // Sử dụng PUT để cập nhật dữ liệu
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
 
       if (response.ok) {
         setIsSuccess(true);
-        console.log("Success:", await response.json()); // In phản hồi từ API khi cập nhật thành công
+        console.log('Success:', await response.json());
         alert('Đặt sân thành công!');
-        window.location.href = '/datsan'; // Chuyển hướng về trang /datsan
+        window.location.href = '/datsan';
       } else {
-        console.log("Failed Response:", await response.text()); // In lỗi nếu có
-        alert('Đặt sân không thành công, vui lòng thử lại.'+data.timeslot_id +data.gia +data.user_id);
+        console.log('Failed Response:', await response.text());
+        alert('Đặt sân không thành công, vui lòng thử lại.');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -143,8 +142,13 @@ const ThanhToan = () => {
             <p>Ngày đặt: <strong>{formatDate(selectedDate)}</strong></p>
             <p>Thời gian: <strong>{timeSlot || '--'}</strong></p>
             <div className="total-amount">
-              <p>Tổng cộng: </p>
-              <p><strong>{gia_thue?.toLocaleString('vi-VN')} VND</strong></p>
+              <p>Tổng cộng:{' '}</p>
+              <p>
+                <strong>
+                  {gia_thue?.toLocaleString('vi-VN')} VND {isExtraFeeTime && '(Đã thêm 10% phí mở đèn)'}
+                </strong>
+              </p>
+               
             </div>
             <button className="pay-button" onClick={handleDatSan}>Đặt Sân</button>
             {isSuccess && <p className="success-message">Đặt sân thành công!</p>}

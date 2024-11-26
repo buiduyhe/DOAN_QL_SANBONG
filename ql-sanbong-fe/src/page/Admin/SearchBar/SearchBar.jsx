@@ -1,11 +1,11 @@
 import React from "react";
 import "./SearchBar.scss"; // File SCSS cho SearchBar
 
-const SearchBar = ({ searchTerm, setSearchTerm, searchField, setSearchField, searchLabel, searchOptions, onSearch }) => {
+const SearchBar = ({ searchTerm, setSearchTerm, searchField, setSearchField, searchLabel, searchOptions }) => {
   return (
     <div className="filters">
       <div className="filter-item">
-        <label htmlFor="searchField">{"Tìm Kiếm"}</label>
+        <label htmlFor="searchField">{searchLabel}</label>
         <select
           id="searchField"
           value={searchField}
@@ -24,10 +24,7 @@ const SearchBar = ({ searchTerm, setSearchTerm, searchField, setSearchField, sea
           type="text"
           placeholder={`Tìm kiếm ${searchLabel}`}
           value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            onSearch(e.target.value);
-          }}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
     </div>

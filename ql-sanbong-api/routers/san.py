@@ -41,7 +41,7 @@ def get_time_slot(db: Session = Depends(get_db)):
 def get_id_timeslot(request:TimeSlotRequest,db: Session = Depends(get_db)):
     return db_san.get_id_timeslot(request,db)
 
-@router.post("/get_timeslot_by_id/{id}")
+@router.get("/get_timeslot_by_id/{id}")
 def get_timeslot_by_id(id:int,db: Session = Depends(get_db)):
     return db_san.get_timeslot_by_id(id,db)
 
@@ -69,3 +69,15 @@ def ThongKe_30days(db: Session = Depends(get_db)):
 @router.get('/ThongKe_month')
 def ThongKe_month(db: Session = Depends(get_db)):
     return db_san.ThongKe_12months(db)
+
+@router.get('/ds_dat_san')
+def get_ds_dat_san(db: Session = Depends(get_db)):
+    return db_san.get_ds_dat_san(db)
+
+@router.post('/approve_dat_san/{id}')
+def approve_dat_san(id:int,db: Session = Depends(get_db)):
+    return db_san.approve_dat_san(id,db)
+
+@router.post('/reject_dat_san/{id}')
+def reject_dat_san(id:int,db: Session = Depends(get_db)):
+    return db_san.reject_dat_san(id,db)

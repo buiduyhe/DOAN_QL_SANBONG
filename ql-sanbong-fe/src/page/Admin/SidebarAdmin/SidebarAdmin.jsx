@@ -47,6 +47,9 @@ const SidebarAdmin = ({ onMenuClick }) => {
           <a onClick={() => onMenuClick("services")}>Quản lý dịch vụ</a>
         </li>
         <li>
+          <a onClick={() => onMenuClick("order")}>Quản lý duyệt đặt sân online</a>
+        </li>
+        <li>
           <a onClick={() => onMenuClick("courts")}>Quản lý sân</a>
         </li>
         <li>

@@ -8,13 +8,12 @@ const ThongTinDatSan = ({ selectedField }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { selectedDate, timeSlot } = location.state || {};
-  const [fields, setFields] = useState([]); // State to store field data
-  const [loaiSanData, setLoaiSanData] = useState([]); // State to store loai_san data from API
+  const [fields, setFields] = useState([]);
+  const [loaiSanData, setLoaiSanData] = useState([]);
 
   const defaultDate = selectedDate || new Date().toLocaleString('en-US', { timeZone: 'Asia/Ho_Chi_Minh' });
 
   useEffect(() => {
-    // Fetch loại sân data
     fetch('http://127.0.0.1:8000/san/loai_san')
       .then((response) => response.json())
       .then((data) => setLoaiSanData(data))
@@ -25,11 +24,9 @@ const ThongTinDatSan = ({ selectedField }) => {
 
   const { loai_san_id, id, gia_thue } = selectedField;
 
-  // Tìm mô tả loại sân dựa vào loai_san_id
   const loaiSanDescription = loaiSanData.find((loaiSan) => loaiSan.id === loai_san_id)?.mo_ta || "Không có mô tả";
-
-   // Tìm tên loại sân dựa vào loai_san_id
   const loaiSanName = loaiSanData.find((loaiSan) => loaiSan.id === loai_san_id)?.ten_loai_san || "Không rõ";
+
   const formatDate = (date) => {
     if (!date) return '--';
     return new Date(date).toLocaleDateString('vi-VN', {
@@ -39,19 +36,52 @@ const ThongTinDatSan = ({ selectedField }) => {
     });
   };
 
+  const calculatePrice = (basePrice, timeSlot) => {
+    if (!timeSlot) return basePrice;
+
+    const [startHour, startMinute] = timeSlot.split(':').map(Number);
+    const startTime = startHour * 60 + startMinute; // Convert to minutes for easier comparison
+
+    const morningThreshold = 6 * 60 + 30; // 6:30 AM in minutes
+    const eveningThreshold = 16 * 60 +30 ; // 4:30 PM in minutes
+
+    if (startTime < morningThreshold || startTime > eveningThreshold) {
+      return basePrice * 1.1; // Add 10% if outside 6:30 AM to 6:30 PM
+    }
+    return basePrice;
+  };
+
+  const adjustedPrice = calculatePrice(gia_thue, timeSlot);
+
   const handleXacNhan = () => {
     const accessToken = Cookies.get('access_token');
-
+  
     if (!accessToken) {
-      // Nếu chưa đăng nhập, hiển thị thông báo và chuyển hướng đến trang đăng nhập
       alert('Bạn cần đăng nhập để tiếp tục đặt sân.');
       navigate('/login');
       return;
     }
-
-    // Điều hướng đến trang ThanhToan và truyền thông tin đặt sân
-    navigate('/thanh-toan', { state: { selectedField, selectedDate: defaultDate, timeSlot, currentStep: 3,loaiSanDescription,loaiSanName } });
+  
+    const [start_time] = timeSlot?.split(' - ') || [];
+    const startHour = parseInt(start_time.split(':')[0], 10);
+    const startMinute = parseInt(start_time.split(':')[1], 10);
+  
+    // Check if time is before 6:30 or after 18:30
+    const isExtraFeeTime = startHour < 6 || (startHour === 6 && startMinute < 30) || startHour >= 16;
+    const adjustedPrice = isExtraFeeTime ? gia_thue * 1.1 : gia_thue;
+  
+    navigate('/thanh-toan', {
+      state: {
+        selectedField: { ...selectedField, gia_thue: adjustedPrice },
+        selectedDate: defaultDate,
+        timeSlot,
+        currentStep: 3,
+        loaiSanDescription,
+        loaiSanName,
+      },
+    });
   };
+  
 
   return (
     <div className="thong-tin-dat-san">
@@ -62,8 +92,8 @@ const ThongTinDatSan = ({ selectedField }) => {
         <p>Ngày đặt: <strong>{formatDate(defaultDate)}</strong></p>
         <p>Thời gian: <strong>{timeSlot || '--'}</strong></p>
         <div className="total-amount">
-          <p>Tổng cộng:  </p>
-          <p><strong>{gia_thue?.toLocaleString('vi-VN')} VND</strong></p>
+          <p>Tổng cộng: </p>
+          <p><strong>{adjustedPrice?.toLocaleString('vi-VN')} VND</strong></p>
         </div>
         <button className="pay-button" onClick={handleXacNhan}>Xác Nhận</button>
       </div>

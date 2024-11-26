@@ -9,6 +9,7 @@ import QLNhaCungCap from "./QLNhaCungCap/QLNhaCungCap";
 import "./Admin.scss";
 import Cookies from "js-cookie";
 import ThongKe from "./ThongKe/ThongKe";
+import QLDuyeDat from "../NhanVienPage/QLDuyet/QLDuyetDat";
 
 const Admin = () => {
   const [activeContent, setActiveContent] = useState(null); // Nội dung hiển thị
@@ -233,16 +234,19 @@ const Admin = () => {
           {activeContent === "customers" && <QLKhachHang onSelectId={handleSelect} />}
           {activeContent === "services" && <QLDichVu onSelectIds={handleSelectIds} />}
           {activeContent === "orders" && <QLDonDat />}
+          {activeContent === "order" && <QLDuyeDat />}
           {activeContent === "courts" && <QLSan />}
           {activeContent === "suppliers" && <QLNhaCungCap />}
           {activeContent === "statistics" && <ThongKe />}
         </div>
 
-        <div className="btn">
-          <button onClick={handleAddClick}>Thêm</button>
-          <button onClick={handleFormDelete}>Xóa</button>
-          <button>Sửa</button>
-        </div>
+        {activeContent !== "order" && activeContent !== "orders" && activeContent !== "statistics" && (
+          <div className="btn">
+            {activeContent !== "courts" && <button onClick={handleAddClick}>Thêm</button>}
+            {activeContent !== "courts" && <button onClick={handleFormDelete}>Xóa</button>}
+            <button>Sửa</button>
+          </div>
+        )}
 
         {showAddForm && (
           <div className="overlay">

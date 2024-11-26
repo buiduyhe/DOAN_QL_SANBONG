@@ -58,25 +58,9 @@ def dat_san(request, db: Session):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Khung giờ đã được đặt trước.")
     
     create_dat = create_dat_san(db, request)
+    time_slot.is_available = False
     
-    if create_dat:
-        new_hoadon = HoaDon(
-            ma_hoa_don = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6)),
-            id_user = request.user_id,
-            ngay_tao = datetime.datetime.now(),
-            trang_thai = 0,##chưa thanh toán
-            tong_tien = request.gia
-        ) 
-        db.add(new_hoadon)
-        db.flush()
-        
-        new_chitiet = ChiTietHoaDon(
-            hoa_don_id = new_hoadon.id,
-            dat_san_id = create_dat.id,
-            so_luong = 1
-        )
-        db.add(new_chitiet)
-        time_slot.is_available = False
+    
     db.commit()
     
     return create_dat
@@ -86,7 +70,8 @@ def create_dat_san(db, request):
         user_id=request.user_id,
         id_san=request.san_id,
         timeslot_id=request.timeslot_id,
-        gia=request.gia
+        gia=request.gia,
+        status=0
     )
     db.add(new_dat_san)
     db.flush()
@@ -297,3 +282,57 @@ def ThongKe_12months(db: Session):
     thong_ke_list = [{"thang_nam": month, "tong_tien": thong_ke.get(month, 0)} for month in months]
 
     return thong_ke_list
+
+def get_ds_dat_san(db: Session):
+    dat_san_list = db.query(DatSan).all()
+    if not dat_san_list:
+        raise HTTPException(status_code=404, detail="Không tìm thấy đặt sân nào.")
+    return dat_san_list
+
+def approve_dat_san(id: int, db: Session):
+    dat_san = db.query(DatSan).filter(DatSan.id == id).first()
+    if not dat_san:
+        raise HTTPException(status_code=404, detail="Không tìm thấy đặt sân.")
+    
+    if dat_san.status == 2:
+        raise HTTPException(status_code=400, detail="Không thể duyệt đặt sân đã bị từ chối.")
+    if dat_san.status == 1:
+        raise HTTPException(status_code=400, detail="Đặt sân đã được duyệt trước đó.")
+    
+    dat_san.status = 1
+    if dat_san:
+        new_hoadon = HoaDon(
+            ma_hoa_don = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6)),
+            id_user = dat_san.user_id,
+            ngay_tao = datetime.now(),
+            trang_thai = 0,#chưa thanh toán
+            tong_tien = dat_san.gia
+        ) 
+        db.add(new_hoadon)
+        db.flush()
+        
+        new_chitiet = ChiTietHoaDon(
+            hoa_don_id = new_hoadon.id,
+            dat_san_id = dat_san.id,
+            so_luong = 1
+        )
+        db.add(new_chitiet)
+    db.commit()
+    return {"message": "Duyệt đặt sân thành công."}
+
+
+def reject_dat_san(id: int, db: Session):
+    dat_san = db.query(DatSan).filter(DatSan.id == id).first()
+    if not dat_san:
+        raise HTTPException(status_code=404, detail="Không tìm thấy đặt sân.")
+    
+    if dat_san.status == 1:
+        raise HTTPException(status_code=400, detail="Không thể từ chối đặt sân đã được duyệt.")
+    
+    if dat_san.status == 2:
+        raise HTTPException(status_code=400, detail="Đặt sân đã bị từ chối trước đó.")
+    dat_san.status = 2
+    time_slot = db.query(TimeSlot).filter(TimeSlot.id == dat_san.timeslot_id).first()
+    time_slot.is_available = True
+    db.commit()
+    return {"message": "Từ chối đặt sân thành công."}

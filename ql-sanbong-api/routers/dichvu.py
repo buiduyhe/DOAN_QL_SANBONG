@@ -192,4 +192,21 @@ def delete_dv(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Lỗi khi xóa dịch vụ: {str(e)}")
     
-    
+@router.get('/get_dv_by_id/{id}',response_model=DichVuDisplayQL)
+def get_dv_by_id(
+    id: int,
+    db: Session = Depends(get_db)
+):
+    dichvu = db.query(DichVu).filter(DichVu.id == id).first()
+    if not dichvu:
+        raise HTTPException(status_code=404, detail="Không tìm thấy dịch vụ nào.")
+    return DichVuDisplayQL(
+        id=dichvu.id,
+        ten_dv=dichvu.ten_dv,
+        gia_dv=dichvu.gia_dv,
+        soluong=dichvu.soluong,
+        mota=dichvu.mota,
+        loai_dv_id=dichvu.loaidichvus[0].loaidichvu_id,
+        ten_loai_dv=dichvu.loaidichvus[0].loaidichvu.ten_loai_dv,
+        image_dv=dichvu.image_dv
+    )

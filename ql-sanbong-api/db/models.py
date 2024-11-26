@@ -70,7 +70,7 @@ class DatSan(Base):
     timeslot_id = Column(Integer, ForeignKey('TIME_SLOT.id'), nullable=False)  # Liên kết với bảng TIME_SLOT
     gia = Column(Integer, nullable=False)  # Giá đặt sân
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
-
+    status = Column(Integer,  default=0)  # Trạng thái đặt sân (0: Chưa duyệt, 1: Đã duyệt, 2: Đã hủy)  
     # Thiết lập quan hệ với bảng TimeSlot
     timeslot = relationship("TimeSlot", back_populates="datsans")
     # Thiết lập quan hệ với bảng ChiTietHoaDon
