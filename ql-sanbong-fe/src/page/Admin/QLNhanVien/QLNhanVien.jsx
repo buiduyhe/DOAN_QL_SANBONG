@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
+import SearchBar from "../SearchBar/SearchBar"; // Import SearchBar component
+import "./QLNhanVien.scss";
 
 const QLNhanVien = ({ onSelectId = () => {} }) => {
-  const [nhanVienList, setNhanVienList] = useState([]);
+  const [nhanVienList, setNhanVienList] = useState([]); // Danh sách nhân viên gốc
+  const [filteredNhanVienList, setFilteredNhanVienList] = useState([]); // Danh sách nhân viên sau khi lọc
   const [selectedId, setSelectedId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState(""); // Giá trị tìm kiếm
+  const [searchField, setSearchField] = useState("full_name"); // Trường tìm kiếm (mặc định là tên)
 
+  // Fetch dữ liệu từ API
   useEffect(() => {
     fetch("http://127.0.0.1:8000/user/get_SysUser/2")
       .then((response) => {
@@ -12,9 +18,23 @@ const QLNhanVien = ({ onSelectId = () => {} }) => {
         }
         return response.json();
       })
-      .then((data) => setNhanVienList(data))
+      .then((data) => {
+        setNhanVienList(data);
+        setFilteredNhanVienList(data); // Hiển thị danh sách gốc ban đầu
+      })
       .catch((error) => console.error("Có lỗi xảy ra:", error));
   }, []);
+
+  // Xử lý tìm kiếm
+  useEffect(() => {
+    const filteredList = nhanVienList.filter((nhanVien) =>
+      nhanVien[searchField]
+        ?.toString()
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+    );
+    setFilteredNhanVienList(filteredList);
+  }, [searchTerm, searchField, nhanVienList]);
 
   const handleCheckboxChange = (id) => {
     setSelectedId(id);
@@ -24,6 +44,23 @@ const QLNhanVien = ({ onSelectId = () => {} }) => {
   return (
     <div>
       <h4>Quản lý nhân viên</h4>
+
+      {/* Thanh tìm kiếm */}
+      <SearchBar
+  searchTerm={searchTerm}
+  setSearchTerm={setSearchTerm}
+  searchField={searchField}
+  setSearchField={setSearchField}
+  searchLabel="Khách Hàng"
+  searchOptions={[
+    { value: "id", label: "Tìm kiếm theo mã" },
+    { value: "full_name", label: "Tìm kiếm theo tên" },
+    { value: "email", label: "Tìm kiếm theo email" },
+    { value: "phone", label: "Tìm kiếm theo số điện thoại" },
+  ]}
+/>
+
+      {/* Bảng danh sách nhân viên */}
       <table>
         <thead>
           <tr>
@@ -35,8 +72,11 @@ const QLNhanVien = ({ onSelectId = () => {} }) => {
           </tr>
         </thead>
         <tbody>
-          {nhanVienList.map((nhanVien) => (
-            <tr key={nhanVien.id} onClick={() => handleCheckboxChange(nhanVien.id)}>
+          {filteredNhanVienList.map((nhanVien) => (
+            <tr
+              key={nhanVien.id}
+              onClick={() => handleCheckboxChange(nhanVien.id)}
+            >
               <td>
                 <input
                   type="radio"
@@ -60,4 +100,3 @@ const QLNhanVien = ({ onSelectId = () => {} }) => {
 };
 
 export default QLNhanVien;
-

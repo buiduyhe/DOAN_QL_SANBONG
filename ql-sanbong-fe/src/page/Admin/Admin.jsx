@@ -8,6 +8,7 @@ import QLNhanVien from "./QLNhanVien/QLNhanVien";
 import QLNhaCungCap from "./QLNhaCungCap/QLNhaCungCap";
 import "./Admin.scss";
 import Cookies from "js-cookie";
+import ThongKe from "./ThongKe/ThongKe";
 
 const Admin = () => {
   const [activeContent, setActiveContent] = useState(null); // Nội dung hiển thị
@@ -234,6 +235,7 @@ const Admin = () => {
           {activeContent === "orders" && <QLDonDat />}
           {activeContent === "courts" && <QLSan />}
           {activeContent === "suppliers" && <QLNhaCungCap />}
+          {activeContent === "statistics" && <ThongKe />}
         </div>
 
         <div className="btn">
