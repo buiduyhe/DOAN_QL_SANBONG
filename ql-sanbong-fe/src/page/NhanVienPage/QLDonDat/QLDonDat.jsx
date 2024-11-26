@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../QL.scss";
+import SearchBar from "../../Admin/SearchBar/SearchBar"; // Import SearchBar component
 
 const QLDonDat = () => {
   const [hoaDons, setHoaDons] = useState([]);
@@ -7,6 +8,7 @@ const QLDonDat = () => {
   const [chiTietHoaDon, setChiTietHoaDon] = useState([]);
   const [sanPhams, setSanPhams] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchField, setSearchField] = useState("ma_hoa_don"); // Trường tìm kiếm mặc định là mã đơn
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [quantities, setQuantities] = useState({});
   const [selectedHoaDon, setSelectedHoaDon] = useState(null);
@@ -106,6 +108,7 @@ const QLDonDat = () => {
         alert("Có lỗi khi thêm sản phẩm!");
       });
   };
+
   const handlePayment = () => {
     if (!selectedId) {
       alert("Vui lòng chọn hóa đơn trước khi thanh toán!");
@@ -137,13 +140,29 @@ const QLDonDat = () => {
     }
   };
 
-  const filteredSanPhams = sanPhams.filter((sp) =>
-    sp.ten_dv.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Lọc dữ liệu hoaDons theo searchTerm và searchField
+  const filteredHoaDons = hoaDons.filter((hoaDon) => {
+    const searchValue = hoaDon[searchField]?.toString().toLowerCase();
+    return searchValue && searchValue.includes(searchTerm.toLowerCase());
+  });
 
   return (
     <div>
       <h4>Quản lý Đơn Đặt</h4>
+
+      {/* Thanh tìm kiếm */}
+      <SearchBar
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        searchField={searchField}
+        setSearchField={setSearchField}
+        searchLabel="Đơn Đặt"
+        searchOptions={[
+          { value: "ma_hoa_don", label: "Tìm kiếm theo mã đơn" },
+          { value: "ten_nguoi_dat", label: "Tìm kiếm theo email người đặt" },
+        ]}
+      />
+
       <table>
         <thead>
           <tr>
@@ -156,7 +175,7 @@ const QLDonDat = () => {
           </tr>
         </thead>
         <tbody>
-          {hoaDons.map((hoaDon) => (
+          {filteredHoaDons.map((hoaDon) => (
             <tr
               key={hoaDon.id}
               onClick={() => handleRowClick(hoaDon)}
@@ -229,80 +248,6 @@ const QLDonDat = () => {
           <button onClick={handlePayment} disabled={selectedHoaDon?.trangthai !== 0}>
             Thanh Toán
           </button>
-          </div>
-        </div>
-      )}
-
-      {isFormOpen && (
-        <div className="form-them-san-pham">
-          <div className="TT">
-            <h5>Chọn Sản Phẩm</h5>
-          </div>
-          <input
-            type="text"
-            placeholder="Tìm kiếm sản phẩm..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <table>
-            <thead>
-              <tr>
-                <th>Hình Ảnh</th>
-                <th>Tên Sản Phẩm</th>
-                <th>Giá</th>
-                <th>Số Lượng</th>
-                <th>Thao Tác</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredSanPhams.map((product) => (
-                <tr key={product.id}>
-                  <td style={{ textAlign: "center" }}>
-                    <img
-                      src={`http://localhost:8000/${product.image_dv}`}
-                      alt={product.ten_dv}
-                      style={{
-                        width: "50px",
-                        height: "50px",
-                        objectFit: "cover",
-                        alignItems: "center",
-                      }}
-                    />
-                  </td>
-                  <td>{product.ten_dv}</td>
-                  <td>{product.gia_dv}</td>
-                  <td>
-                    <input
-                      type="number"
-                      min="1"
-                      value={quantities[product.id] || 0}
-                      onChange={(e) =>
-                        handleQuantityChange(product.id, Number(e.target.value))
-                      }
-                      style={{
-                        width: "50px",
-                        textAlign: "center",
-                      }}
-                    />
-                  </td>
-                  <td>
-                    <button onClick={() => handleAddProduct(product)}>
-                      Thêm
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <div className="btn-actions">
-            <button
-              onClick={() => {
-                refreshData();
-                setIsFormOpen(false);
-              }}
-            >
-              Thoát
-            </button>
           </div>
         </div>
       )}

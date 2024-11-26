@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
 import "../QL.scss";
 import "./QLDichVu.scss";
+import SearchBar from "../../Admin/SearchBar/SearchBar"; // Import SearchBar component
 
 const QLDichVu = ({ onSelectIds }) => {
   const [dichVuList, setDichVuList] = useState([]);
+  const [filteredDichVuList, setFilteredDichVuList] = useState([]); // Danh sách dịch vụ đã lọc
   const [selectedIds, setSelectedIds] = useState([]);
+
+  // Các trạng thái tìm kiếm
+  const [searchTerm, setSearchTerm] = useState(""); // Từ khóa tìm kiếm
+  const [searchField, setSearchField] = useState("id"); // Trường tìm kiếm (Mã Dịch Vụ, Tên Dịch Vụ, Loại Dịch Vụ)
 
   useEffect(() => {
     fetch("http://localhost:8000/dichvu/dichvu_QL")
@@ -14,13 +20,20 @@ const QLDichVu = ({ onSelectIds }) => {
         }
         return response.json();
       })
-      .then((data) => setDichVuList(data))
+      .then((data) => {
+        setDichVuList(data);
+        setFilteredDichVuList(data); // Set data ban đầu
+      })
       .catch((error) => console.error("Có lỗi xảy ra:", error));
   }, []);
 
+  // Filter dịch vụ khi từ khóa tìm kiếm hoặc trường tìm kiếm thay đổi
   useEffect(() => {
-    onSelectIds(selectedIds); // Pass the selected IDs to parent whenever it changes
-  }, [selectedIds]);
+    const filteredList = dichVuList.filter((dichVu) =>
+      dichVu[searchField]?.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredDichVuList(filteredList); // Cập nhật danh sách dịch vụ đã lọc
+  }, [searchTerm, searchField, dichVuList]);
 
   const handleCheckboxChange = (id) => {
     setSelectedIds((prevSelectedIds) =>
@@ -42,9 +55,30 @@ const QLDichVu = ({ onSelectIds }) => {
     handleCheckboxChange(id);
   };
 
+  // Gọi callback khi selectedIds thay đổi
+  useEffect(() => {
+    onSelectIds(selectedIds);
+  }, [selectedIds, onSelectIds]);
+
   return (
     <div>
       <h4>Quản lý Dịch Vụ</h4>
+
+      {/* Thanh tìm kiếm */}
+      <SearchBar
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        searchField={searchField}
+        setSearchField={setSearchField}
+        searchLabel="Dịch Vụ"
+        searchOptions={[
+          { value: "id", label: "Tìm kiếm theo mã" },
+          { value: "ten_dv", label: "Tìm kiếm theo tên dịch vụ" },
+          { value: "ten_loai_dv", label: "Tìm kiếm theo loại dịch vụ" },
+        ]}
+      />
+
+      {/* Bảng danh sách dịch vụ */}
       <table>
         <thead>
           <tr>
@@ -66,7 +100,7 @@ const QLDichVu = ({ onSelectIds }) => {
           </tr>
         </thead>
         <tbody>
-          {dichVuList.map((dichVu) => (
+          {filteredDichVuList.map((dichVu) => (
             <tr key={dichVu.id} onClick={() => handleRowClick(dichVu.id)} style={{ cursor: "pointer" }}>
               <td>
                 <input
