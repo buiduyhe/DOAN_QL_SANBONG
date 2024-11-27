@@ -85,8 +85,10 @@ const Navbar = () => {
                 {showDropdown && (
                   <ul className="dropdown-menu">
                     <li onClick={() => navigate("/change-password")}>Đổi mật khẩu</li>
-                    <li >Thông tin cá nhân</li>
-                    <li >Đơn đặt</li>
+                    <li className="menu-item">
+                      <a href="/ThongTinCaNhan">Thông tin cá nhân</a></li>
+                    <li className="menu-item">
+                    <a href="/LichSuDonDat" >Lịch Sử Đơn đặt</a></li>
                   </ul>
                 )}
               </li>

@@ -1,44 +1,52 @@
-
 .sidebarAdmin {
-    background-color: #333;
-    color: white;
+    background-color: #2c3e50; // Màu tối hơn cho cảm giác hiện đại
+    color: #ecf0f1; // Sử dụng màu sáng hơn để tương phản
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 30px;
+    gap: 20px;
     height: 100vh;
-    padding-top: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    padding: 20px 0;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3); // Tăng hiệu ứng shadow
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+
     .sidebar-header {
-        img{
-            width: 50px;    
+        img {
+            width: 60px; // Tăng kích thước logo
             height: auto;
+            border-radius: 50%; // Thêm hiệu ứng bo tròn logo
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); // Hiệu ứng nổi bật logo
         }
     }
+
     .sidebar-menu {
-        list-style-type: none;
+        list-style: none;
         display: flex;
         flex-direction: column;
-        gap: 50px;
-        margin-left: -50px;
-        li{
+        gap: 30px;
+        margin: 0;
+        padding: 0;
+
+        li {
             text-align: left;
-            font-size: 20px;
+            font-size: 18px; // Giảm nhẹ kích thước font để cân đối
+            font-weight: 500; // Tăng độ đậm để dễ đọc
         }
+
         a {
             text-decoration: none;
-            color: #fff;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            border-radius: 5px;
+            color: #ecf0f1;
+            transition: all 0.3s ease;
+            border-radius: 8px;
             cursor: pointer;
-            padding: 15px;
+            padding: 12px 10px;
+            margin-left: 0;
+            background-color: transparent;
+
+            &:hover {
+                background-color: #2c3e50; // Hiệu ứng hover tinh tế
+                color: #1abc9c; // Thêm điểm nhấn với màu xanh
+            }
         }
-        a:hover {
-            background-color: #555; 
-            color: #1abc9c;
-            transform: scale(1.05); 
-          }
     }
 }
-  
-  
