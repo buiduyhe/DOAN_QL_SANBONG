@@ -92,7 +92,7 @@ const QLSan = ({ onSelectId = () => {} }) => {
                   {san.id}</td>
                 <td>{san.loai_san_id === 1 ? "Sân 5" : "Sân 7"}</td>
                 <td>{san.gia_thue.toLocaleString()} VND</td>
-                <td>{san.trang_thai === 1 ? "Còn trống" : "Đang đặt"}</td>
+                <td>{san.trang_thai === 1 ? "Còn trống" : "Đang sử dụng"}</td>
               </tr>
             ))}
           </tbody>

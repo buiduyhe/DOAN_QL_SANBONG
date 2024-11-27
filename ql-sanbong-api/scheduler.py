@@ -97,6 +97,7 @@ def update_sanbong_status_used():
             .filter(TimeSlot.date == current_date)  # Ngày hiện tại
             .filter(TimeSlot.start_time <= current_time)  # Giờ bắt đầu trước hoặc bằng giờ hiện tại
             .filter(TimeSlot.end_time >= current_time)  # Giờ kết thúc sau hoặc bằng giờ hiện tại
+            .filter(DatSan.status == 1 )  # Khung giờ còn trống
             .all()
         )
 
@@ -114,6 +115,7 @@ def update_sanbong_status_used():
             .join(TimeSlot, DatSan.timeslot_id == TimeSlot.id)
             .filter(TimeSlot.date == current_date)
             .filter(TimeSlot.end_time < current_time)
+            .filter(DatSan.status == 1 )  # Khung giờ còn trống
             .all()
         )
 
@@ -150,7 +152,6 @@ def start_scheduler():
     create_daily_time_slots()  # Tạo khung giờ ngay khi server khởi động
     update_time_slots_status()
     update_sanbong_status_used()
-    auto_backup_database()
     scheduler.add_job(update_sanbong_status_used, 'interval', seconds=30)  # Cập nhật trạng thái mỗi 30 giây
     scheduler.add_job(create_daily_time_slots, 'cron', hour=0, minute=0)  # Chạy vào 00:00 hàng ngày
     scheduler.add_job(update_time_slots_status, 'interval', minutes=1)  # Cập nhật trạng thái mỗi phút
