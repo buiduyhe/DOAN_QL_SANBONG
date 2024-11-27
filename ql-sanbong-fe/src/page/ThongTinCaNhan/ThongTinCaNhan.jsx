@@ -23,14 +23,14 @@ const ThongTinCaNhan = () => {
       const fetchUserData = async () => {
         setLoading(true);
         try {
-          const response = await axios.get(`http://localhost:8000/user/get_SysUser/${userId}`);
+          const response = await axios.get(`http://127.0.0.1:8000/user/get_user_by_id/${userId}`);
           console.log(response.data);  // Kiểm tra dữ liệu từ API
-          setUserData(response.data[0]);
+          setUserData(response.data);
           setFormData({
-            hoten: response.data[0].full_name,
-            email: response.data[0].email,
-            phone: response.data[0].phone,
-            gender: response.data[0].gender,
+            hoten: response.data.full_name,
+            email: response.data.email,
+            phone: response.data.phone,
+            gender: response.data.gender,
           });
         } catch (err) {
           setError('Không thể tải thông tin người dùng.');
