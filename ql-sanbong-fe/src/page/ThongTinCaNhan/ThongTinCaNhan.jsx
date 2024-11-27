@@ -27,7 +27,7 @@ const ThongTinCaNhan = () => {
           console.log(response.data);  // Kiểm tra dữ liệu từ API
           setUserData(response.data[0]);
           setFormData({
-            full_name: response.data[0].full_name,
+            hoten: response.data[0].full_name,
             email: response.data[0].email,
             phone: response.data[0].phone,
             gender: response.data[0].gender,
@@ -55,15 +55,19 @@ const ThongTinCaNhan = () => {
   };
 
   const handleSaveChanges = async () => {
-    console.log('Dữ liệu gửi đi:', formData);  // Kiểm tra giá trị formData trước khi gửi
-    try {
-      const response = await axios.put(`http://localhost:8000/user/update_SysUser/${userId}`, formData);
-      console.log('Dữ liệu phản hồi từ API:', response.data);  // Kiểm tra phản hồi
-      setUserData(response.data);
-      setEditing(false);  // Thoát chế độ chỉnh sửa
-    } catch (err) {
-      console.log('Lỗi khi cập nhật:', err);  // In lỗi nếu có
-      setError('Không thể cập nhật thông tin.');
+    const confirmSave = window.confirm('Bạn có chắc chắn muốn lưu các thay đổi?');
+    if (confirmSave) {
+      console.log('Dữ liệu gửi đi:', formData);  // Kiểm tra giá trị formData trước khi gửi
+      try {
+        const response = await axios.put(`http://localhost:8000/user/update_SysUser/${userId}`, formData);
+        console.log('Dữ liệu phản hồi từ API:', response.data);  // Kiểm tra phản hồi
+        setUserData(response.data);
+        setEditing(false);  // Thoát chế độ chỉnh sửa
+        alert('Lưu thay đổi thành công!');
+      } catch (err) {
+        console.log('Lỗi khi cập nhật:', err);  // In lỗi nếu có
+        setError('Không thể cập nhật thông tin.');
+      }
     }
   };
 
@@ -100,8 +104,8 @@ const ThongTinCaNhan = () => {
               <strong>Tên người dùng:</strong>
               <input
                 type="text"
-                name="full_name" 
-                value={formData.full_name}
+                name="hoten" 
+                value={formData.hoten}
                 onChange={handleInputChange}
               />
             </div>

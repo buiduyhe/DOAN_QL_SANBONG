@@ -61,7 +61,11 @@ const SidebarAdmin = ({ onMenuClick }) => {
           </li>
         )}
         <li>
-          <a onClick={() => onMenuClick("statistics")}>Thống kê</a></li>
+          <a onClick={() => onMenuClick("statistics")}>Thống kê</a>
+        </li>
+        <li>
+          <a onClick={() => onMenuClick("SaoLuu")}>Sao lưu phục hồi</a>
+        </li>
       </ul>
     </div>
   );

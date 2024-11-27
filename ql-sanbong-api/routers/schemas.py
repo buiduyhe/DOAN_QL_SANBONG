@@ -217,3 +217,8 @@ class UserRequest(BaseModel):
     password: Optional[str] = None
     gender: Optional[str] = None
     
+class SanBongUpdateRequest(BaseModel):
+    gia: Optional[int] = None
+    class Config:
+        orm_mode = True
+    
