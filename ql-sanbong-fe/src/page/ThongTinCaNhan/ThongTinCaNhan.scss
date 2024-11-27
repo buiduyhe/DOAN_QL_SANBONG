@@ -1,0 +1,109 @@
+.thong-tin-ca-nhan {
+
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    
+    .info-item input,
+.info-item select {
+  padding: 8px;
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.save-btn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+}
+
+.cancel-btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+}
+
+.edit-btn {
+  background-color: #008CBA;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+    h2 {
+      font-size: 24px;
+      color: #333;
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+  
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+  
+    .info-item {
+      font-size: 16px;
+      color: #555;
+      display: flex;
+      justify-content: space-between;
+      padding: 8px;
+      background-color: #f9f9f9;
+      border-radius: 6px;
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05);
+  
+      strong {
+        color: #333;
+      }
+    }
+  
+    .gender {
+      font-size: 16px;
+      color: #555;
+      padding: 8px;
+      background-color: #f9f9f9;
+      border-radius: 6px;
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05);
+    }
+  
+    .loading, .no-data, .error {
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      color: #ff6347;  // Màu cho các thông báo
+    }
+  
+    .loading {
+      color: #ffa500; // Màu cam cho trạng thái tải
+    }
+  
+    .no-data {
+      color: #32cd32; // Màu xanh lá cho dữ liệu trống
+    }
+  
+    .error {
+      color: #ff0000; // Màu đỏ cho lỗi
+    }
+  }
+  

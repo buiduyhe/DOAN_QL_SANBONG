@@ -14,6 +14,9 @@ import GioHang from "./page/GioHang/GioHang";
 import { CartProvider } from './CartContext';  // Import CartProvider
 import Checkout from "./page/GioHang/ThanhToan/Checkout";
 import ChangePasswordForm from "./ChangePasswordForm";
+import ThongTinCaNhan from "./page/ThongTinCaNhan/ThongTinCaNhan";
+import ThongTin from "./page/ThongTinCaNhan/ThongTin";
+import LichSuDonDat from "./page/LichSuDonDat/LichSuDonDat";
 
 
 function App() {
@@ -33,6 +36,8 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/thanh-toan" element={<ThanhToan />} />
           <Route path="/change-password" element={<ChangePasswordForm/>}/>
+          <Route path="/ThongTinCaNhan" element={<ThongTin/>}/>
+          <Route path="/LichSuDonDat" element={<LichSuDonDat/>}/>
 
           {/* Protected Routes */}
           <Route path="/supadmin" element={<PrivateRoute allowedRole="supadmin"><Admin /></PrivateRoute>} />
