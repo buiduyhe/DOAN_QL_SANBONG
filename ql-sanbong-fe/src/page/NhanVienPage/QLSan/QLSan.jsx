@@ -37,11 +37,21 @@ const QLSan = ({ onSelectId = () => {} }) => {
   // Bộ lọc dữ liệu theo từ khóa và trường tìm kiếm
   useEffect(() => {
     const filteredList = data.filter((san) => {
-      const searchValue = san[searchField]?.toString().toLowerCase();
-      return searchValue && searchValue.includes(searchTerm.toLowerCase());
+      let searchValue = san[searchField]?.toString().toLowerCase() || "";
+  
+      // Ánh xạ loại sân và tình trạng thành chuỗi mô tả
+      if (searchField === "loai_san_id") {
+        searchValue = san.loai_san_id === 1 ? "sân 5" : "sân 7";
+      } else if (searchField === "trang_thai") {
+        searchValue = san.trang_thai === 1 ? "còn trống" : "đang sử dụng";
+      }
+  
+      return searchValue.includes(searchTerm.toLowerCase());
     });
-    setFilteredData(filteredList); // Cập nhật dữ liệu đã lọc
+    setFilteredData(filteredList);
   }, [searchTerm, searchField, data]);
+  
+  
   const handleCheckboxChange = (id) => {
     setSelectedId(id);
     onSelectId(id); // Gọi callback để truyền ID
