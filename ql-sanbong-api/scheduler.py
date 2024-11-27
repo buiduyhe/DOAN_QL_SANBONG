@@ -6,6 +6,9 @@ from datetime import datetime, timedelta ,date
 from sqlalchemy.orm import Session
 from db.database import SessionLocal, get_db
 from db.models import DatSan, SanBong, TimeSlot
+import os
+import shutil
+from fastapi import HTTPException
     
 # Hàm tạo khung giờ hàng ngày cho tất cả các sân
 def create_time_slots_for_day(db, san_id, today):
@@ -126,13 +129,32 @@ def update_sanbong_status_used():
         db.close()
         logging.info("update_sanbong_status completed.")
 
+# Đường dẫn tới file database và thư mục sao lưu
+DB_PATH = "sanbong_api.db"
+BACKUP_DIR = "backups"
+os.makedirs(BACKUP_DIR, exist_ok=True)
+
+def auto_backup_database():
+    try:
+        # Tạo tên file sao lưu với timestamp
+        backup_file = os.path.join(BACKUP_DIR, f"backup_{datetime.now().strftime('%Y%m%d%H%M%S')}.sqlite")
+        shutil.copy(DB_PATH, backup_file)
+        logging.info(f"Database backup created at {backup_file}")
+    except Exception as e:
+        logging.error(f"Backup failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Backup failed: {str(e)}")
+
+    
 def start_scheduler():
     scheduler = BackgroundScheduler()
     create_daily_time_slots()  # Tạo khung giờ ngay khi server khởi động
     update_time_slots_status()
     update_sanbong_status_used()
+    auto_backup_database()
     scheduler.add_job(update_sanbong_status_used, 'interval', seconds=30)  # Cập nhật trạng thái mỗi 30 giây
     scheduler.add_job(create_daily_time_slots, 'cron', hour=0, minute=0)  # Chạy vào 00:00 hàng ngày
     scheduler.add_job(update_time_slots_status, 'interval', minutes=1)  # Cập nhật trạng thái mỗi phút
+    scheduler.add_job(auto_backup_database, 'interval', hours=1)  # Sao lưu mỗi 1 tiếng
     scheduler.start()
     logging.info("Scheduler started with daily and interval jobs.")
+    

@@ -139,7 +139,9 @@ const QLDonDat = () => {
         });
     }
   };
-
+  const filteredSanPhams = sanPhams.filter((sp) =>
+    sp.ten_dv.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   // Lọc dữ liệu hoaDons theo searchTerm và searchField
   const filteredHoaDons = hoaDons.filter((hoaDon) => {
     const searchValue = hoaDon[searchField]?.toString().toLowerCase();
@@ -251,6 +253,81 @@ const QLDonDat = () => {
           </div>
         </div>
       )}
+      
+      {isFormOpen && (
+        <div className="form-them-san-pham">
+          <div className="TT">
+            <h5>Chọn Sản Phẩm</h5>
+          </div>
+          <input
+            type="text"
+            placeholder="Tìm kiếm sản phẩm..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <table>
+            <thead>
+              <tr>
+                <th>Hình Ảnh</th>
+                <th>Tên Sản Phẩm</th>
+                <th>Giá</th>
+                <th>Số Lượng</th>
+                <th>Thao Tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredSanPhams.map((product) => (
+                <tr key={product.id}>
+                  <td style={{ textAlign: "center" }}>
+                    <img
+                      src={`http://localhost:8000/${product.image_dv}`}
+                      alt={product.ten_dv}
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        objectFit: "cover",
+                        alignItems: "center",
+                      }}
+                    />
+                  </td>
+                  <td>{product.ten_dv}</td>
+                  <td>{product.gia_dv}</td>
+                  <td>
+                    <input
+                      type="number"
+                      min="1"
+                      value={quantities[product.id] || 0}
+                      onChange={(e) =>
+                        handleQuantityChange(product.id, Number(e.target.value))
+                      }
+                      style={{
+                        width: "50px",
+                        textAlign: "center",
+                      }}
+                    />
+                  </td>
+                  <td>
+                    <button onClick={() => handleAddProduct(product)}>
+                      Thêm
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="btn-actions">
+            <button
+              onClick={() => {
+                refreshData();
+                setIsFormOpen(false);
+              }}
+            >
+              Thoát
+            </button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

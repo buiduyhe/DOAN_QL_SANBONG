@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import "../QL.scss";
 import SearchBar from "../../Admin/SearchBar/SearchBar"; // Import SearchBar component
 
-const QLSan = () => {
+const QLSan = ({ onSelectId = () => {} }) => {
   const [data, setData] = useState([]); // State để lưu dữ liệu từ API
   const [filteredData, setFilteredData] = useState([]); // State để lưu dữ liệu đã lọc
   const [loading, setLoading] = useState(true); // State để hiển thị trạng thái loading
   const [error, setError] = useState(null); // State để hiển thị lỗi (nếu có)
+  const [selectedId, setSelectedId] = useState(null);
 
   // Trạng thái tìm kiếm
   const [searchTerm, setSearchTerm] = useState(""); // Từ khóa tìm kiếm
@@ -41,7 +42,10 @@ const QLSan = () => {
     });
     setFilteredData(filteredList); // Cập nhật dữ liệu đã lọc
   }, [searchTerm, searchField, data]);
-
+  const handleCheckboxChange = (id) => {
+    setSelectedId(id);
+    onSelectId(id); // Gọi callback để truyền ID
+  };
   return (
     <div>
       <h4>Quản lý Sân Bóng</h4>
@@ -76,8 +80,16 @@ const QLSan = () => {
           </thead>
           <tbody>
             {filteredData.map((san) => (
-              <tr key={san.id}>
-                <td>{san.id}</td>
+              <tr key={san.id} onClick={() => handleCheckboxChange(san.id)}>
+                <td>
+                <input
+                  type="radio"
+                  name="san"
+                  onChange={() => handleCheckboxChange(san.id)}
+                  checked={selectedId === san.id}
+                  style={{ marginRight: "5px" }}
+                />
+                  {san.id}</td>
                 <td>{san.loai_san_id === 1 ? "Sân 5" : "Sân 7"}</td>
                 <td>{san.gia_thue.toLocaleString()} VND</td>
                 <td>{san.trang_thai === 1 ? "Còn trống" : "Đang đặt"}</td>

@@ -2,7 +2,7 @@ import locale
 import os
 import random
 import string
-from routers.schemas import HoaDonDisplay, PostBase, TimeSlotDisplay, TimeSlotRequest,TimeSlotResponse
+from routers.schemas import HoaDonDisplay, PostBase, TimeSlotDisplay, TimeSlotRequest,TimeSlotResponse,SanBongUpdateRequest
 from sqlalchemy.orm.session import Session
 import datetime
 from fastapi import HTTPException, status
@@ -349,3 +349,12 @@ def get_san_by_id(id: str, db: Session):
     if not san:
         raise HTTPException(status_code=404, detail="Không tìm thấy sân.")
     return san
+
+def update_san(id: str,request: SanBongUpdateRequest, db: Session ):
+    san_update = db.query(SanBong).filter(SanBong.id == id).first()
+    if not san_update:
+        raise HTTPException(status_code=404, detail="Không tìm thấy sân.")
+    if request.gia:
+        san_update.gia_thue = request.gia
+    db.commit()
+    return {"message": "Cập nhật sân thành công."}

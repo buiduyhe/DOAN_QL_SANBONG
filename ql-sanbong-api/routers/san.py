@@ -1,6 +1,6 @@
 from fastapi import APIRouter , Depends,File ,HTTPException,status,UploadFile,Form
 from sqlalchemy.orm import Session
-from routers.schemas import DatSanRequest, DatSanResponse, DichVuResponse, LoaiDichVuDisplay, PostBase, PostDisplay,TimeSlotRequest
+from routers.schemas import DatSanRequest, DatSanResponse, DichVuResponse, LoaiDichVuDisplay, PostBase, PostDisplay, SanBongUpdateRequest,TimeSlotRequest
 from db.database import get_db
 from db import db_dichvu,db_user,db_san
 from typing import List
@@ -90,3 +90,6 @@ def get_ds_dat_san_by_user(db: Session = Depends(get_db),current_user: SysUser =
 @router.get('/get_san_by_id/{id}')
 def get_san_by_id(id:str,db: Session = Depends(get_db)):
     return db_san.get_san_by_id(id,db)
+@router.put('/update_san/{id}')
+def update_san(id:str,request:SanBongUpdateRequest,db: Session = Depends(get_db)):
+    return db_san.update_san(id,request,db)

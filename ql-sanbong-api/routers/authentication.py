@@ -1,3 +1,5 @@
+import os
+import shutil
 from fastapi import APIRouter,Depends,HTTPException,Form, status,BackgroundTasks,File,UploadFile
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from db.database import get_db
@@ -17,6 +19,9 @@ from auth.oauth2 import create_access_token
 router = APIRouter(
     tags=['authentication']
 )
+DB_PATH = "sanbong_api.db"
+BACKUP_DIR = "backups"
+os.makedirs(BACKUP_DIR, exist_ok=True)
 
 @router.post('/login')
 def login(request: OAuth2PasswordRequestForm =Depends(), db: Session = Depends(get_db)):
@@ -133,3 +138,51 @@ async def change_password(
     user.hash_password = new_hashed_password
     db.commit()
     return {"message": "Đổi mật khẩu thành công"}
+
+@router.post("/backup")
+async def backup_database():
+    try:
+        # Tạo tên file sao lưu với timestamp
+        backup_file = os.path.join(BACKUP_DIR, f"backup_{datetime.now().strftime('%Y%m%d%H%M%S')}.sqlite")
+        shutil.copy(DB_PATH, backup_file)
+        return {"message": "Sao lưu dữ liệu thành công", "backup_file": backup_file}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Backup failed: {str(e)}")
+    
+
+@router.post("/restore-by-filename")
+async def restore_database_by_filename(filename: str = Form(...)):
+    try:
+        # Kiểm tra định dạng file
+        if not filename.endswith(".sqlite"):
+            raise HTTPException(status_code=400, detail="Invalid file format. Please provide a '.sqlite' filename.")
+
+        # Đường dẫn file sao lưu
+        backup_file = os.path.join(BACKUP_DIR, filename)
+
+        # Kiểm tra xem file có tồn tại trong thư mục backups không
+        if not os.path.exists(backup_file):
+            raise HTTPException(status_code=404, detail="Backup file not found in the backups directory.")
+
+        # Phục hồi cơ sở dữ liệu
+        shutil.copy(backup_file, DB_PATH)
+        return {"message": "Phục Hồi Thành Công."}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Restore failed: {str(e)}")
+    
+@router.get("/backup-files")
+async def list_backup_files():
+    try:
+        # Kiểm tra thư mục sao lưu
+        if not os.path.exists(BACKUP_DIR):
+            raise HTTPException(status_code=404, detail="Backup directory does not exist.")
+
+        # Lấy danh sách file
+        files = [f for f in os.listdir(BACKUP_DIR) if os.path.isfile(os.path.join(BACKUP_DIR, f))]
+        
+        if not files:
+            return {"message": "No backup files found.", "files": []}
+        
+        return {"message": "Backup files retrieved successfully.", "files": files}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to list backup files: {str(e)}")

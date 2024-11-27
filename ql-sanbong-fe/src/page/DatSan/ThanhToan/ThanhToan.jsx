@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Navbar from '../../../component/Navbar/Navbar';
 import Stepper from '../Stepper/Stepper';
@@ -13,6 +13,7 @@ const ThanhToan = () => {
   const { id, gia_thue } = selectedField || {};
   const [isSuccess, setIsSuccess] = useState(false);
   const [isExtraFeeTime, setIsExtraFeeTime] = useState(false); // State to store if extra fee is applied
+  const [adjustedPrice, setAdjustedPrice] = useState(gia_thue); // State to store the adjusted price
 
   // Lấy user_id từ cookie
   const user_id = Cookies.get('user_id');
@@ -78,6 +79,20 @@ const ThanhToan = () => {
     }
   };
 
+  useEffect(() => {
+    if (timeSlot && gia_thue) {
+      const [start_time] = timeSlot.split(' - ');
+      const startHour = parseInt(start_time.split(':')[0], 10);
+      const startMinute = parseInt(start_time.split(':')[1], 10);
+
+      const isExtraFee = startHour < 6 || (startHour === 6 && startMinute < 30) || startHour >= 18;
+      setIsExtraFeeTime(isExtraFee); // Set the state for extra fee time
+
+      const adjustedPrice = isExtraFee ? gia_thue * 1.1 : gia_thue;
+      setAdjustedPrice(adjustedPrice); // Update the adjusted price state
+    }
+  }, [timeSlot, gia_thue]);
+
   const handleDatSan = async () => {
     if (!id) return;
 
@@ -89,16 +104,6 @@ const ThanhToan = () => {
     // Lấy timeslot_id từ API
     const timeslot_id = await getTimeslotId();
     if (!timeslot_id) return;
-
-    // Tách start_time và kiểm tra điều kiện nhân thêm 10% giá
-    const [start_time] = timeSlot?.split(' - ') || [];
-    const startHour = parseInt(start_time.split(':')[0], 10);
-    const startMinute = parseInt(start_time.split(':')[1], 10);
-
-    const isExtraFee = startHour < 6 || (startHour === 6 && startMinute < 30) || startHour >= 18;
-    setIsExtraFeeTime(isExtraFee); // Set the state for extra fee time
-
-    const adjustedPrice = isExtraFee ? gia_thue * 1.1 : gia_thue;
 
     const data = {
       user_id,
@@ -145,10 +150,9 @@ const ThanhToan = () => {
               <p>Tổng cộng:{' '}</p>
               <p>
                 <strong>
-                  {gia_thue?.toLocaleString('vi-VN')} VND {isExtraFeeTime && '(Đã thêm 10% phí mở đèn)'}
+                  {adjustedPrice?.toLocaleString('vi-VN')} VND {isExtraFeeTime && '(Đã thêm 10% phí mở đèn)'}
                 </strong>
               </p>
-               
             </div>
             <button className="pay-button" onClick={handleDatSan}>Đặt Sân</button>
             {isSuccess && <p className="success-message">Đặt sân thành công!</p>}

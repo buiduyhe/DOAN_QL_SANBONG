@@ -11,6 +11,7 @@ import Cookies from "js-cookie";
 import ThongKe from "./ThongKe/ThongKe";
 import QLDuyeDat from "../NhanVienPage/QLDuyet/QLDuyetDat";
 import axios from "axios";
+import SaoLuu from "../NhanVienPage/BackUp&Restore/Bu&Rt";
 
 const Admin = () => {
   const [activeContent, setActiveContent] = useState(null); // Nội dung hiển thị
@@ -33,6 +34,7 @@ const Admin = () => {
     quantity: "",
     description: "",
     image: null,
+    gia: "",
   });
 
   const username = Cookies.get("username"); // Lấy thông tin người dùng từ Cookies
@@ -60,17 +62,26 @@ const Admin = () => {
   };
   const fetchUserData = async (selectedId) => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/user/get_user_by_id/${selectedId}`);
-      const user = response.data;
-      
-      // Cập nhật dữ liệu form với thông tin người dùng nhận được
-      setFormData({
-        name: user.full_name,
-        phone: user.phone,
-        gender: user.gender === "MALE" ? "male" : user.gender === "FEMALE" ? "female" : "other",
-        email: user.email,
-        password: "" // Không hiển thị mật khẩu trong form
-      });
+      let response;
+      if (activeContent === "courts") {
+        response = await axios.get(`http://127.0.0.1:8000/san/get_san_by_id/${selectedId}`);
+        const court = response.data;
+        setFormData((prevData) => ({
+          ...prevData,
+          gia: court.gia_thue || ""
+        }));
+      } else {
+        response = await axios.get(`http://127.0.0.1:8000/user/get_user_by_id/${selectedId}`);
+        const user = response.data;
+        setFormData({
+          name: user.full_name || "",
+          phone: user.phone || "",
+          gender: user.gender === "MALE" ? "male" : user.gender === "FEMALE" ? "female" : "other",
+          email: user.email || "",
+          password: "", // Không hiển thị mật khẩu trong form
+          gia: ""
+        });
+      }
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu người dùng:", error);
     }
@@ -107,7 +118,7 @@ const Admin = () => {
     if (selectedId) {
       fetchUserData(selectedId);
       setShowEditForm(true);   // Mở form chỉnh sửa
-      setFormType(activeContent === "employees" ? "employees" : "customers");
+      setFormType(activeContent === "employees" ? "employees" : activeContent === "customers" ? "customers" : "courts");
     } else {
       console.error("No selected ID found");
     }
@@ -132,6 +143,8 @@ const Admin = () => {
     console.log("Selected ID:", id); // Xử lý logic tùy ý
     if (activeContent === "employees") setFormType("employees");
     else if (activeContent === "customers") setFormType("customers");
+    else if (activeContent === "courts") setFormType("courts");
+
   };
   const handleSelectIds = (ids) => {
     setSelectedIds(ids);
@@ -251,15 +264,21 @@ const Admin = () => {
     setError('');
 
     let apiUrl = '';
-    let requestData = {
-      hoten: formData.name,
-      phone: formData.phone,
-      password: formData.password,
-      gender: formData.gender === "male" ? "Nam" : formData.gender === "female" ? "Nữ" : "Khác",
-    };
+    let requestData = {};
 
     if (formType === 'employees' || formType === 'customers') {
       apiUrl = `http://127.0.0.1:8000/user/update_SysUser/${selectedId}`;
+      requestData = {
+        hoten: formData.name,
+        phone: formData.phone,
+        password: formData.password,
+        gender: formData.gender === "male" ? "Nam" : formData.gender === "female" ? "Nữ" : "Khác",
+      };
+    } else if (formType === 'courts') {
+      apiUrl = `http://127.0.0.1:8000/san/update_san/${selectedId}`;
+      requestData = {
+        gia: formData.gia,
+      };
     } else {
       console.error('Invalid form type:', formType); // Log chi tiết lỗi
       setError('Invalid form type. Please check your form configuration.');
@@ -289,7 +308,6 @@ const Admin = () => {
 
     setShowEditForm(false); // Đóng form sau khi xử lý
   };
-  
   return (
     <div className="AdminPage row">
       <div className="Admin-left col-md-2">
@@ -308,12 +326,14 @@ const Admin = () => {
           {activeContent === "services" && <QLDichVu onSelectIds={handleSelectIds} />}
           {activeContent === "orders" && <QLDonDat />}
           {activeContent === "order" && <QLDuyeDat />}
-          {activeContent === "courts" && <QLSan />}
+          {activeContent === "courts" && <QLSan onSelectId={handleSelect}/>}
           {activeContent === "suppliers" && <QLNhaCungCap />}
           {activeContent === "statistics" && <ThongKe />}
+          {activeContent === "SaoLuu" && <SaoLuu />}
+
         </div>
 
-        {activeContent !== "order" && activeContent !== "orders" && activeContent !== "statistics" && (
+        {activeContent !== "order" && activeContent !== "orders" && activeContent !== "statistics" && activeContent !== "SaoLuu" && (
           <div className="btn">
             {activeContent !== "courts" && <button onClick={handleAddClick}>Thêm</button>}
             {activeContent !== "courts" && <button onClick={handleFormDelete}>Xóa</button>}
@@ -326,7 +346,7 @@ const Admin = () => {
             <div className="modal">
               <form className="add-form" onSubmit={handleFormEditSubmit}>
                 <h3>
-                {formType === "employees" ? "Sửa Nhân Viên" : formType === "customers" ? "Sửa Khách Hàng" : formType === "courts" ? "Sửa Sân Bóng" : ""}
+                {formType === "employees" ? "Sửa Thông Tin Nhân Viên" : formType === "customers" ? "Sửa Thông Tin Khách Hàng" : formType === "courts" ? "Sửa Thông Tin Sân Bóng" : ""}
                 </h3>
 
                 {(formType === "employees" || formType === "customers") && (
@@ -376,16 +396,20 @@ const Admin = () => {
                     </div>
                   </>
                 )}
+                
                 {(formType === "courts") && (
+                  <>
                   <div>
-                  <label>Giá Thuê:</label>
-                  <input
-                    type="text"
-                    name="Gia"
-                    value={formData.gia}
-                    onChange={handleInputChange}
-                  />
-                </div>
+                    <label>Giá Thuê:</label>
+                    <input
+                      type="text"
+                      name="gia"
+                      value={formData.gia}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  </>
                 )}
 
                 <div className="modal-buttons">
