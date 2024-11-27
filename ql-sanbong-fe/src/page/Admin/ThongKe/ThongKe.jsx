@@ -1,4 +1,13 @@
 import React, { useState, useEffect } from "react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 import "./ThongKe.scss";
 
 const ThongKe = () => {
@@ -10,16 +19,58 @@ const ThongKe = () => {
   const [selectedDate, setSelectedDate] = useState(""); // Giá trị ngày được chọn
   const [selectedMonth, setSelectedMonth] = useState(""); // Giá trị tháng được chọn
 
+  // Lọc 3 ngày gần nhất (tính từ ngày người dùng chọn)
+  const getRecentDates = (date) => {
+    const dates = [];
+    const currentDate = new Date(date);
+
+    // Lấy ngày hiện tại và 2 ngày trước đó
+    for (let i = 2; i >= 0; i--) {
+      const dateCopy = new Date(currentDate);
+      dateCopy.setDate(currentDate.getDate() - i);
+      dates.push(dateCopy.toISOString().split("T")[0]);
+    }
+
+    return dates;
+  };
+
+  // Lọc 3 tháng gần nhất (tính từ tháng người dùng chọn)
+  const getRecentMonths = (month) => {
+    const months = [];
+    const [year, monthNum] = month.split("-");
+
+    // Lấy tháng hiện tại và 2 tháng trước đó
+    for (let i = 2; i >= 0; i--) {
+      const currentMonth = new Date(year, monthNum - 1 - i, 1);
+      months.push(
+        `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, "0")}`
+      );
+    }
+
+    return months;
+  };
+
   // Gọi API theo ngày
   const fetchDailyData = async (date) => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:8000/san/ThongKe_day?ngay=${date}`);
+      const recentDates = getRecentDates(date).join(",");
+      const response = await fetch(
+        `http://localhost:8000/san/ThongKe_day?ngay=${recentDates}`
+      );
       if (!response.ok) {
         throw new Error("Lỗi khi tải thống kê theo ngày");
       }
       const data = await response.json();
-      setDailyData(data);
+  
+      // Tạo dữ liệu cho các ngày không có doanh thu (giả sử giá trị = 0)
+      const recentDatesArray = getRecentDates(date);
+      const completeData = recentDatesArray.map((ngay) => {
+        const existingData = data.find((item) => item.ngay === ngay);
+        return existingData || { ngay, tong_tien: 0 }; // Nếu không có dữ liệu cho ngày, gán tổng tiền = 0
+      });
+  
+      setDailyData(completeData); // Lưu trữ dữ liệu trả về từ API, bao gồm cả ngày không có doanh thu
     } catch (err) {
       setError(err.message);
     } finally {
@@ -31,19 +82,29 @@ const ThongKe = () => {
   const fetchMonthlyData = async (month) => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:8000/san/ThongKe_month?thang=${month}`);
+      const recentMonths = getRecentMonths(month).join(",");
+      const response = await fetch(
+        `http://localhost:8000/san/ThongKe_month?thang=${recentMonths}`
+      );
       if (!response.ok) {
         throw new Error("Lỗi khi tải thống kê theo tháng");
       }
       const data = await response.json();
-      setMonthlyData(data);
+  
+      // Tạo dữ liệu cho các tháng không có doanh thu (giả sử giá trị = 0)
+      const recentMonthsArray = getRecentMonths(month);
+      const completeData = recentMonthsArray.map((thang) => {
+        const existingData = data.find((item) => item.thang_nam === thang);
+        return existingData || { thang_nam: thang, tong_tien: 0 }; // Nếu không có dữ liệu cho tháng, gán tổng tiền = 0
+      });
+  
+      setMonthlyData(completeData); // Lưu trữ dữ liệu trả về từ API, bao gồm cả tháng không có doanh thu
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
-
   // Xử lý khi chọn ngày
   const handleDateChange = (e) => {
     const date = e.target.value;
@@ -90,46 +151,42 @@ const ThongKe = () => {
       {/* Hiển thị dữ liệu theo ngày */}
       {selectedDate && dailyData.length > 0 && (
         <div className="statistics-section">
-          <h3>Theo ngày</h3>
-          <table className="statistics-table">
-            <thead>
-              <tr>
-                <th>Ngày</th>
-                <th>Tổng Tiền (VND)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {dailyData.map((item, index) => (
-                <tr key={index}>
-                  <td>{item.ngay}</td>
-                  <td>{item.tong_tien.toLocaleString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <h3>Thống kê doanh thu theo ngày</h3>
+          <ResponsiveContainer width="100%" height={400}>
+            <BarChart data={dailyData}>
+              <XAxis dataKey="ngay" label={{ position: "insideBottom" }} />
+              <YAxis label={{ angle: -90, position: "insideLeft" }} />
+              <Tooltip />
+              <Legend />
+              <Bar
+                dataKey="tong_tien"
+                fill="#8884d8"
+                name="Tổng Tiền (VND)"
+                barSize={20} // Điều chỉnh kích thước cột
+              />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       )}
 
       {/* Hiển thị dữ liệu theo tháng */}
       {selectedMonth && monthlyData.length > 0 && (
         <div className="statistics-section">
-          <h3>Theo tháng</h3>
-          <table className="statistics-table">
-            <thead>
-              <tr>
-                <th>Tháng - Năm</th>
-                <th>Tổng Tiền (VND)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {monthlyData.map((item, index) => (
-                <tr key={index}>
-                  <td>{item.thang_nam}</td>
-                  <td>{item.tong_tien.toLocaleString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <h3>Thống kê doanh thu theo tháng</h3>
+          <ResponsiveContainer width="100%" height={400}>
+            <BarChart data={monthlyData}>
+              <XAxis dataKey="thang_nam" label={{ position: "insideBottom" }} />
+              <YAxis label={{ angle: -90, position: "insideLeft" }} />
+              <Tooltip />
+              <Legend />
+              <Bar
+                dataKey="tong_tien"
+                fill="#82ca9d"
+                name="Tổng Tiền (VND)"
+                barSize={30} // Điều chỉnh kích thước cột theo tháng
+              />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       )}
 
