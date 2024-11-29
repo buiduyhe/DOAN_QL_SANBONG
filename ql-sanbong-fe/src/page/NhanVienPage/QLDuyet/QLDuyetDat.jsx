@@ -11,8 +11,10 @@ const QLDuyetDat = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [searchField, setSearchField] = useState("id");
     const [selectedId, setSelectedId] = useState(null);
+    const [refresh, setRefresh] = useState(false);
 
     useEffect(() => {
+        setLoading(true);
         fetch("http://127.0.0.1:8000/san/ds_dat_san")
             .then((response) => response.json())
             .then((data) => {
@@ -24,7 +26,7 @@ const QLDuyetDat = () => {
                 setError(error.message);
                 setLoading(false);
             });
-    }, []);
+    }, [refresh]);
 
     useEffect(() => {
         const fetchTimeslots = async () => {
@@ -90,6 +92,7 @@ const QLDuyetDat = () => {
                     } else {
                         window.alert("Duyệt đơn thành công!");
                     }
+                    setRefresh(!refresh);
                 })
                 .catch((error) => {
                     console.error("Error approving booking:", error.message);
@@ -110,6 +113,7 @@ const QLDuyetDat = () => {
                     } else {
                         window.alert("Từ chối đơn thành công!");
                     }
+                    setRefresh(!refresh);
                 })
                 .catch((error) => {
                     console.error("Error rejecting booking:", error.message);
