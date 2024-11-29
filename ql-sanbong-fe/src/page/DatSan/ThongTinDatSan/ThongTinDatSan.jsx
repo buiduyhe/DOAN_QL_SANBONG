@@ -92,9 +92,11 @@ const ThongTinDatSan = ({ selectedField }) => {
         <p>Ngày đặt: <strong>{formatDate(defaultDate)}</strong></p>
         <p>Thời gian: <strong>{timeSlot || '--'}</strong></p>
         <div className="total-amount">
-          <p>Tổng cộng: </p>
+          <p>Tạm Tính: </p>
           <p><strong>{adjustedPrice?.toLocaleString('vi-VN')} VND</strong></p>
         </div>
+        <p className="price-note" style={{ color: 'red', fontSize: '12px' }}>(Giá sân có thể thay đổi tùy vào khung giờ)</p>
+
         <button className="pay-button" onClick={handleXacNhan}>Xác Nhận</button>
       </div>
     </div>

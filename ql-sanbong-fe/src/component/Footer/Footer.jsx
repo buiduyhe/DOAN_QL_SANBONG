@@ -68,11 +68,11 @@ const Footer = () => {
           <h4>Liên hệ</h4>
           <div className="card-call">
             <div className="card-left">
-              <p>chăm sóc khách hàng</p>
+              <p>Chăm sóc khách hàng</p>
               <a href="" style={{ textDecoration: "none" }}>
-                0919581455
+                0123456789
               </a>
-              <p>Hải Biết Chơi</p>
+              <p>Nguyễn Văn An</p>
             </div>
             <div className="card-right">
               <button>Gọi Ngay</button>

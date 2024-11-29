@@ -7,12 +7,12 @@
   align-items: flex-start;
   position: relative;
 
-  .left-column{
+  .left-column {
     display: flex;
     flex-direction: column;
     gap: 10px;
   }
-  
+
   .mid-column, .right-column {
     display: flex;
     flex-direction: column;
@@ -48,6 +48,12 @@
       opacity: 0.7;
     }
 
+    &.selected {
+      border: 2px solid #FFD700;  // Golden border to indicate selection
+      background-color: rgba(255, 215, 0, 0.5);  // Light golden background for selected field
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);  // Add a glow effect
+    }
+
     .reserved-text {
       position: absolute;
       bottom: 10px;
@@ -57,8 +63,8 @@
   }
 
   .large-field {
-    width: 300px; /* Tăng chiều ngang cho sân 7 */
-    height: 180px; /* Giữ nguyên chiều cao */
+    width: 300px;
+    height: 180px;
     top: 10px;
     left: 10px;
   }

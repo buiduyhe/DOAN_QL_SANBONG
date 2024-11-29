@@ -66,24 +66,40 @@ const SoDoSan = () => {
   const isFieldAvailable = (fieldId) => {
     return availableFields.find((field) => field.san_id === fieldId)?.tinhtrang === true;
   };
-
+  const Field = ({ field, onClick, isLarge, isDisabled, isSelected }) => {
+    if (!field) return null;
+  
+    const backgroundImage = isLarge ? `url(${San_7})` : `url(${fieldImage})`;
+  
+    return (
+      <div
+        className={`field ${isDisabled ? 'reserved' : ''} ${isLarge ? 'large-field' : ''} ${isSelected ? 'selected' : ''}`}
+        style={{ backgroundImage }}
+        onClick={!isDisabled ? onClick : null}
+      >
+        {field.id}
+        {isDisabled && <span className="reserved-text">Đã đặt sân</span>}
+      </div>
+    );
+  };
+  
   return (
     <div className="stadium-layout">
       <div className="left-column">
         <div className="row">
-          <Field field={getFieldById("S507")} onClick={() => handleFieldClick(getFieldById("S507"))} isDisabled={!isFieldAvailable("S507")} />
-          <Field field={getFieldById("S505")} onClick={() => handleFieldClick(getFieldById("S505"))} isDisabled={!isFieldAvailable("S505")} />
-          <Field field={getFieldById("S503")} onClick={() => handleFieldClick(getFieldById("S503"))} isDisabled={!isFieldAvailable("S503")} />
-          <Field field={getFieldById("S501")} onClick={() => handleFieldClick(getFieldById("S501"))} isDisabled={!isFieldAvailable("S501")} />
+          <Field field={getFieldById("S507")} onClick={() => handleFieldClick(getFieldById("S507"))} isDisabled={!isFieldAvailable("S507")} isSelected={selectedField?.id === "S507"}/>
+          <Field field={getFieldById("S505")} onClick={() => handleFieldClick(getFieldById("S505"))} isDisabled={!isFieldAvailable("S505")} isSelected={selectedField?.id === "S505"}/>
+          <Field field={getFieldById("S503")} onClick={() => handleFieldClick(getFieldById("S503"))} isDisabled={!isFieldAvailable("S503")} isSelected={selectedField?.id === "S503"}/>
+          <Field field={getFieldById("S501")} onClick={() => handleFieldClick(getFieldById("S501"))} isDisabled={!isFieldAvailable("S501")} isSelected={selectedField?.id === "S501"}/>
         </div>
         <div className="row">
-          <Field field={getFieldById("S508")} onClick={() => handleFieldClick(getFieldById("S508"))} isDisabled={!isFieldAvailable("S508")} />
-          <Field field={getFieldById("S506")} onClick={() => handleFieldClick(getFieldById("S506"))} isDisabled={!isFieldAvailable("S506")} />
-          <Field field={getFieldById("S504")} onClick={() => handleFieldClick(getFieldById("S504"))} isDisabled={!isFieldAvailable("S504")} />
-          <Field field={getFieldById("S502")} onClick={() => handleFieldClick(getFieldById("S502"))} isDisabled={!isFieldAvailable("S502")} />
+          <Field field={getFieldById("S508")} onClick={() => handleFieldClick(getFieldById("S508"))} isDisabled={!isFieldAvailable("S508")} isSelected={selectedField?.id === "S508"}/>
+          <Field field={getFieldById("S506")} onClick={() => handleFieldClick(getFieldById("S506"))} isDisabled={!isFieldAvailable("S506")} isSelected={selectedField?.id === "S506"}/>
+          <Field field={getFieldById("S504")} onClick={() => handleFieldClick(getFieldById("S504"))} isDisabled={!isFieldAvailable("S504")} isSelected={selectedField?.id === "S504"}/>
+          <Field field={getFieldById("S502")} onClick={() => handleFieldClick(getFieldById("S502"))} isDisabled={!isFieldAvailable("S502")} isSelected={selectedField?.id === "S502"}/>
         </div>
         <div className='row'>
-          <Field field={getFieldById("S702")} onClick={() => handleFieldClick(getFieldById("S702"))} isLarge isDisabled={!isFieldAvailable("S702")} />
+          <Field field={getFieldById("S702")} onClick={() => handleFieldClick(getFieldById("S702"))} isLarge isDisabled={!isFieldAvailable("S702")} isSelected={selectedField?.id === "S702"}/>
         </div>
       </div>
 
@@ -92,19 +108,19 @@ const SoDoSan = () => {
         <div className="info-box info-box-QQL">Quầy quản lý</div>
         <div className="info-box large">Đường đi, giữ xe</div>
         <div className="row">
-          <Field field={getFieldById("S701")} onClick={() => handleFieldClick(getFieldById("S701"))} isLarge isDisabled={!isFieldAvailable("S701")} />
+          <Field field={getFieldById("S701")} onClick={() => handleFieldClick(getFieldById("S701"))} isLarge isDisabled={!isFieldAvailable("S701")} isSelected={selectedField?.id === "S701"}/>
         </div>
         
       </div>
 
       <div className="right-column">
         <div className="row">
-          <Field field={getFieldById("S509")} onClick={() => handleFieldClick(getFieldById("S509"))} isDisabled={!isFieldAvailable("S509")} />
-          <Field field={getFieldById("S511")} onClick={() => handleFieldClick(getFieldById("S511"))} isDisabled={!isFieldAvailable("S511")} />
+          <Field field={getFieldById("S509")} onClick={() => handleFieldClick(getFieldById("S509"))} isDisabled={!isFieldAvailable("S509")} isSelected={selectedField?.id === "S509"}/>
+          <Field field={getFieldById("S511")} onClick={() => handleFieldClick(getFieldById("S511"))} isDisabled={!isFieldAvailable("S511")} isSelected={selectedField?.id === "S511"}/>
         </div>
         <div className="row">
-          <Field field={getFieldById("S510")} onClick={() => handleFieldClick(getFieldById("S510"))} isDisabled={!isFieldAvailable("S510")} />
-          <Field field={getFieldById("S512")} onClick={() => handleFieldClick(getFieldById("S512"))} isDisabled={!isFieldAvailable("S512")} />
+          <Field field={getFieldById("S510")} onClick={() => handleFieldClick(getFieldById("S510"))} isDisabled={!isFieldAvailable("S510")} isSelected={selectedField?.id === "S510"}/>
+          <Field field={getFieldById("S512")} onClick={() => handleFieldClick(getFieldById("S512"))} isDisabled={!isFieldAvailable("S512")} isSelected={selectedField?.id === "S512"}/>
         </div>
         
       </div>
