@@ -42,9 +42,8 @@ function ChangePasswordForm() {
 
       setLoading(false); // Kết thúc tải
       if (!response.ok) {
-        const errorText = await response.text();
-        const errorData = JSON.parse(errorText || '{}');
-        throw new Error(errorData.message || errorText || 'Đổi mật khẩu không thành công.');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Đổi mật khẩu không thành công.');
       }
 
       setSuccess('Đổi mật khẩu thành công!');

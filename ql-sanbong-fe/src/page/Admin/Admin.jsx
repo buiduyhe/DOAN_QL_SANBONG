@@ -152,6 +152,10 @@ const Admin = () => {
     if (activeContent === "services") setFormType("services");
   };
   const handleFormDelete = async () => {
+    if (!window.confirm("Bạn có chắc chắn muốn xóa người dùng này không?")) {
+      return; // Dừng xử lý nếu người dùng chọn "Không"
+    }
+
     console.log(`Xóa ID:`, selectedId, selectedIds, formType); // Log ID cần xóa
     
     setMessage('');
@@ -185,7 +189,7 @@ const Admin = () => {
         throw new Error(data.detail || 'Xóa không thành công!'); // Lỗi từ API
       }
   
-      setMessage('Xóa thành công!');
+      alert('Xóa thành công!');
       refreshData(); // Lưu thông báo thành công
     } catch (error) {
       console.error('Error during delete:', error); // Log lỗi chi tiết
@@ -194,7 +198,6 @@ const Admin = () => {
   
     setShowAddForm(false); // Đóng form sau khi xử lý
   };
-  
   
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -241,7 +244,7 @@ const Admin = () => {
         throw new Error(data.detail || 'Đăng ký không thành công!'); // Lỗi từ API
       }
 
-      setMessage(data.detail);
+      alert(data.detail);
       refreshData(); // Lưu thông báo thành công
     } catch (error) {
       setError(error.message); // Lưu thông báo lỗi
@@ -258,6 +261,9 @@ const Admin = () => {
   
   const handleFormEditSubmit = async (e) => {
     e.preventDefault();
+    if (!window.confirm("Bạn có chắc chắn muốn lưu các thay đổi này không?")) {
+      return; // Dừng xử lý nếu người dùng chọn "Không"
+    }
     console.log(`Dữ liệu form (${formType}):`, formData);
 
     setMessage('');
@@ -299,7 +305,7 @@ const Admin = () => {
         throw new Error(data.detail || 'Cập nhật không thành công!'); // Lỗi từ API
       }
 
-      setMessage(data.detail);
+      alert(data.detail);
       refreshData(); // Lưu thông báo thành công
     } catch (error) {
       console.error('Error during update:', error); // Log lỗi chi tiết
@@ -413,7 +419,7 @@ const Admin = () => {
                 )}
 
                 <div className="modal-buttons">
-                  <button type="submit" onClick={() => refreshData()}>Lưu</button>
+                  <button type="submit" >Lưu</button>
                   <button type="button" onClick={() => setShowEditForm(false)}>Hủy</button>
                 </div>
               </form>
@@ -627,7 +633,7 @@ const Admin = () => {
                 )}
 
                 <div className="modal-buttons">
-                  <button type="submit" onClick={() => refreshData()} >Lưu </button>
+                  <button type="submit">Lưu </button>
                   <button type="button" onClick={() => setShowAddForm(false)}>
                     Hủy
                   </button>
