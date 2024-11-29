@@ -105,6 +105,7 @@ const ThongKe = () => {
       setLoading(false);
     }
   };
+
   // Xử lý khi chọn ngày
   const handleDateChange = (e) => {
     const date = e.target.value;
@@ -121,6 +122,11 @@ const ThongKe = () => {
     fetchMonthlyData(month); // Gọi API theo tháng
   };
 
+  // Tính toán ngày tối đa và tối thiểu cho input date
+  const today = new Date();
+  const maxDate = today.toISOString().split("T")[0];
+  const minDate = new Date(today.setDate(today.getDate() - 29)).toISOString().split("T")[0];
+
   return (
     <div className="thong-ke">
       <h2>Thống kê doanh thu</h2>
@@ -133,6 +139,8 @@ const ThongKe = () => {
             type="date"
             id="date"
             value={selectedDate}
+            min={minDate}
+            max={maxDate}
             onChange={handleDateChange}
           />
         </div>
