@@ -28,7 +28,7 @@ cd ql-sanbong-api
 env/Scripts/activate
 uvicorn main:app --reload
 ```
-
+tạo 1 cmd mới để chạy
 3. Navigate into the project directory:
 ```bash
 cd ql-sanbong-fe
@@ -36,6 +36,5 @@ cd ql-sanbong-fe
 3.1 Create virtual environment
 ```bash
 npm install
-npm install react-router-dom
 npm start
 ```
