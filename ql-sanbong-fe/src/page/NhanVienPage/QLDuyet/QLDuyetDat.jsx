@@ -151,7 +151,13 @@ const QLDuyetDat = () => {
                     </thead>
                     <tbody>
                         {filteredData.map((san) => (
-                            <tr key={san.id} onClick={() => handleRadioChange(san.id)}>
+                            <tr
+                                key={san.id}
+                                onClick={() => handleRadioChange(san.id)}
+                                style={{
+                                    backgroundColor: san.status === 0 ? "white" : san.status === 1 ? "lightgreen" : "lightcoral"
+                                }}
+                            >
                                 <td>
                                 <input
                                     type="radio"

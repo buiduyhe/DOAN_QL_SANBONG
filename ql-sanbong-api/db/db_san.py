@@ -284,7 +284,7 @@ def ThongKe_12months(db: Session):
     return thong_ke_list
 
 def get_ds_dat_san(db: Session):
-    dat_san_list = db.query(DatSan).all()
+    dat_san_list = db.query(DatSan).order_by(DatSan.id.desc()).all()
     if not dat_san_list:
         raise HTTPException(status_code=404, detail="Không tìm thấy đặt sân nào.")
     return dat_san_list
