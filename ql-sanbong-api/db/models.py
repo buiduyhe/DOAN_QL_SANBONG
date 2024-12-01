@@ -152,10 +152,11 @@ class NhaCungCap(Base):
 class NhapHang(Base):
     __tablename__ = 'NHAP_HANG'
     id = Column(Integer, primary_key=True, index=True)
+    ma_phieu_nhap = Column(String(255), unique=True, nullable=False)
     ncc_id = Column(Integer, ForeignKey('NHA_CUNG_CAP.id'), nullable=False)
     ngay_nhap = Column(DateTime, server_default=func.now(), nullable=False)
+    trang_thai = Column(Integer, default=0)  # 0: Chưa duyệt, 1: Đã duyệt
     tong_tien = Column(Float, nullable=False)
-
     # Mối quan hệ với bảng NhaCungCap và ChiTietNhapHang
     nha_cung_cap = relationship("NhaCungCap", back_populates="nhap_hangs")
     chi_tiet_nhap_hangs = relationship("ChiTietNhapHang", back_populates="nhap_hang")

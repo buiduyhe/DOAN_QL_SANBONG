@@ -221,4 +221,20 @@ class SanBongUpdateRequest(BaseModel):
     gia: Optional[int] = None
     class Config:
         orm_mode = True
+        
+class ChitietNhapHang(BaseModel):
+    id_dv:str
+    soluong:int
+    don_gia:int
+    class Config:
+        orm_mode = True
+        
+class ChitietNhapHangResponse(BaseModel):
+    STT:int
+    id_dv:int
+    soluong:int
+    don_gia:int
+    thanhtien:int
+    class Config:
+        orm_mode = True
     
