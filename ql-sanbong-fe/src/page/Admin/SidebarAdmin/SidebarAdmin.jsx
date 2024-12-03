@@ -57,7 +57,7 @@ const SidebarAdmin = ({ onMenuClick }) => {
         </li>
         {role !== "admin" && (
           <li>
-            <a onClick={handleSupplierClick}>Quản lý nhà cung cấp</a>
+            <a onClick={() => onMenuClick("suppliers")}>Quản lý nhà cung cấp</a>
           </li>
         )}
         <li>
@@ -65,6 +65,9 @@ const SidebarAdmin = ({ onMenuClick }) => {
         </li>
         <li>
           <a onClick={() => onMenuClick("SaoLuu")}>Sao lưu phục hồi</a>
+        </li>
+        <li>
+          <a onClick={() => onMenuClick("PhieuNhap")}>Phiếu đặt hàng</a>
         </li>
       </ul>
     </div>

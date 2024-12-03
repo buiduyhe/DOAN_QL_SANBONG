@@ -47,18 +47,18 @@ const QLNhanVien = ({ onSelectId = () => {} }) => {
 
       {/* Thanh tìm kiếm */}
       <SearchBar
-  searchTerm={searchTerm}
-  setSearchTerm={setSearchTerm}
-  searchField={searchField}
-  setSearchField={setSearchField}
-  searchLabel="Khách Hàng"
-  searchOptions={[
-    { value: "id", label: "Tìm kiếm theo mã" },
-    { value: "full_name", label: "Tìm kiếm theo tên" },
-    { value: "email", label: "Tìm kiếm theo email" },
-    { value: "phone", label: "Tìm kiếm theo số điện thoại" },
-  ]}
-/>
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        searchField={searchField}
+        setSearchField={setSearchField}
+        searchLabel="Khách Hàng"
+        searchOptions={[
+          { value: "id", label: "Tìm kiếm theo mã" },
+          { value: "full_name", label: "Tìm kiếm theo tên" },
+          { value: "email", label: "Tìm kiếm theo email" },
+          { value: "phone", label: "Tìm kiếm theo số điện thoại" },
+        ]}
+      />
 
       {/* Bảng danh sách nhân viên */}
       <table>
