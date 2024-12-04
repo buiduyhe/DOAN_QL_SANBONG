@@ -237,4 +237,8 @@ class ChitietNhapHangResponse(BaseModel):
     thanhtien:int
     class Config:
         orm_mode = True
-    
+class UpdateNCC(BaseModel):
+    ten_ncc: Optional[str] = None
+    dia_chi: Optional[str] = None
+    sdt: Optional[str] = None
+    email: Optional[str] = None

@@ -2,7 +2,7 @@
 
 import logging
 from apscheduler.schedulers.background import BackgroundScheduler
-from datetime import datetime, timedelta ,date
+from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from db.database import SessionLocal, get_db
 from db.models import DatSan, SanBong, TimeSlot
@@ -103,7 +103,7 @@ def update_sanbong_status_used():
 
         # Cập nhật trạng thái của sân bóng
         for record in dat_san_records:
-            san_bong = db.query(SanBong).filter(SanBong.id == record.id_san).first()
+            san_bong = db.query(SanBong).filter(SanBong.id == record.id_san).one_or_none()
             if san_bong:
                 san_bong.trang_thai = 0  # Đang sử dụng
                 db.add(san_bong)
@@ -120,7 +120,7 @@ def update_sanbong_status_used():
         )
 
         for slot in past_time_slots:
-            san_bong = db.query(SanBong).filter(SanBong.id == slot.id_san).first()
+            san_bong = db.query(SanBong).filter(SanBong.id == slot.id_san).one_or_none()
             if san_bong:
                 san_bong.trang_thai = 1  # Không sử dụng
                 db.add(san_bong)

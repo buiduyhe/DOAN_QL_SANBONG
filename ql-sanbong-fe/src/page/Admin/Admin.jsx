@@ -62,7 +62,7 @@ const Admin = () => {
 
   const fetchSupplierData = async (id) => {
     try {
-      const response = await axios.get(`http://localhost:8000/Ncc/get_Ncc_by_id/${id}`);
+      const response = await axios.get(`http://127.0.0.1:8000/Ncc/get-Ncc/${id}`);
       const supplier = response.data;
   
       setFormData({
@@ -106,7 +106,7 @@ const Admin = () => {
         });
       }
     } catch (error) {
-      console.error("Lỗi khi lấy dữ liệu người dùng:", error);
+      console.error("Lỗi khi lấy dữ liệu ", error);
     }
   };
   const handleLogoutClick = () => {
@@ -243,19 +243,6 @@ const Admin = () => {
     e.preventDefault();
     console.log(`Dữ liệu form (${formType}):`, formData);
 
-    if (!formData.name || !formData.email || !formData.phone || !formData.address) {
-      setError("Tên, email, số điện thoại và địa chỉ là bắt buộc.");
-      return;
-    }
-    const supplierData = {
-      ten_ncc: formData.name,    // Tên nhà cung cấp
-      dia_chi: formData.address, // Địa chỉ
-      email: formData.email,     // Email
-      sdt: formData.phone,       // Số điện thoại
-    };
-
-
-    
     setMessage('');
     setError('');
 
@@ -306,7 +293,7 @@ const Admin = () => {
         throw new Error(data.detail || 'Đăng ký không thành công!'); // Lỗi từ API
       }
 
-      alert(data.detail);
+      alert("Đăng ký thành công!");
       refreshData(); // Lưu thông báo thành công
     } catch (error) {
       setError(error.message); // Lưu thông báo lỗi
@@ -334,9 +321,24 @@ const Admin = () => {
   
     let apiUrl = '';
     let requestData = {};
-  
-    if (formType === 'suppliers') {
-      apiUrl = `http://localhost:8000/Ncc/update_Ncc/${selectedId}`;
+    
+    
+    if (formType === 'employees' || formType === 'customers') {
+      apiUrl = `http://127.0.0.1:8000/user/update_SysUser/${selectedId}`;
+      requestData = {
+        hoten: formData.name,
+        phone: formData.phone,
+        password: formData.password,
+        gender: formData.gender === "male" ? "Nam" : formData.gender === "female" ? "Nữ" : "Khác",
+      };
+    } else if (formType === 'courts') {
+      apiUrl = `http://127.0.0.1:8000/san/update_san/${selectedId}`;
+      requestData = {
+        gia: formData.gia,
+      };
+    }
+    else if (formType === 'suppliers') {
+      apiUrl = `http://127.0.0.1:8000/Ncc/update-Ncc/${selectedId}`;
       requestData = {
         ten_ncc: formData.name,
         dia_chi: formData.address,
@@ -363,7 +365,7 @@ const Admin = () => {
         throw new Error(data.detail || 'Cập nhật không thành công!');
       }
   
-      alert(data.detail);
+      alert('Cập nhật thành công!');
       refreshData();
     } catch (error) {
       console.error('Error during update:', error);
@@ -399,7 +401,7 @@ const Admin = () => {
 
         </div>
 
-        {activeContent !== "order" && activeContent !== "orders" && activeContent !== "statistics" && activeContent !== "SaoLuu" && (
+        {activeContent !== "order" && activeContent !== "orders" && activeContent !== "statistics" && activeContent !== "SaoLuu" &&activeContent !== "PhieuNhap" && (
           <div className="btn">
             {activeContent !== "courts" && <button onClick={handleAddClick}>Thêm</button>}
             {activeContent !== "courts" && <button onClick={handleFormDelete}>Xóa</button>}

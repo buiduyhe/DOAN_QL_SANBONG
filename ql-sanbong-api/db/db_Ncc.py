@@ -8,7 +8,7 @@ import datetime
 from fastapi import HTTPException, status
 from db.models import DatSan, DichVu, DichVu_LoaiDichVu, SanBong,LoaiSanBong, SysUser, TimeSlot,ChiTietHoaDon,HoaDon,NhaCungCap
 from routers import schemas
-from db import db_user,db_san,db_dichvu
+from db import db_user,db_san,db_dichvu,db_auth
 import pandas as pd
 from fastapi.responses import FileResponse
 from datetime import datetime, timedelta
@@ -38,11 +38,17 @@ def create_Ncc(db: Session, tenNcc: str, diachi: str, sdt: str, email: str):
     db.commit()
     return {"message": "Tạo Nhà cung cấp thành công."}
 
-def update_Ncc(db: Session, id: int, tenNcc: str, diachi: str, sdt: str, email: str):
+def update_Ncc(db: Session, id: int, Ncc: schemas.UpdateNCC):
+    if not Ncc.email or "@" not in Ncc.email:
+        raise HTTPException(status_code=400, detail="Email không đúng định dạng.")
+    
+    if not db_auth.check_phone_number_valid(phone=Ncc.sdt):
+        raise HTTPException(status_code=400, detail="Số điện thoại không hợp lệ.")
+    
     query = db.query(NhaCungCap).filter(NhaCungCap.id == id).first()
-    query.ten_ncc = tenNcc
-    query.dia_chi = diachi
-    query.sdt = sdt
-    query.email = email
+    query.ten_ncc = Ncc.ten_ncc
+    query.dia_chi = Ncc.dia_chi
+    query.sdt = Ncc.sdt
+    query.email = Ncc.email
     db.commit()
     return {"message": "Cập nhật Nhà cung cấp thành công."}

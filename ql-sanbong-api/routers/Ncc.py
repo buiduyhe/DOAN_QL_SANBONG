@@ -5,7 +5,7 @@ from db import db_dichvu,db_user,db_san,db_Ncc,db_auth
 from typing import List
 import random
 from db.models import DichVu, NhaCungCap, NhapHang, ChiTietNhapHang
-from routers.schemas import ChitietNhapHang, ChitietNhapHangResponse
+from routers.schemas import ChitietNhapHang, ChitietNhapHangResponse, UpdateNCC
 router = APIRouter(
     prefix='/Ncc',
     tags=['Ncc']
@@ -41,22 +41,16 @@ def get_Ncc_by_id(id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Không tìm thấy Nhà cung cấp.")
     return query
 @router.put("/update-Ncc/{id}")
-async def update_Ncc(
+def update_Ncc(
     id: int,
-    tenNcc: str = Form(...),
-    diachi: str = Form(...),
-    sdt: str = Form(...),
-    email: str = Form(...),
+    Ncc: UpdateNCC,
     db: Session = Depends(get_db)
 ):
     query = db_Ncc.get_Ncc_by_id(db, id)
     if not query:
         raise HTTPException(status_code=404, detail="Không tìm thấy Nhà cung cấp.")
-    if not email or "@" not in email:
-        raise HTTPException(status_code=400, detail="Email không đúng định dạng.")
-    sdt = await db_auth.check_phone_number_valid(phone=sdt)
     
-    return db_Ncc.update_Ncc(db=db, id=id, tenNcc=tenNcc, diachi=diachi, sdt=sdt,email=email)
+    return db_Ncc.update_Ncc(db=db, id=id,Ncc=Ncc)
 
 @router.delete("/delete-Ncc/{id}")
 def delete_Ncc(id: int, db: Session = Depends(get_db)):
@@ -96,14 +90,21 @@ def them_phieu_nhap(
     db.commit()
     return {"message": "Thêm phiếu nhập thành công"}
 
-@router.get("/nhap-hang/{nhap_hang_id}")
+@router.get("/get-all-nhap-hang")
+def get_all_nhap_hang(db: Session = Depends(get_db)):
+    phieu_nhap = db.query(NhapHang).all()
+    if not phieu_nhap:
+        raise HTTPException(status_code=404, detail="Không tìm thấy phiếu nhập nào.")
+    
+    return phieu_nhap
+
+@router.get("/chi-tiet-nhap-hang/{nhap_hang_id}")
 def chi_tiet_phieu_nhap(nhap_hang_id: int, db: Session = Depends(get_db)):
     phieu_nhap = db.query(NhapHang).filter(NhapHang.id == nhap_hang_id).first()
     if not phieu_nhap:
         raise HTTPException(status_code=404, detail="Phiếu nhập không tồn tại")
     chitiet = db.query(ChiTietNhapHang).filter(ChiTietNhapHang.nhap_hang_id == nhap_hang_id).all()
     return {
-        "phieu_nhap": phieu_nhap,
         "chi_tiet": [
             ChitietNhapHangResponse(
                 STT=index + 1,
@@ -147,3 +148,11 @@ def RejectNhapHang(nhap_hang_id: int, db: Session = Depends(get_db)):
     phieu_nhap.trang_thai = 2
     db.commit()
     return {"message": "Từ chối duyệt phiếu nhập thành công"}
+
+@router.get('/get-all-phieu-nhap')
+def get_all_phieu_nhap(db: Session = Depends(get_db)):
+    phieu_nhap = db.query(NhapHang).all()
+    if not phieu_nhap:
+        raise HTTPException(status_code=404, detail="Không tìm thấy phiếu nhập nào.")
+    
+    return phieu_nhap
