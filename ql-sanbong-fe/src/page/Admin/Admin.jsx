@@ -6,6 +6,7 @@ import QLDonDat from "../NhanVienPage/QLDonDat/QLDonDat";
 import QLSan from "../NhanVienPage/QLSan/QLSan";
 import QLNhanVien from "./QLNhanVien/QLNhanVien";
 import QLNhaCungCap from "./QLNhaCungCap/QLNhaCungCap";
+import PhieuNhap from "./PhieuNhap/QLPhieuNhap";
 import "./Admin.scss";
 import Cookies from "js-cookie";
 import ThongKe from "./ThongKe/ThongKe";
@@ -22,7 +23,9 @@ const Admin = () => {
   const [error, setError] = useState('');
   const [selectedId, setSelectedId] = useState(null);
   const [selectedIds, setSelectedIds] = useState([null]);
+  const [selectedSupplier, setSelectedSupplier] = useState(null);
   const [formData, setFormData] = useState({
+    
     name: "",
     email: "",
     password: "",
@@ -32,11 +35,13 @@ const Admin = () => {
     serviceType: "",
     price: "",
     quantity: "",
+    address: "",
     description: "",
     image: null,
     gia: "",
   });
 
+  
   const username = Cookies.get("username"); // Lấy thông tin người dùng từ Cookies
 
   const [serviceTypes, setServiceTypes] = useState([]);
@@ -55,6 +60,23 @@ const Admin = () => {
     fetchServiceTypes();
   }, []);
 
+  const fetchSupplierData = async (id) => {
+    try {
+      const response = await axios.get(`http://localhost:8000/Ncc/get_Ncc_by_id/${id}`);
+      const supplier = response.data;
+  
+      setFormData({
+        name: supplier.ten_ncc || "",
+        email: supplier.email || "",
+        phone: supplier.sdt || "",
+        address: supplier.dia_chi || "",
+        // other supplier-related fields if needed
+      });
+    } catch (error) {
+      console.error("Lỗi khi lấy dữ liệu nhà cung cấp:", error);
+    }
+  };
+  
   const handleMenuClick = (content) => {
     setActiveContent(content);
     setShowAddForm(false); // Đóng form khi chọn menu khác
@@ -70,6 +92,7 @@ const Admin = () => {
           ...prevData,
           gia: court.gia_thue || ""
         }));
+        
       } else {
         response = await axios.get(`http://127.0.0.1:8000/user/get_user_by_id/${selectedId}`);
         const user = response.data;
@@ -106,19 +129,25 @@ const Admin = () => {
       quantity: "",
       description: "",
       image: null,
+      address: "",
     }); // Reset dữ liệu form
 
     if (activeContent === "employees") setFormType("employees");
     else if (activeContent === "customers") setFormType("customers");
     else if (activeContent === "services") setFormType("services");
-
+    else if (activeContent === "suppliers") setFormType("suppliers");
     setShowAddForm(true); // Mở form thêm mới
   };
   const handleEditClick = () => {
     if (selectedId) {
-      fetchUserData(selectedId);
-      setShowEditForm(true);   // Mở form chỉnh sửa
-      setFormType(activeContent === "employees" ? "employees" : activeContent === "customers" ? "customers" : "courts");
+      // Fetch data for the supplier to populate the form
+      if (activeContent === "suppliers") {
+        fetchSupplierData(selectedId);
+      } else {
+        fetchUserData(selectedId);
+      }
+      setShowEditForm(true);  // Open edit form
+      setFormType(activeContent === "employees" ? "employees" : activeContent === "customers" ? "customers" : activeContent === "suppliers" ? "suppliers" : "courts");
     } else {
       console.error("No selected ID found");
     }
@@ -144,7 +173,7 @@ const Admin = () => {
     if (activeContent === "employees") setFormType("employees");
     else if (activeContent === "customers") setFormType("customers");
     else if (activeContent === "courts") setFormType("courts");
-
+    else if (activeContent === "suppliers") setFormType("suppliers");
   };
   const handleSelectIds = (ids) => {
     setSelectedIds(ids);
@@ -155,7 +184,13 @@ const Admin = () => {
     if (!window.confirm("Bạn có chắc chắn muốn xóa người dùng này không?")) {
       return; // Dừng xử lý nếu người dùng chọn "Không"
     }
-
+  
+    // Kiểm tra xem selectedId có hợp lệ không
+    if (!selectedId) {
+      setError('Vui lòng chọn ID hợp lệ để xóa.');
+      return; // Dừng xử lý nếu selectedId không hợp lệ
+    }
+  
     console.log(`Xóa ID:`, selectedId, selectedIds, formType); // Log ID cần xóa
     
     setMessage('');
@@ -169,6 +204,9 @@ const Admin = () => {
       requestData = selectedIds.filter(id => id !== null); // Chỉ truyền mảng selectedIds
     } else if (formType === 'customers' || formType === 'employees') {
       apiUrl = `http://127.0.0.1:8000/user/delete_SysUser/${selectedId}`;
+    } else if (formType === 'suppliers') {
+      // Chắc chắn sử dụng đúng URL cho xóa NCC
+      apiUrl = `http://127.0.0.1:8000/Ncc/delete-Ncc/${selectedId}`; // Đảm bảo đây là URL đúng để xóa NCC
     } else {
       console.error('Invalid form type:', formType); // Log chi tiết lỗi
       setError('Invalid form type. Please check your form configuration.');
@@ -181,7 +219,8 @@ const Admin = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(requestData), // Truyền mảng trực tiếp, không cần bao trong đối tượng
+        // Không cần body trong trường hợp DELETE nếu không có dữ liệu thêm
+        body: JSON.stringify(requestData), 
       });
   
       if (!response.ok) {
@@ -199,10 +238,24 @@ const Admin = () => {
     setShowAddForm(false); // Đóng form sau khi xử lý
   };
   
+  
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     console.log(`Dữ liệu form (${formType}):`, formData);
 
+    if (!formData.name || !formData.email || !formData.phone || !formData.address) {
+      setError("Tên, email, số điện thoại và địa chỉ là bắt buộc.");
+      return;
+    }
+    const supplierData = {
+      ten_ncc: formData.name,    // Tên nhà cung cấp
+      dia_chi: formData.address, // Địa chỉ
+      email: formData.email,     // Email
+      sdt: formData.phone,       // Số điện thoại
+    };
+
+
+    
     setMessage('');
     setError('');
 
@@ -231,6 +284,12 @@ const Admin = () => {
         requestData.append('phone', formData.phone);
         requestData.append('password', formData.password);
         requestData.append('gender', formData.gender);
+    } else if (formType === 'suppliers'){
+      apiUrl = 'http://localhost:8000/Ncc/create-Ncc';
+        requestData.append('tenNcc', formData.name);
+        requestData.append('diachi', formData.address);
+        requestData.append('email', formData.email);
+        requestData.append('sdt', formData.phone);
     }
 
     try {
@@ -240,6 +299,9 @@ const Admin = () => {
       });
 
       const data = await response.json();
+      console.log('Error detail:', data);
+      console.log('Dữ liệu form gửi đi:', formData);
+
       if (!response.ok) {
         throw new Error(data.detail || 'Đăng ký không thành công!'); // Lỗi từ API
       }
@@ -250,47 +312,43 @@ const Admin = () => {
       setError(error.message); // Lưu thông báo lỗi
     }
 
-    setShowAddForm(false); // Đóng form sau khi xử lý
+    setShowAddForm(false);
   };
   const refreshData = () => {
-    window.location.reload(); // Reload the page
+    window.location.reload();
     setTimeout(() => {
-      handleMenuClick(formType); // Reopen the active content after redirect
-    }, 100); // Adjust the timeout as needed
+      handleMenuClick(formType);
+    }, 100)
   };
   
   const handleFormEditSubmit = async (e) => {
     e.preventDefault();
     if (!window.confirm("Bạn có chắc chắn muốn lưu các thay đổi này không?")) {
-      return; // Dừng xử lý nếu người dùng chọn "Không"
+      return;
     }
+    
     console.log(`Dữ liệu form (${formType}):`, formData);
-
+  
     setMessage('');
     setError('');
-
+  
     let apiUrl = '';
     let requestData = {};
-
-    if (formType === 'employees' || formType === 'customers') {
-      apiUrl = `http://127.0.0.1:8000/user/update_SysUser/${selectedId}`;
+  
+    if (formType === 'suppliers') {
+      apiUrl = `http://localhost:8000/Ncc/update_Ncc/${selectedId}`;
       requestData = {
-        hoten: formData.name,
-        phone: formData.phone,
-        password: formData.password,
-        gender: formData.gender === "male" ? "Nam" : formData.gender === "female" ? "Nữ" : "Khác",
-      };
-    } else if (formType === 'courts') {
-      apiUrl = `http://127.0.0.1:8000/san/update_san/${selectedId}`;
-      requestData = {
-        gia: formData.gia,
+        ten_ncc: formData.name,
+        dia_chi: formData.address,
+        email: formData.email,
+        sdt: formData.phone,
       };
     } else {
-      console.error('Invalid form type:', formType); // Log chi tiết lỗi
+      console.error('Invalid form type:', formType);
       setError('Invalid form type. Please check your form configuration.');
-      return; // Dừng xử lý nếu form type không hợp lệ
+      return;
     }
-
+  
     try {
       const response = await fetch(apiUrl, {
         method: 'PUT',
@@ -299,20 +357,20 @@ const Admin = () => {
         },
         body: JSON.stringify(requestData),
       });
-
+  
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.detail || 'Cập nhật không thành công!'); // Lỗi từ API
+        throw new Error(data.detail || 'Cập nhật không thành công!');
       }
-
+  
       alert(data.detail);
-      refreshData(); // Lưu thông báo thành công
+      refreshData();
     } catch (error) {
-      console.error('Error during update:', error); // Log lỗi chi tiết
-      setError(error.message); // Lưu thông báo lỗi
+      console.error('Error during update:', error);
+      setError(error.message);
     }
-
-    setShowEditForm(false); // Đóng form sau khi xử lý
+  
+    setShowEditForm(false); // Close the edit form after processing
   };
   return (
     <div className="AdminPage row">
@@ -333,9 +391,11 @@ const Admin = () => {
           {activeContent === "orders" && <QLDonDat />}
           {activeContent === "order" && <QLDuyeDat />}
           {activeContent === "courts" && <QLSan onSelectId={handleSelect}/>}
-          {activeContent === "suppliers" && <QLNhaCungCap />}
+          {activeContent === "suppliers" && <QLNhaCungCap onSelectId={handleSelect}/>}
           {activeContent === "statistics" && <ThongKe />}
           {activeContent === "SaoLuu" && <SaoLuu />}
+          {activeContent === "PhieuNhap" && <PhieuNhap />}
+          
 
         </div>
 
@@ -347,85 +407,136 @@ const Admin = () => {
           </div>
         )}
 
-        {showEditForm && (
-          <div className="overlay">
-            <div className="modal">
-              <form className="add-form" onSubmit={handleFormEditSubmit}>
-                <h3>
-                {formType === "employees" ? "Sửa Thông Tin Nhân Viên" : formType === "customers" ? "Sửa Thông Tin Khách Hàng" : formType === "courts" ? "Sửa Thông Tin Sân Bóng" : ""}
-                </h3>
+{showEditForm && (
+  <div className="overlay">
+    <div className="modal">
+      <form className="add-form" onSubmit={handleFormEditSubmit}>
+        <h3>
+          {formType === "employees" ? "Sửa Thông Tin Nhân Viên" : 
+           formType === "customers" ? "Sửa Thông Tin Khách Hàng" : 
+           formType === "courts" ? "Sửa Thông Tin Sân Bóng" : 
+           formType === "suppliers" ? "Sửa Thông Tin Nhà Cung Cấp" : ""}
+        </h3>
 
-                {(formType === "employees" || formType === "customers") && (
-                  <>
-                    <div>
-                      <label>Họ Tên:</label>
-                      <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label>Mật Khẩu:</label>
-                      <input
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div>
-                      <label>Số Điện Thoại:</label>
-                      <input
-                        type="text"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label>Giới Tính:</label>
-                      <select
-                        name="gender"
-                        value={formData.gender}
-                        onChange={handleInputChange}
-                        required
-                      >
-                        <option value="">Chọn</option>
-                        <option value="male">Nam</option>
-                        <option value="female">Nữ</option>
-                        <option value="other">Khác</option>
-                      </select>
-                    </div>
-                  </>
-                )}
-                
-                {(formType === "courts") && (
-                  <>
-                  <div>
-                    <label>Giá Thuê:</label>
-                    <input
-                      type="text"
-                      name="gia"
-                      value={formData.gia}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  </>
-                )}
-
-                <div className="modal-buttons">
-                  <button type="submit" >Lưu</button>
-                  <button type="button" onClick={() => setShowEditForm(false)}>Hủy</button>
-                </div>
-              </form>
+        {(formType === "employees" || formType === "customers") && (
+          <>
+            <div>
+              <label>Họ Tên:</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+              />
             </div>
-          </div>
+            <div>
+              <label>Mật Khẩu:</label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div>
+              <label>Số Điện Thoại:</label>
+              <input
+                type="text"
+                name="phone"
+                value={formData.phone}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div>
+              <label>Giới Tính:</label>
+              <select
+                name="gender"
+                value={formData.gender}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Chọn</option>
+                <option value="male">Nam</option>
+                <option value="female">Nữ</option>
+                <option value="other">Khác</option>
+              </select>
+            </div>
+          </>
         )}
+
+        {(formType === "courts") && (
+          <>
+            <div>
+              <label>Giá Thuê:</label>
+              <input
+                type="text"
+                name="gia"
+                value={formData.gia}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+          </>
+        )}
+
+        {formType === "suppliers" && (
+          <>
+            <div>
+              <label>Tên Nhà Cung Cấp:</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div>
+              <label>Email:</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div>
+              <label>Số điện thoại:</label>
+              <input
+                type="text"
+                name="phone"
+                value={formData.phone}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div>
+              <label>Địa chỉ:</label>
+              <input
+                type="text"
+                name="address"
+                value={formData.address}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+          </>
+        )}
+
+        <div className="modal-buttons">
+          <button type="submit">Lưu </button>
+          <button type="button" onClick={() => setShowEditForm(false)}>
+            Hủy
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
+
 
         {showAddForm && (
           <div className="overlay">
@@ -631,6 +742,51 @@ const Admin = () => {
                     </div>
                   </>
                 )}
+                {formType === "suppliers" && (
+                  <>
+                    <div>
+                      <label>Tên Nhà Cung Cấp:</label>
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label>Email:</label>
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label>Số điện thoại:</label>
+                      <input
+                        type="text"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label>Địa chỉ:</label>
+                      <input
+                        type="text"
+                        name="address"
+                        value={formData.address}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                </>
+              )}
+
 
                 <div className="modal-buttons">
                   <button type="submit">Lưu </button>
