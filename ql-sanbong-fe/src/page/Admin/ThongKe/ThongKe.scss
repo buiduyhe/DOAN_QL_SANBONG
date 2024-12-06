@@ -1,52 +1,87 @@
 .thong-ke {
+  font-family: 'Arial', sans-serif;
   padding: 20px;
-  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   max-width: 800px;
-  margin: 0 auto;
+  margin: 20px auto;
+  
+
+  h2 {
+    font-size: 26px;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+  }
 
   .filters {
     display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
+    justify-content: space-between;
     margin-bottom: 20px;
+   
 
     .filter-item {
-      flex: 1;
-      min-width: 150px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      
 
       label {
-        font-weight: bold;
-        margin-bottom: 5px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #555;
       }
 
       input {
-        padding: 6px;
-        font-size: 14px;
-        border: 1px solid #ccc;
+        padding: 8px;
+        border: 1px solid #ddd;
         border-radius: 4px;
+        font-size: 14px;
+        transition: border-color 0.3s;
+
+        &:hover {
+          border-color: #007bff;
+        }
+
+        &:focus {
+          border-color: #0056b3;
+          outline: none;
+        }
       }
     }
   }
 
   .statistics-section {
     margin-top: 20px;
-    width: 100%;
-
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    
     h3 {
-      margin-bottom: 10px;
       font-size: 18px;
+      color: #444;
+      margin-bottom: 10px;
+      border-left: 4px solid #8884d8;
+      padding-left: 8px;
     }
 
-    .chart-container {
-      position: relative;
-      width: 100%;
-      height: 500px; /* Đảm bảo đủ chiều cao cho biểu đồ */
+    .recharts-wrapper {
+      max-width: 100%;
     }
   }
 
   .error {
-    color: red;
-    font-weight: bold;
+    color: #d9534f;
+    font-size: 14px;
     margin-top: 10px;
+    text-align: center;
+  }
+
+  p {
+    text-align: center;
+    font-size: 14px;
+    color: #666;
   }
 }

@@ -19,6 +19,13 @@ const ThongKe = () => {
   const [selectedDate, setSelectedDate] = useState(""); // Giá trị ngày được chọn
   const [selectedMonth, setSelectedMonth] = useState(""); // Giá trị tháng được chọn
 
+  // Hàm định dạng số tiền
+  const formatCurrency = (value) => {
+    return value
+      .toLocaleString("vi-VN", { maximumFractionDigits: 0 })
+      .replace(/,/g, ".");
+  };
+
   // Lọc 3 ngày gần nhất (tính từ ngày người dùng chọn)
   const getRecentDates = (date) => {
     const dates = [];
@@ -62,14 +69,14 @@ const ThongKe = () => {
         throw new Error("Lỗi khi tải thống kê theo ngày");
       }
       const data = await response.json();
-  
+
       // Tạo dữ liệu cho các ngày không có doanh thu (giả sử giá trị = 0)
       const recentDatesArray = getRecentDates(date);
       const completeData = recentDatesArray.map((ngay) => {
         const existingData = data.find((item) => item.ngay === ngay);
         return existingData || { ngay, tong_tien: 0 }; // Nếu không có dữ liệu cho ngày, gán tổng tiền = 0
       });
-  
+
       setDailyData(completeData); // Lưu trữ dữ liệu trả về từ API, bao gồm cả ngày không có doanh thu
     } catch (err) {
       setError(err.message);
@@ -90,14 +97,14 @@ const ThongKe = () => {
         throw new Error("Lỗi khi tải thống kê theo tháng");
       }
       const data = await response.json();
-  
+
       // Tạo dữ liệu cho các tháng không có doanh thu (giả sử giá trị = 0)
       const recentMonthsArray = getRecentMonths(month);
       const completeData = recentMonthsArray.map((thang) => {
         const existingData = data.find((item) => item.thang_nam === thang);
         return existingData || { thang_nam: thang, tong_tien: 0 }; // Nếu không có dữ liệu cho tháng, gán tổng tiền = 0
       });
-  
+
       setMonthlyData(completeData); // Lưu trữ dữ liệu trả về từ API, bao gồm cả tháng không có doanh thu
     } catch (err) {
       setError(err.message);
@@ -160,18 +167,18 @@ const ThongKe = () => {
       {selectedDate && dailyData.length > 0 && (
         <div className="statistics-section">
           <h3>Thống kê doanh thu theo ngày</h3>
-          <ResponsiveContainer width="100%" height={400}>
-            <BarChart data={dailyData}>
-              <XAxis dataKey="ngay" label={{ position: "insideBottom" }} />
-              <YAxis label={{ angle: -90, position: "insideLeft" }} />
-              <Tooltip />
-              <Legend />
-              <Bar
-                dataKey="tong_tien"
-                fill="#8884d8"
-                name="Tổng Tiền (VND)"
-                barSize={20} // Điều chỉnh kích thước cột
+          <ResponsiveContainer width="95%" height={400}>
+            <BarChart data={dailyData} margin={{ top: 20, right: 20, left: 40, bottom: 20 }}>
+              <XAxis dataKey="ngay" />
+              <YAxis
+                tickFormatter={(value) => formatCurrency(value)}
+                tickMargin={10} // Thêm khoảng cách giữa trục và nhãn
               />
+              <Tooltip
+                formatter={(value) => [formatCurrency(value), "Tổng tiền"]} // Đổi nhãn thành "Tổng tiền"
+              />
+              <Legend />
+              <Bar dataKey="tong_tien" fill="#8884d8" barSize={30} name="Tổng tiền" /> {/* Đặt tên cho chú thích */}
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -181,18 +188,18 @@ const ThongKe = () => {
       {selectedMonth && monthlyData.length > 0 && (
         <div className="statistics-section">
           <h3>Thống kê doanh thu theo tháng</h3>
-          <ResponsiveContainer width="100%" height={400}>
-            <BarChart data={monthlyData}>
-              <XAxis dataKey="thang_nam" label={{ position: "insideBottom" }} />
-              <YAxis label={{ angle: -90, position: "insideLeft" }} />
-              <Tooltip />
-              <Legend />
-              <Bar
-                dataKey="tong_tien"
-                fill="#82ca9d"
-                name="Tổng Tiền (VND)"
-                barSize={30} // Điều chỉnh kích thước cột theo tháng
+          <ResponsiveContainer width="95%" height={400}>
+            <BarChart data={monthlyData} margin={{ top: 20, right: 20, left: 40, bottom: 20 }}>
+              <XAxis dataKey="thang_nam" />
+              <YAxis
+                tickFormatter={(value) => formatCurrency(value)}
+                tickMargin={10} // Thêm khoảng cách giữa trục và nhãn
               />
+              <Tooltip
+                formatter={(value) => [formatCurrency(value), "Tổng tiền"]} // Đổi nhãn thành "Tổng tiền"
+              />
+              <Legend />
+              <Bar dataKey="tong_tien" fill="#82ca9d" barSize={30} name="Tổng tiền" /> {/* Đặt tên cho chú thích */}
             </BarChart>
           </ResponsiveContainer>
         </div>
