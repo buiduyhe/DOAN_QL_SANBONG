@@ -8,7 +8,7 @@ const QLPhieuNhap = () => {
   const [receiptDetails, setReceiptDetails] = useState([]); // For storing the receipt details
   const [products, setProducts] = useState([]); // For storing product data
   const [selectedSupplier, setSelectedSupplier] = useState(null); // For tracking selected supplier
-  const [newReceiptData, setNewReceiptData] = useState([{ id_dv: '', soluong: 0, don_gia: 0 }]); // For new receipt form data
+  const [newReceiptData, setNewReceiptData] = useState([]); // For new receipt form data
   const [showForm, setShowForm] = useState(false); // For showing the form after clicking "Thêm Phiếu Nhập Hàng"
 
   useEffect(() => {
@@ -124,7 +124,28 @@ const QLPhieuNhap = () => {
       alert('Vui lòng chọn đơn hàng');
     }
   };
-
+  const handleInPhieuNhap = () => {
+    if (selectedRow !== null) {
+      fetch(`http://127.0.0.1:8000/Ncc/in_hoadon_nhap_excel?nhap_hang_id=${selectedRow}`, {
+        method: 'POST',
+      })
+        .then((response) => response.blob())
+        .then((blob) => {
+          const url = window.URL.createObjectURL(new Blob([blob]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', `phieu_nhap_${selectedRow}.xlsx`);
+          document.body.appendChild(link);
+          link.click();
+          link.parentNode.removeChild(link);
+        })
+        .catch((error) => {
+          console.error('Error printing receipt:', error);
+        });
+    } else {
+      alert('Vui lòng chọn đơn hàng');
+    }
+  };
   const fetchData = () => {
     fetch('http://localhost:8000/Ncc/get-all-nhap-hang')
       .then((response) => response.json())
@@ -145,32 +166,23 @@ const QLPhieuNhap = () => {
   const handleSupplierChange = (event) => {
     const supplierId = event.target.value;
     setSelectedSupplier(supplierId);
-    fetchProductsForSupplier(supplierId); // Fetch products for selected supplier
   };
 
-  const fetchProductsForSupplier = (supplierId) => {
-    fetch(`http://localhost:8000/Ncc/nhap-hang/?ncc_id=${supplierId}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setNewReceiptData(data.map((item) => ({
-          id_dv: item.id_dv,
-          soluong: 0,
-          don_gia: 0,
-        })));
-      })
-      .catch((error) => {
-        console.error('Error fetching products:', error);
-      });
-  };
 
   // Handle form submission to add new receipt
   const handleSubmitReceipt = () => {
-    const receiptData = {
-      ncc_id: selectedSupplier,
-      details: newReceiptData,
-    };
+    if (!selectedSupplier) {
+      alert('Vui lòng chọn nhà cung cấp');
+      return;
+    }
 
-    fetch('http://localhost:8000/Ncc/nhap-hang/', {
+    const receiptData = newReceiptData.map(item => ({
+      id_dv: String(item.id_dv),
+      soluong: item.soluong,
+      don_gia: item.don_gia,
+    }));
+
+    fetch(`http://localhost:8000/Ncc/nhap-hang?ncc_id=${Number(selectedSupplier)}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -181,6 +193,7 @@ const QLPhieuNhap = () => {
       .then(() => {
         alert('Phiếu nhập hàng đã được thêm');
         setShowForm(false); // Hide the form after submission
+        setNewReceiptData([]); // Clear new receipt data
         fetchData(); // Refresh the data
       })
       .catch((error) => {
@@ -196,7 +209,6 @@ const QLPhieuNhap = () => {
   return (
     <div>
       <h1>Quản lý phiếu nhập</h1>
-      
 
       {/* Show form for adding new receipt */}
       
@@ -267,19 +279,27 @@ const QLPhieuNhap = () => {
         </div>
       )}
 
+      <div className="button-container"></div>
       <div className="button-container">
         {selectedRow !== null && data.some(item => item.id === selectedRow && (item.trang_thai === 1 || item.trang_thai === 2)) ? (
           <div>
             <button className="button duyet" disabled>Duyệt Đơn</button>
             <button className="button tuchoi" disabled>Từ Chối Duyệt</button>
+            <button className="button them" onClick={() => setShowForm(true)}>
+              Tạo Phiếu Nhập Hàng
+            </button>
+            <button className="button them" onClick={handleInPhieuNhap} >
+              In Phiếu Nhập Hàng
+            </button>
           </div>
         ) : (
           <div>
             <button className="button duyet" onClick={handleDuyet}>Duyệt Đơn</button>
-            <button className="button tuchoi" onClick={handleTuChoiDuyet}>Từ Chối Duyệt</button>
+            <button className="button tuchoi" onClick={handleTuChoiDuyet}>Từ Chối Đơn</button>
             <button className="button them" onClick={() => setShowForm(true)}>
-              Thêm Phiếu Nhập Hàng
+              Tạo Phiếu Nhập Hàng
             </button>
+            
           </div>
 
         )}
@@ -294,68 +314,177 @@ const QLPhieuNhap = () => {
               </option>
             ))}
           </select>
+            <table>
+              <thead>
+                <tr>
+                  <th>Hình Ảnh</th>
+                  <th>Tên Sản Phẩm</th>
+                  <th>Giá</th>
+                  <th>Số Lượng</th>
+                  <th>Thao Tác</th>
+                </tr>
+              </thead>
+          <div style={{ maxHeight: '250px', overflowY: 'auto' }}>
 
+              <tbody>
+                {products.length > 0 ? (
+                  products.map((product) => (
+                    <tr key={product.id}>
+                      <td style={{ textAlign: "center" }}>
+                        <img
+                          src={`http://localhost:8000/${product.image_dv}`}
+                          alt={product.ten_dv}
+                          style={{
+                            width: "50px",
+                            height: "50px",
+                            objectFit: "cover",
+                            alignItems: "center",
+                          }}
+                        />
+                      </td>
+                      <td>{product.ten_dv}</td>
+                      <td>{(product.gia_dv * 0.8)}</td>
+
+                      <td>
+                        <input
+                          type="number"
+                          min="0"
+                          value={newReceiptData.find(item => item.id_dv === product.id)?.soluong || 0}
+                          onChange={(e) =>
+                            setNewReceiptData((prevData) => {
+                              const updatedData = prevData.map(item =>
+                                item.id_dv === product.id
+                                  ? { ...item, soluong: Number(e.target.value) }
+                                  : item
+                              ).filter(item => item.soluong > 0);
+                              return updatedData;
+                            })
+                          }
+                          style={{
+                            width: "50px",
+                            textAlign: "center",
+                          }}
+                        />
+                      </td>
+                      <td>
+                      <button
+                        onClick={() => {
+                          setNewReceiptData(prevData => {
+                            const productInCart = prevData.find(item => item.id_dv === product.id);
+                            if (productInCart) {
+                              // Nếu sản phẩm đã tồn tại, tăng số lượng
+                              return prevData.map(item =>
+                                item.id_dv === product.id
+                                  ? { ...item, soluong: item.soluong + 1 }
+                                  : item
+                              );
+                            } else {
+                              // Nếu sản phẩm chưa tồn tại, thêm sản phẩm mới
+                              return [
+                                ...prevData,
+                                { id_dv: product.id, soluong: 1, don_gia: product.gia_dv * 0.8 }
+                              ];
+                            }
+                          });
+                        }}
+                      >
+                        Thêm
+                      </button>
+
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" style={{ textAlign: "center" }}>Chưa có sản phẩm nào</td>
+                  </tr>
+                )}
+              </tbody>
+          </div>
+
+            </table>
           {/* Show receipt details form after supplier is selected */}
-          {selectedSupplier && newReceiptData.length > 0 && (
-            <div>
-              <h3>Nhập thông tin phiếu nhập</h3>
-              {newReceiptData.map((item, index) => (
-                <div key={index} className="receipt-item">
-                  <label>Tên dịch vụ:</label>
-                  <select
-                    value={item.id_dv}
-                    onChange={(e) =>
-                      setNewReceiptData((prevData) => {
-                        const updatedData = [...prevData];
-                        updatedData[index].id_dv = e.target.value;
-                        return updatedData;
-                      })
-                    }
-                  >
-                    <option value="">Chọn dịch vụ</option>
-                    {products.map((product) => (
-                      <option key={product.id} value={product.id}>
-                        {product.ten_dv}
-                      </option>
-                    ))}
-                  </select>
+          
+          <h3>Danh sách sản phẩm</h3>
+          <table>
+            <thead>
+            <tr>
+              <th>Tên sản phẩm</th>
+              <th>Số lượng</th>
+              <th>Đơn giá</th>
+              <th>Thành tiền</th>
+              <th>Thao tác</th>
+            </tr>
+            </thead>
+          <div style={{ maxHeight: '150px', overflowY: 'auto' }}>
 
-                  <label>Số lượng:</label>
-                  <input
-                    type="number"
-                    value={item.soluong}
-                    onChange={(e) =>
-                      setNewReceiptData((prevData) => {
-                        const updatedData = [...prevData];
-                        updatedData[index].soluong = parseInt(e.target.value);
-                        return updatedData;
-                      })
-                    }
-                  />
+            <tbody>
+            {newReceiptData.map((item, index) => {
+              const product = products.find((prod) => prod.id === item.id_dv);
+              if (!product) return null;
+              return (
+              <tr key={index}>
+                <td>{product.ten_dv}</td>
+                <td>{item.soluong}</td>
+                <td>{item.don_gia.toLocaleString()}</td>
+                <td>{(item.soluong * item.don_gia).toLocaleString()}</td>
+                <td>
+                  <button onClick={() => {
+                    setNewReceiptData(prevData => prevData.filter((_, i) => i !== index));
+                  }}>
+                    X
+                  </button>
+                </td>
+              </tr>
+              );
+            })}
+            </tbody>
+          </div>
 
-                  <label>Đơn giá:</label>
-                  <input
-                    type="number"
-                    value={item.don_gia}
-                    onChange={(e) =>
-                      setNewReceiptData((prevData) => {
-                        const updatedData = [...prevData];
-                        updatedData[index].don_gia = parseInt(e.target.value);
-                        return updatedData;
-                      })
-                    }
-                  />
-                </div>
-              ))}
-              <button className="button" onClick={handleSubmitReceipt}>
-                Thêm Phiếu Nhập
-              </button>
-              <button className="button cancel" onClick={handleCancel}>
-                Hủy
-              </button>
-            </div>
-          )}
+          </table>
+          <div className="cart-total">
+            <strong>Tổng tiền: </strong>
+            {newReceiptData.reduce((total, item) => total + item.soluong * item.don_gia, 0).toLocaleString()}
+          </div>
+          <div style={{ display: "flex", gap: "10px" }}>
+        <button
+          onClick={handleSubmitReceipt}
+          style={{
+            padding: "10px 20px",
+            fontSize: "16px",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+            backgroundColor: "#4CAF50",
+            color: "white",
+            transition: "all 0.3s ease",
+          }}
+          onMouseOver={(e) => (e.target.style.backgroundColor = "#45a049")}
+          onMouseOut={(e) => (e.target.style.backgroundColor = "#4CAF50")}
+        >
+          Thêm Phiếu Nhập
+        </button>
+        <button
+          onClick={handleCancel}
+          style={{
+            padding: "10px 20px",
+            fontSize: "16px",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+            backgroundColor: "#f44336",
+            color: "white",
+            transition: "all 0.3s ease",
+          }}
+          onMouseOver={(e) => (e.target.style.backgroundColor = "#d32f2f")}
+          onMouseOut={(e) => (e.target.style.backgroundColor = "#f44336")}
+        >
+          Hủy
+        </button>
+      </div>
+
         </div>
+        
       )}
       </div>
     </div>

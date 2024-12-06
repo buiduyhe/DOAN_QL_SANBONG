@@ -156,3 +156,7 @@ def get_all_phieu_nhap(db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Không tìm thấy phiếu nhập nào.")
     
     return phieu_nhap
+
+@router.post('/in_hoadon_nhap_excel')
+def in_hoadon_nhap_excel( nhap_hang_id: int,db: Session = Depends(get_db)):
+    return db_Ncc.in_hoadon_nhap_excel(db=db, nhap_hang_id=nhap_hang_id)
