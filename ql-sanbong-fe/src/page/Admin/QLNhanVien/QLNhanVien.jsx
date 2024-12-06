@@ -90,7 +90,17 @@ const QLNhanVien = ({ onSelectId = () => {} }) => {
               <td>{nhanVien.full_name}</td>
               <td>{nhanVien.email}</td>
               <td>{nhanVien.phone}</td>
-              <td>{nhanVien.gender === "FEMALE" ? "Nữ" : "Nam"}</td>
+              <td>
+              {nhanVien.gender === "MALE"
+                  ? "Nam"
+                  : nhanVien.gender === "FEMALE"
+                  ? "Nữ"
+                  :nhanVien.gender === "Nữ"
+                  ? "Nữ"
+                  : nhanVien.gender === "Nam"
+                  ? "Nam"
+                  : "Khác"}
+              </td>
             </tr>
           ))}
         </tbody>

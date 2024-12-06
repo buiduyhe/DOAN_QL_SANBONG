@@ -185,10 +185,10 @@ const Admin = () => {
       return; // Dừng xử lý nếu người dùng chọn "Không"
     }
   
-    // Kiểm tra xem selectedId có hợp lệ không
-    if (!selectedId) {
-      setError('Vui lòng chọn ID hợp lệ để xóa.');
-      return; // Dừng xử lý nếu selectedId không hợp lệ
+    // Kiểm tra xem selectedId hoặc selectedids có hợp lệ không
+    if (!selectedId && (!selectedIds || selectedIds.length === 0 || selectedIds[0] === null)) {
+      alert("Vui lòng chọn một mục để xóa.");
+      return;
     }
   
     console.log(`Xóa ID:`, selectedId, selectedIds, formType); // Log ID cần xóa

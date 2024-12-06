@@ -106,7 +106,17 @@ const QLKhachHang = ({ onSelectId = () => {} }) => {
                   <td>{cus.full_name}</td>
                   <td>{cus.email}</td>
                   <td>{cus.phone}</td>
-                  <td>{cus.gender === "FEMALE" ? "Nữ" : "Nam"}</td>
+                  <td>
+                {cus.gender === "MALE"
+                  ? "Nam"
+                  : cus.gender === "FEMALE"
+                  ? "Nữ"
+                  :cus.gender === "Nữ"
+                  ? "Nữ"
+                  : cus.gender === "Nam"
+                  ? "Nam"
+                  : "Khác"}
+              </td>
                 </tr>
               ))
             ) : (
