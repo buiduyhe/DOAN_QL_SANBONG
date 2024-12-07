@@ -9,7 +9,8 @@ import QLNhaCungCap from "./QLNhaCungCap/QLNhaCungCap";
 import PhieuNhap from "./PhieuNhap/QLPhieuNhap";
 import "./Admin.scss";
 import Cookies from "js-cookie";
-import ThongKe from "./ThongKe/ThongKe";
+import ThongKeDay from "./ThongKe/ThongKeDay";
+import ThongKeMonth from "./ThongKe/ThongKeMonth";
 import QLDuyeDat from "../NhanVienPage/QLDuyet/QLDuyetDat";
 import axios from "axios";
 import SaoLuu from "../NhanVienPage/BackUp&Restore/Bu&Rt";
@@ -394,14 +395,15 @@ const Admin = () => {
           {activeContent === "order" && <QLDuyeDat />}
           {activeContent === "courts" && <QLSan onSelectId={handleSelect}/>}
           {activeContent === "suppliers" && <QLNhaCungCap onSelectId={handleSelect}/>}
-          {activeContent === "statistics" && <ThongKe />}
+          {activeContent === "statisticsDay" && <ThongKeDay />}
+          {activeContent === "statisticsMonth" && <ThongKeMonth />}
           {activeContent === "SaoLuu" && <SaoLuu />}
           {activeContent === "PhieuNhap" && <PhieuNhap />}
           
 
         </div>
 
-        {activeContent !== "order" && activeContent !== "orders" && activeContent !== "statistics" && activeContent !== "SaoLuu" &&activeContent !== "PhieuNhap" && (
+        {activeContent !== "order" && activeContent !== "orders" && activeContent !== "statistics" && activeContent !== "SaoLuu" &&activeContent !== "PhieuNhap" &&activeContent !== "statisticsDay" &&activeContent !== "statisticsMonth" && (
           <div className="btn">
             {activeContent !== "courts" && <button onClick={handleAddClick}>Thêm</button>}
             {activeContent !== "courts" && <button onClick={handleFormDelete}>Xóa</button>}

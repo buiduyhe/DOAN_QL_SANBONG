@@ -49,4 +49,18 @@
             }
         }
     }
+    .submenu {
+        padding-left: 20px;
+        list-style: none;
+      }
+      
+      .submenu li a {
+        color: #ebebeb;
+        text-decoration: none;
+        font-size: 14px;
+      }
+      
+      .submenu li a:hover {
+        color: #7c7b7b;
+      }
 }

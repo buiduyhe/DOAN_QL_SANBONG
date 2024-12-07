@@ -1,4 +1,3 @@
-// src/SidebarAdmin/SidebarAdmin.js
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./SlidebarAdmin.scss";
@@ -7,6 +6,7 @@ import cookies from "js-cookie";
 
 const SidebarAdmin = ({ onMenuClick }) => {
   const [adminName, setAdminName] = useState("");
+  const [isStatisticsOpen, setIsStatisticsOpen] = useState(false); // State cho mục "Thống kê"
   const role = cookies.get("user_role");
 
   useEffect(() => {
@@ -23,9 +23,8 @@ const SidebarAdmin = ({ onMenuClick }) => {
     fetchAdminInfo();
   }, []);
 
-  const handleSupplierClick = (e) => {
-    e.preventDefault();
-    alert("Chức năng này đang được phát triển.");
+  const toggleStatistics = () => {
+    setIsStatisticsOpen((prevState) => !prevState); // Toggle mở/đóng
   };
 
   return (
@@ -61,7 +60,26 @@ const SidebarAdmin = ({ onMenuClick }) => {
           </li>
         )}
         <li>
-          <a onClick={() => onMenuClick("statistics")}>Thống kê</a>
+          <a onClick={toggleStatistics}>Thống kê</a>
+          {isStatisticsOpen && (
+            <ul className="submenu">
+              <li>
+                <a onClick={() => onMenuClick("statisticsDay")}>
+                  Thống kê theo ngày
+                </a>
+              </li>
+              <li>
+                <a onClick={() => onMenuClick("statisticsMonth")}>
+                  Thống kê theo tháng
+                </a>
+              </li>
+              <li>
+                <a onClick={() => onMenuClick("statisticsYear")}>
+                  Thống kê theo năm
+                </a>
+              </li>
+            </ul>
+          )}
         </li>
         <li>
           <a onClick={() => onMenuClick("SaoLuu")}>Sao lưu phục hồi</a>
