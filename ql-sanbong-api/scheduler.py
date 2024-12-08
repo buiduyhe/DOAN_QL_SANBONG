@@ -51,18 +51,17 @@ def create_daily_time_slots():
                 # Tạo mới nếu chưa tồn tại
                 create_time_slots_for_day(db=db, san_id=sanbong.id, today=future_date)
 
+        # Tạo time slot cho ngày hôm đó dù nó đã qua thời gian now
+        for sanbong in sanbongs:
+            existing_slots = db.query(TimeSlot).filter(
+                TimeSlot.san_id == sanbong.id,
+                TimeSlot.date == today
+            ).first()
+            if not existing_slots:
+                create_time_slots_for_day(db=db, san_id=sanbong.id, today=today)
     finally:
         db.close()
         logging.info("create_daily_time_slots completed")
-       
-    # Tạo time slot cho ngày hôm đó dù nó đã qua thời gian now
-    for sanbong in sanbongs:
-        existing_slots = db.query(TimeSlot).filter(
-        TimeSlot.san_id == sanbong.id,
-        TimeSlot.date == today
-        ).first()
-        if not existing_slots:
-            create_time_slots_for_day(db=db, san_id=sanbong.id, today=today)
 # Hàm cập nhật trạng thái TimeSlot khi thời gian hiện tại đã qua end_time
 def update_time_slots_status():
     db: Session = SessionLocal()

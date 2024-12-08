@@ -358,3 +358,10 @@ def update_san(id: str,request: SanBongUpdateRequest, db: Session ):
         san_update.gia_thue = request.gia
     db.commit()
     return {"message": "Cập nhật sân thành công."}
+
+
+def get_ds_hoa_don_by_user(db: Session, user_id: int):
+    hoadon_list = db.query(HoaDon).filter(HoaDon.id_user == user_id).all()
+    if not hoadon_list:
+        raise HTTPException(status_code=404, detail="Không tìm thấy hóa đơn nào.")
+    return hoadon_list

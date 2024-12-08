@@ -8,6 +8,7 @@ const LichSuDonDat = () => {
   const [timeSlotCache, setTimeSlotCache] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [filterStatus, setFilterStatus] = useState(0); // Default to "Đơn Đã Duyệt"
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,7 +47,7 @@ const LichSuDonDat = () => {
   const getStatusText = (status) => {
     switch (status) {
       case 0:
-        return 'Chưa thanh toán';
+        return 'Chờ duyệt';
       case 1:
         return 'Đã duyệt';
       case 2:
@@ -65,15 +66,12 @@ const LichSuDonDat = () => {
       const response = await axios.get(`http://localhost:8000/san/get_timeslot_by_id/${timeslotId}`);
       const timeSlot = response.data;
 
-      // Lấy ngày (ngay), bắt đầu (batdau) và kết thúc (ketthuc)
       const { ngay, batdau, ketthuc } = timeSlot;
 
-      // Tính số phút
       const start = new Date(`${ngay}T${batdau}`);
       const end = new Date(`${ngay}T${ketthuc}`);
       const durationMinutes = (end - start) / (1000 * 60);
 
-      // Định dạng thời gian và ngày
       const date = new Date(start).toLocaleDateString('vi-VN', {
         weekday: 'long',
         year: 'numeric',
@@ -86,7 +84,6 @@ const LichSuDonDat = () => {
         duration: durationMinutes,
       };
 
-      // Lưu cache
       setTimeSlotCache((prevCache) => ({
         ...prevCache,
         [timeslotId]: timeSlotText,
@@ -117,26 +114,89 @@ const LichSuDonDat = () => {
   if (isLoading) return <div>Đang tải dữ liệu...</div>;
   if (error) return <div>{error}</div>;
 
+  const filterDonDatByStatus = (status) => {
+    return lichSuDonDat.filter((donDat) => donDat.status === status);
+  };
+
+  const handleFilterChange = (status) => {
+    setFilterStatus(status);
+  };
+
   return (
     <div className="lich-su-don-dat">
       <h1>Lịch Sử Đơn Đặt Hàng</h1>
+      <div className="filter-buttons">
+        <button onClick={() => handleFilterChange(0)}>Đơn Chờ Duyệt</button>
+        <button onClick={() => handleFilterChange(1)}>Đơn Đã Duyệt</button>
+        <button onClick={() => handleFilterChange(2)}>Đơn Bị Từ Chối</button>
+        <button >Danh Sách Hóa Đơn</button>
+      </div>
       <div className="list">
-        {lichSuDonDat.length === 0 ? (
-          <p>Bạn chưa có đơn đặt hàng nào.</p>
-        ) : (
-          <ul>
-            {lichSuDonDat.map((donDat, index) => (
-              <li key={index}>
-                <div className="stt">Thứ tự đơn đặt: {index + 1}</div>
-                <div>Ngày đặt: {new Date(donDat.created_at).toLocaleString()}</div>
-                <div>Trạng thái: {getStatusText(donDat.status)}</div>
-                <div>Sân đặt: {donDat.id_san}</div>
-                <div>Thời gian: {donDat.timeSlotText || 'Đang tải...'}</div>
-                <div>Thời lượng: {donDat.duration || 0} phút</div>
-                <div>Giá: {donDat.gia.toLocaleString()} VND</div>
-              </li>
-            ))}
-          </ul>
+        {filterStatus === 0 && (
+          <>
+            <h2>Đơn Chờ Duyệt</h2>
+            {filterDonDatByStatus(0).length === 0 ? (
+              <p>Không có đơn đặt hàng nào chờ duyệt.</p>
+            ) : (
+              <ul>
+                {filterDonDatByStatus(0).map((donDat, index) => (
+                  <li key={index}>
+                    <div className="stt">Thứ tự đơn đặt: {index + 1}</div>
+                    <div>Ngày đặt: {new Date(donDat.created_at).toLocaleString()}</div>
+                    <div>Sân đặt: {donDat.id_san}</div>
+                    <div>Thời gian: {donDat.timeSlotText || 'Đang tải...'}</div>
+                    <div>Thời lượng: {donDat.duration || 0} phút</div>
+                    <div>Giá: {donDat.gia.toLocaleString()} VND</div>
+                    <div>Trạng thái: {getStatusText(donDat.status)}</div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
+        )}
+        {filterStatus === 1 && (
+          <>
+            <h2>Đơn Đã Duyệt</h2>
+            {filterDonDatByStatus(1).length === 0 ? (
+              <p>Không có đơn đặt hàng nào đã được duyệt.</p>
+            ) : (
+              <ul>
+                {filterDonDatByStatus(1).map((donDat, index) => (
+                  <li key={index}>
+                    <div className="stt">Thứ tự đơn đặt: {index + 1}</div>
+                    <div>Ngày đặt: {new Date(donDat.created_at).toLocaleString()}</div>
+                    <div>Sân đặt: {donDat.id_san}</div>
+                    <div>Thời gian: {donDat.timeSlotText || 'Đang tải...'}</div>
+                    <div>Thời lượng: {donDat.duration || 0} phút</div>
+                    <div>Giá: {donDat.gia.toLocaleString()} VND</div>
+                    <div>Trạng thái: {getStatusText(donDat.status)}</div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
+        )}
+        {filterStatus === 2 && (
+          <>
+            <h2>Đơn Bị Từ Chối</h2>
+            {filterDonDatByStatus(2).length === 0 ? (
+              <p>Không có đơn đặt hàng nào bị từ chối.</p>
+            ) : (
+              <ul>
+                {filterDonDatByStatus(2).map((donDat, index) => (
+                  <li key={index}>
+                    <div className="stt">Thứ tự đơn đặt: {index + 1}</div>
+                    <div>Ngày đặt: {new Date(donDat.created_at).toLocaleString()}</div>
+                    <div>Sân đặt: {donDat.id_san}</div>
+                    <div>Thời gian: {donDat.timeSlotText || 'Đang tải...'}</div>
+                    <div>Thời lượng: {donDat.duration || 0} phút</div>
+                    <div>Giá: {donDat.gia.toLocaleString()} VND</div>
+                    <div>Trạng thái: {getStatusText(donDat.status)}</div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
         )}
       </div>
     </div>

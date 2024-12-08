@@ -93,3 +93,8 @@ def get_san_by_id(id:str,db: Session = Depends(get_db)):
 @router.put('/update_san/{id}')
 def update_san(id:str,request:SanBongUpdateRequest,db: Session = Depends(get_db)):
     return db_san.update_san(id,request,db)
+
+@router.get('/get_ds_hoa_don_by_user')
+def get_ds_hoa_don_by_user(db: Session = Depends(get_db),current_user: SysUser = Depends(db_user.get_current_user_info)
+):
+    return db_san.get_ds_hoa_don_by_user(db,current_user.id)
