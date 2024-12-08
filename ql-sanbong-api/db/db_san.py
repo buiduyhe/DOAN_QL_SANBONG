@@ -365,3 +365,20 @@ def get_ds_hoa_don_by_user(db: Session, user_id: int):
     if not hoadon_list:
         raise HTTPException(status_code=404, detail="Không tìm thấy hóa đơn nào.")
     return hoadon_list
+
+def ThongKe_year(db: Session):
+    hoadon_list = db.query(HoaDon).filter(HoaDon.trang_thai == 1).all()
+
+    if not hoadon_list:
+        raise HTTPException(status_code=404, detail="Không tìm thấy hóa đơn đã thanh toán nào.")
+
+    thong_ke = defaultdict(int)
+    for hd in hoadon_list:
+        nam_tao = hd.ngay_tao.strftime("%Y")
+        thong_ke[nam_tao] += hd.tong_tien
+
+    years = sorted(thong_ke.keys())
+
+    thong_ke_list = [{"nam": year, "tong_tien": thong_ke[year]} for year in years]
+
+    return thong_ke_list

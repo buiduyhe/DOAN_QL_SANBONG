@@ -98,3 +98,7 @@ def update_san(id:str,request:SanBongUpdateRequest,db: Session = Depends(get_db)
 def get_ds_hoa_don_by_user(db: Session = Depends(get_db),current_user: SysUser = Depends(db_user.get_current_user_info)
 ):
     return db_san.get_ds_hoa_don_by_user(db,current_user.id)
+
+@router.get('/ThongKe_year')
+def ThongKe_year(db: Session = Depends(get_db)):
+    return db_san.ThongKe_year(db)
