@@ -197,7 +197,7 @@ const LichSuDonDat = () => {
       <div className="filter-buttons">
         <button onClick={() => handleFilterChange(0)}>Đơn Chờ Duyệt</button>
         <button onClick={() => handleFilterChange(1)}>Đơn Đã Duyệt</button>
-        <button onClick={() => handleFilterChange(2)}>Đơn Bị Từ Chối</button>
+        <button onClick={() => handleFilterChange(2)}style={{ backgroundColor: 'red', color: 'white' }}>Đơn Bị Từ Chối</button>
         <button onClick={() => handleFilterChange(3)} style={{ backgroundColor: 'green', color: 'white' }}>Danh Sách Hóa Đơn</button>
       </div>
       <div className="list">
