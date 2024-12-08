@@ -1,47 +1,46 @@
 .gioi-thieu {
-    font-family: 'Times New Roman', Times, serif; // Đặt font chữ mặc định là Times New Roman
+    font-family: 'Times New Roman', Times, serif;
     padding: 20px;
     margin-top: 90px;
-    margin-left: 20px; // Thêm khoảng cách bên trong cho component
+    margin-left: 20px;
     background: white;
 
     h2 {
         margin-top: 30px;
-        font-size: 30px; // Kích thước chữ cho tiêu đề chính
-        margin-bottom: 15px; // Khoảng cách dưới tiêu đề
+        font-size: 30px;
+        margin-bottom: 15px;
         color: #333;
         text-align: center;
     }
 
     h3 {
-        font-size: 16px; // Kích thước chữ cho tiêu đề phụ
-        margin-top: 20px; // Khoảng cách trên tiêu đề phụ
-        margin-bottom: 10px; // Khoảng cách dưới tiêu đề phụ
-        color: #555; // Màu sắc cho tiêu đề phụ
+        font-size: 16px;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        color: #555;
     }
 
     p {
-        font-size: 16px; // Kích thước chữ cho đoạn văn
-        line-height: 1.5; // Đường dẫn giữa các dòng
-        color: #444; // Màu sắc cho văn bản
-        margin-bottom: 15px; // Khoảng cách dưới mỗi đoạn văn
+        font-size: 16px;
+        line-height: 1.5;
+        color: #444;
+        margin-bottom: 15px;
     }
 
     ul {
-        margin-left: 20px; // Khoảng cách bên trái cho danh sách
-        list-style-type: disc; // Kiểu dấu đầu dòng
+        margin-left: 20px;
+        list-style-type: disc;
 
         li {
-            font-size: 16px; // Kích thước chữ cho danh sách
-            color: #444; // Màu sắc cho danh sách
-            margin-bottom: 5px; // Khoảng cách dưới mỗi mục trong danh sách
+            font-size: 16px;
+            color: #444;
+            margin-bottom: 5px;
         }
     }
 
-    // Thêm kiểu cho footer nếu cần
     footer {
-        margin-top: 20px; // Khoảng cách trên footer
-        text-align: center; // Căn giữa nội dung footer
-        color: #777; // Màu sắc cho văn bản footer
+        margin-top: 20px;
+        text-align: center;
+        color: #777;
     }
 }

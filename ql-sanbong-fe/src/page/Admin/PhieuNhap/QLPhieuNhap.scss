@@ -1,4 +1,4 @@
-/* General button style */
+
 .button {
     padding: 10px 20px;
     border-radius: 5px;
@@ -9,43 +9,43 @@
     transition: background-color 0.3s, transform 0.2s;
   
     &.duyet {
-      background-color: #4CAF50; /* Green color for approve */
+      background-color: #4CAF50;
       color: white;
   
       &:hover {
-        background-color: #45a049; /* Darker green when hovered */
-        transform: scale(1.05); /* Slightly larger on hover */
+        background-color: #45a049; 
+        transform: scale(1.05);
       }
   
       &:disabled {
-        background-color: #e0e0e0; /* Gray background for disabled state */
-        color: #b0b0b0; /* Light gray text */
-        cursor: not-allowed; /* Disable pointer */
+        background-color: #e0e0e0;
+        color: #b0b0b0;
+        cursor: not-allowed;
       }
     }
   
     &.tuchoi {
-      background-color: #f44336; /* Red color for reject */
+      background-color: #f44336; 
       color: white;
   
       &:hover {
-        background-color: #f33526; /* Darker red when hovered */
-        transform: scale(1.05); /* Slightly larger on hover */
+        background-color: #f33526;
+        transform: scale(1.05); 
       }
   
       &:disabled {
-        background-color: #e0e0e0; /* Gray background for disabled state */
-        color: #b0b0b0; /* Light gray text */
-        cursor: not-allowed; /* Disable pointer */
+        background-color: #e0e0e0;
+        color: #b0b0b0;
+        cursor: not-allowed;
       }
     }
   }
   
-  /* Container styling for buttons */
+ 
   .button-container {
     margin-top: 20px;
     display: flex;
-    gap: 15px; /* Add space between buttons */
+    gap: 15px;
   }
   .form-container {
     background: #f9f9f9;
@@ -72,7 +72,7 @@
     color: #333; 
   }
 
-  // Styling for the form input fields and labels
+ 
   .form-container div {
     margin-bottom: 15px; 
   }
@@ -101,7 +101,7 @@
     outline: none;
   }
 
-  // Button styles in the form
+  
   .form-container button {
     padding: 12px 20px;
     background: #007bff;
@@ -117,7 +117,7 @@
     background: #0056b3;
   }
   .button.cancel {
-    background-color: #f44336; /* Màu đỏ cho nút hủy */
+    background-color: #f44336;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -129,7 +129,7 @@
   }
   
 .button-form-cancel {
-    background-color: #f44336; /* Màu đỏ cho nút hủy */
+    background-color: #f44336; 
     color: white;
     border: none;
     padding: 10px 20px;

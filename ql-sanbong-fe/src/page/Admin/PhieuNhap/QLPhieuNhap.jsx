@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import './QLPhieuNhap.scss'; // Import SCSS file
+import './QLPhieuNhap.scss';
 
 const QLPhieuNhap = () => {
-  const [data, setData] = useState([]); // For receipt data
-  const [suppliers, setSuppliers] = useState([]); // For supplier data
-  const [selectedRow, setSelectedRow] = useState(null); // For tracking the selected row
-  const [receiptDetails, setReceiptDetails] = useState([]); // For storing the receipt details
-  const [products, setProducts] = useState([]); // For storing product data
-  const [selectedSupplier, setSelectedSupplier] = useState(null); // For tracking selected supplier
-  const [newReceiptData, setNewReceiptData] = useState([]); // For new receipt form data
-  const [showForm, setShowForm] = useState(false); // For showing the form after clicking "Thêm Phiếu Nhập Hàng"
+  const [data, setData] = useState([]); 
+  const [suppliers, setSuppliers] = useState([]); 
+  const [selectedRow, setSelectedRow] = useState(null); 
+  const [receiptDetails, setReceiptDetails] = useState([]); 
+  const [products, setProducts] = useState([]);
+  const [selectedSupplier, setSelectedSupplier] = useState(null);
+  const [newReceiptData, setNewReceiptData] = useState([]); 
+  const [showForm, setShowForm] = useState(false); 
 
   useEffect(() => {
     fetch('http://localhost:8000/Ncc/Ncc')

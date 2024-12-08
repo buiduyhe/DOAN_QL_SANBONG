@@ -49,9 +49,9 @@
     }
 
     &.selected {
-      border: 2px solid #FFD700;  // Golden border to indicate selection
-      background-color: rgba(255, 215, 0, 0.5);  // Light golden background for selected field
-      box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);  // Add a glow effect
+      border: 2px solid #FFD700;
+      background-color: rgba(255, 215, 0, 0.5);
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
     }
 
     .reserved-text {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../QL.scss";
-import "./Bu&Rt.scss"; // Import the new CSS file
+import "./Bu&Rt.scss";
 
 const SaoLuu = () => {
     const [loading, setLoading] = useState(false);

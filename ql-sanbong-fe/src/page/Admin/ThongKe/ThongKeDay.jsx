@@ -11,12 +11,12 @@ import {
 import "./ThongKe.scss";
 
 const ThongKe = () => {
-  const [dailyData, setDailyData] = useState([]); // Dữ liệu theo ngày
-  const [loading, setLoading] = useState(false); // Trạng thái loading
-  const [error, setError] = useState(null); // Trạng thái lỗi
+  const [dailyData, setDailyData] = useState([]); 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null); 
 
-  const [startDate, setStartDate] = useState(""); // Ngày bắt đầu
-  const [endDate, setEndDate] = useState(""); // Ngày kết thúc
+  const [startDate, setStartDate] = useState(""); 
+  const [endDate, setEndDate] = useState(""); 
 
   // Hàm định dạng số tiền
   const formatCurrency = (value) => {

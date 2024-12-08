@@ -6,7 +6,6 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   max-width: 800px;
   margin: 20px auto;
-  
 
   h2 {
     font-size: 26px;
@@ -19,13 +18,11 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
-   
 
     .filter-item {
       display: flex;
       flex-direction: column;
       gap: 8px;
-      
 
       label {
         font-size: 14px;
@@ -48,6 +45,15 @@
           border-color: #0056b3;
           outline: none;
         }
+
+        &[type="number"] {
+          -moz-appearance: textfield; // Xóa mũi tên tăng/giảm số trên Firefox
+          &::-webkit-inner-spin-button,
+          &::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+          }
+        }
       }
     }
   }
@@ -58,7 +64,7 @@
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    
+
     h3 {
       font-size: 18px;
       color: #444;
@@ -69,6 +75,12 @@
 
     .recharts-wrapper {
       max-width: 100%;
+    }
+
+    .recharts-bar {
+      &:hover {
+        opacity: 0.8;
+      }
     }
   }
 

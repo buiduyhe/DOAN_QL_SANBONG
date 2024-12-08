@@ -9,7 +9,7 @@
   
       input[type='radio'] {
         cursor: pointer;
-        accent-color: #007bff; /* Màu sắc nút radio */
+        accent-color: #007bff;
       }
   
       span {
@@ -63,9 +63,9 @@
             border-bottom: 2px solid #dee2e6;
           }
   
-          /* Giảm kích thước ô "STT" */
+         
           th:first-child {
-            width: 60px; /* Hoặc điều chỉnh giá trị tùy ý */
+            width: 60px;
             text-align: center;
           }
         }
@@ -89,13 +89,13 @@
   
             input[type='radio'] {
               cursor: pointer;
-              accent-color: #007bff; /* Màu của nút radio */
+              accent-color: #007bff;
             }
           }
   
-          /* Giảm kích thước ô "STT" */
+          
           td:first-child {
-            width: 60px; /* Hoặc điều chỉnh giá trị tùy ý */
+            width: 60px; 
             text-align: center;
           }
         }

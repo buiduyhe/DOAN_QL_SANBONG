@@ -1,4 +1,3 @@
-/* Container for the entire component */
 .backup-restore-container {
   display: flex;
   flex-direction: column;
@@ -13,7 +12,6 @@
   margin: 20px auto;
 }
 
-/* Title styling */
 .backup-restore-container h2 {
   font-size: 24px;
   font-weight: bold;
@@ -22,7 +20,6 @@
   text-align: center;
 }
 
-/* Buttons container */
 .backup-restore-buttons {
   display: flex;
   gap: 20px;
@@ -30,7 +27,6 @@
   margin-bottom: 20px;
 }
 
-/* Common button styles */
 .backup-restore-button {
   padding: 12px 25px;
   font-size: 18px;
@@ -44,19 +40,16 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Button hover effect */
 .backup-restore-button:hover {
   background-color: #0056b3;
   transform: translateY(-2px);
 }
 
-/* Disabled button state */
 .backup-restore-button:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
 }
 
-/* Select dropdown styling */
 .backup-restore-select {
   margin-top: 20px;
   display: flex;
@@ -82,12 +75,10 @@
   transition: border-color 0.3s ease;
 }
 
-/* Hover effect on select */
 #backup-files:hover {
   border-color: #007bff;
 }
 
-/* Loading message styling */
 .loading {
   margin-top: 20px;
   font-size: 18px;
@@ -96,7 +87,6 @@
   text-align: center;
 }
 
-/* General message styling */
 .message {
   margin-top: 20px;
   font-size: 18px;
@@ -105,7 +95,6 @@
   text-align: center;
 }
 
-/* Error message */
 .message.error {
   color: #dc3545;
 }

@@ -1,9 +1,9 @@
 .filters {
     display: flex;
-    justify-content: center; /* Căn giữa các phần tử */
+    justify-content: center; 
     align-items: center;
     margin-bottom: 20px;
-    gap: 15px; /* Khoảng cách giữa các phần tử */
+    gap: 15px; 
   
     .filter-item {
       display: flex;
@@ -22,10 +22,10 @@
         border-radius: 8px;
         font-size: 16px;
         outline: none;
-        width: 250px; /* Chiều rộng của các input và select */
+        width: 250px; 
         transition: all 0.3s ease;
   
-        /* Khi focus */
+       
         &:focus {
           border-color: #007bff;
           box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
@@ -38,13 +38,13 @@
   
       select {
         cursor: pointer;
-        width: 250px; /* Tăng chiều rộng của dropdown */
+        width: 250px; 
       }
     }
   
-    /* Kiểu cho input tìm kiếm */
+    
     input[type="text"] {
-      max-width: 400px; /* Tăng chiều rộng tối đa cho input tìm kiếm */
+      max-width: 400px;
     }
   
     .filter-item + .filter-item {
@@ -59,7 +59,7 @@
     }
   
     .filter-item {
-      width: 100%; /* Đảm bảo các phần tử chiếm toàn bộ chiều rộng trên màn hình nhỏ */
+      width: 100%;
     }
   }
   

@@ -151,7 +151,7 @@ const LichSuDonDat = () => {
   useEffect(() => {
     const updateLichSuDonDat = async () => {
       if (!isLoading) {
-        renderLichSuDonDat();
+        await renderLichSuDonDat();
       }
     };
     updateLichSuDonDat();
@@ -296,10 +296,11 @@ const LichSuDonDat = () => {
                                 {hoaDon.details ? (
                                   hoaDon.details.map((detail, detailIndex) => (
                                     <tr key={detailIndex}>
-                                      <td>Tên dịch vụ: {detail.ten_san_pham}</td>
-                                      <td>Số lượng: {detail.so_luong}</td>
-                                      <td>Đơn giá: {detail.don_gia}</td>
-                                      <td>Giá: {detail.tong_tien.toLocaleString()} VND</td>
+                                      <td>{detailIndex + 1}</td>
+                                      <td>{detail.ten_san_pham}</td>
+                                      <td>{detail.so_luong}</td>
+                                      <td>{detail.don_gia.toLocaleString()} VND</td>
+                                      <td>{detail.tong_tien.toLocaleString()} VND</td>
                                     </tr>
                                   ))
                               ) : (

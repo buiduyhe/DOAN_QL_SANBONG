@@ -17,7 +17,7 @@
     z-index: 9999; 
   }
 
-  // Title styling in the form
+  
   .add-form h3 {
     margin-bottom: 15px;
     text-align: center; 
@@ -26,7 +26,7 @@
     color: #333; 
   }
 
-  // Styling for the form input fields and labels
+  
   .add-form div {
     margin-bottom: 15px; 
   }
@@ -55,7 +55,7 @@
     outline: none;
   }
 
-  // Button styles in the form
+  
   .add-form button {
     padding: 12px 20px;
     background: #007bff;
@@ -77,12 +77,11 @@
     flex-direction: column;
     gap: 30px;
     padding-bottom: 20px;
-    // Title section with admin information and logout
     .title {
       display: flex;
       padding: 20px 50px;
       justify-content: space-between;
-      align-items: center; /* Căn giữa nội dung theo chiều dọc */
+      align-items: center;
       background-color: antiquewhite;
       height: 100px;
 
@@ -95,11 +94,9 @@
       }
 
       h5:hover {
-        color: #007bff; /* Thêm hiệu ứng hover cho tên người dùng */
+        color: #007bff;
       }
     }
-
-    // Buttons section
     .btn {
       display: flex;
       gap: 30px;
@@ -112,7 +109,7 @@
         background-color: rgb(145, 205, 205);
         font-size: 14px;
         font-weight: bold;
-        transition: background-color 0.3s ease; /* Thêm hiệu ứng chuyển màu */
+        transition: background-color 0.3s ease; 
       }
 
       button:hover {
@@ -121,19 +118,17 @@
       }
     }
   }
-
-  // Ensure that the form and modal container are positioned properly when visible
   .overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000; /* Đảm bảo lớp phủ nổi lên trên */
+    z-index: 1000;
   }
 
   .modal {
@@ -176,8 +171,6 @@
     background-color: #0056b3;
    }
   }
-
-  // Animation for the modal when it appears
   @keyframes slideDown {
     from {
       transform: translateY(-50px);

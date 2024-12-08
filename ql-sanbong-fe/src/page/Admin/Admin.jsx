@@ -11,15 +11,16 @@ import "./Admin.scss";
 import Cookies from "js-cookie";
 import ThongKeDay from "./ThongKe/ThongKeDay";
 import ThongKeMonth from "./ThongKe/ThongKeMonth";
+import ThongKeYear from "./ThongKe/ThongKeYear";
 import QLDuyeDat from "../NhanVienPage/QLDuyet/QLDuyetDat";
 import axios from "axios";
 import SaoLuu from "../NhanVienPage/BackUp&Restore/Bu&Rt";
 
 const Admin = () => {
-  const [activeContent, setActiveContent] = useState(null); // Nội dung hiển thị
-  const [showAddForm, setShowAddForm] = useState(false); // Hiển thị form thêm
-  const [showEditForm, setShowEditForm] = useState(false); // Hiển thị form thêm
-  const [formType, setFormType] = useState(""); // Loại form (employees, customers, services, ...)
+  const [activeContent, setActiveContent] = useState(null);
+  const [showAddForm, setShowAddForm] = useState(false); 
+  const [showEditForm, setShowEditForm] = useState(false); 
+  const [formType, setFormType] = useState("");
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [selectedId, setSelectedId] = useState(null);
@@ -43,7 +44,7 @@ const Admin = () => {
   });
 
   
-  const username = Cookies.get("username"); // Lấy thông tin người dùng từ Cookies
+  const username = Cookies.get("username");
 
   const [serviceTypes, setServiceTypes] = useState([]);
   useEffect(() => {
@@ -71,7 +72,6 @@ const Admin = () => {
         email: supplier.email || "",
         phone: supplier.sdt || "",
         address: supplier.dia_chi || "",
-        // other supplier-related fields if needed
       });
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu nhà cung cấp:", error);
@@ -80,8 +80,8 @@ const Admin = () => {
   
   const handleMenuClick = (content) => {
     setActiveContent(content);
-    setShowAddForm(false); // Đóng form khi chọn menu khác
-    setShowEditForm(false); // Đóng form khi chọn menu khác
+    setShowAddForm(false);
+    setShowEditForm(false);
   };
   const fetchUserData = async (selectedId) => {
     try {
@@ -102,7 +102,7 @@ const Admin = () => {
           phone: user.phone || "",
           gender: user.gender === "MALE" ? "male" : user.gender === "FEMALE" ? "female" : "other",
           email: user.email || "",
-          password: "", // Không hiển thị mật khẩu trong form
+          password: "",
           gia: ""
         });
       }
@@ -114,7 +114,7 @@ const Admin = () => {
     Cookies.remove("access_token");
     Cookies.remove("username");
     Cookies.remove("user_role");
-    window.location.href = "/"; // Chuyển hướng về trang đăng nhập
+    window.location.href = "/";
   };
 
   const handleAddClick = () => {
@@ -131,23 +131,22 @@ const Admin = () => {
       description: "",
       image: null,
       address: "",
-    }); // Reset dữ liệu form
+    }); 
 
     if (activeContent === "employees") setFormType("employees");
     else if (activeContent === "customers") setFormType("customers");
     else if (activeContent === "services") setFormType("services");
     else if (activeContent === "suppliers") setFormType("suppliers");
-    setShowAddForm(true); // Mở form thêm mới
+    setShowAddForm(true);
   };
   const handleEditClick = () => {
     if (selectedId) {
-      // Fetch data for the supplier to populate the form
       if (activeContent === "suppliers") {
         fetchSupplierData(selectedId);
       } else {
         fetchUserData(selectedId);
       }
-      setShowEditForm(true);  // Open edit form
+      setShowEditForm(true);  
       setFormType(activeContent === "employees" ? "employees" : activeContent === "customers" ? "customers" : activeContent === "suppliers" ? "suppliers" : "courts");
     } else {
       console.error("No selected ID found");
@@ -178,7 +177,7 @@ const Admin = () => {
   };
   const handleSelectIds = (ids) => {
     setSelectedIds(ids);
-    console.log("Selected IDs in Admin:", ids); // You can use the selected IDs for any purpose
+    console.log("Selected IDs in Admin:", ids); 
     if (activeContent === "services") setFormType("services");
   };
   const handleFormDelete = async () => {
@@ -192,7 +191,7 @@ const Admin = () => {
       return;
     }
   
-    console.log(`Xóa ID:`, selectedId, selectedIds, formType); // Log ID cần xóa
+    console.log(`Xóa ID:`, selectedId, selectedIds, formType);
     
     setMessage('');
     setError('');
@@ -373,7 +372,7 @@ const Admin = () => {
       setError(error.message);
     }
   
-    setShowEditForm(false); // Close the edit form after processing
+    setShowEditForm(false); 
   };
   return (
     <div className="AdminPage row">
@@ -397,13 +396,14 @@ const Admin = () => {
           {activeContent === "suppliers" && <QLNhaCungCap onSelectId={handleSelect}/>}
           {activeContent === "statisticsDay" && <ThongKeDay />}
           {activeContent === "statisticsMonth" && <ThongKeMonth />}
+          {activeContent === "statisticsYear" && <ThongKeYear />}
           {activeContent === "SaoLuu" && <SaoLuu />}
           {activeContent === "PhieuNhap" && <PhieuNhap />}
           
 
         </div>
 
-        {activeContent !== "order" && activeContent !== "orders" && activeContent !== "statistics" && activeContent !== "SaoLuu" &&activeContent !== "PhieuNhap" &&activeContent !== "statisticsDay" &&activeContent !== "statisticsMonth" && (
+        {activeContent !== "order" && activeContent !== "orders" && activeContent !== "statistics" && activeContent !== "SaoLuu" &&activeContent !== "PhieuNhap" &&activeContent !== "statisticsDay" &&activeContent !== "statisticsMonth"  &&activeContent !== "statisticsYear"&& (
           <div className="btn">
             {activeContent !== "courts" && <button onClick={handleAddClick}>Thêm</button>}
             {activeContent !== "courts" && <button onClick={handleFormDelete}>Xóa</button>}

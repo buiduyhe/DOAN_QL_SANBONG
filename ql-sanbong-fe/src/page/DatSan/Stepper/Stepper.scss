@@ -20,7 +20,7 @@
         cursor: pointer;
   
         &.active {
-          color: #0056b3; // Màu xanh dương đậm
+          color: #0056b3;
           font-weight: bold;
         }
       }
@@ -38,7 +38,7 @@
         top: 0;
         left: 0;
         height: 100%;
-        background-color: #0056b3; // Màu xanh dương đậm
+        background-color: #0056b3;
         transition: width 0.3s ease;
       }
     }

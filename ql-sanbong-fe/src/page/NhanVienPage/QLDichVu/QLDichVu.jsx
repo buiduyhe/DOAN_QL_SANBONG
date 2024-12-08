@@ -78,7 +78,7 @@ const QLDichVu = ({ onSelectIds }) => {
         ]}
       />
 
-      {/* Bảng danh sách dịch vụ */}
+      
       <table>
         <thead>
           <tr>

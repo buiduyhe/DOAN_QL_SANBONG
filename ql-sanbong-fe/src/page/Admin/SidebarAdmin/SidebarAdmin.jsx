@@ -6,13 +6,13 @@ import cookies from "js-cookie";
 
 const SidebarAdmin = ({ onMenuClick }) => {
   const [adminName, setAdminName] = useState("");
-  const [isStatisticsOpen, setIsStatisticsOpen] = useState(false); // State cho mục "Thống kê"
+  const [isStatisticsOpen, setIsStatisticsOpen] = useState(false); 
   const role = cookies.get("user_role");
 
   useEffect(() => {
     const fetchAdminInfo = async () => {
       try {
-        const response = await fetch("api/admin"); // Cập nhật endpoint API nếu cần
+        const response = await fetch("api/admin"); 
         const data = await response.json();
         setAdminName(data.name);
       } catch (error) {
@@ -24,7 +24,7 @@ const SidebarAdmin = ({ onMenuClick }) => {
   }, []);
 
   const toggleStatistics = () => {
-    setIsStatisticsOpen((prevState) => !prevState); // Toggle mở/đóng
+    setIsStatisticsOpen((prevState) => !prevState);
   };
 
   return (

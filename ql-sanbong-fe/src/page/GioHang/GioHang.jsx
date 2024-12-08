@@ -4,7 +4,7 @@ import Navbar from '../../component/Navbar/Navbar'
 import SanPhamDaDat from './SanPhamDaDat/SanPhamDaDat';
 
 const GioHang = () => {
-  const { cartItems, removeFromCart } = useCart();  // Lấy giỏ hàng và hàm xóa sản phẩm
+  const { cartItems, removeFromCart } = useCart();
 
   return (
     <div>

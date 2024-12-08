@@ -12,7 +12,6 @@ const DatSan = () => {
         <Stepper/>
         <StepSelector/>
         <SoDoSan/>
-
         <Footer/>
     </div>
   )

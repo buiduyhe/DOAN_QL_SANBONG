@@ -1,8 +1,8 @@
 import React from "react";
-import "./SearchBar.scss"; // File SCSS cho SearchBar
+import "./SearchBar.scss"; 
 
 const SearchBar = ({ searchTerm, setSearchTerm, searchField, setSearchField, searchLabel, searchOptions = [] }) => {
-  // Đảm bảo searchOptions luôn là mảng, mặc định là mảng rỗng nếu không có giá trị
+  
   return (
     <div className="filters">
       <div className="filter-item">

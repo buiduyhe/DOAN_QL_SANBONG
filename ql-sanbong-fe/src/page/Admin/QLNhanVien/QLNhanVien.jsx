@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
-import SearchBar from "../SearchBar/SearchBar"; // Import SearchBar component
+import SearchBar from "../SearchBar/SearchBar"; 
 import "./QLNhanVien.scss";
 
 const QLNhanVien = ({ onSelectId = () => {} }) => {
-  const [nhanVienList, setNhanVienList] = useState([]); // Danh sách nhân viên gốc
-  const [filteredNhanVienList, setFilteredNhanVienList] = useState([]); // Danh sách nhân viên sau khi lọc
+  const [nhanVienList, setNhanVienList] = useState([]); 
+  const [filteredNhanVienList, setFilteredNhanVienList] = useState([]); 
   const [selectedId, setSelectedId] = useState(null);
-  const [searchTerm, setSearchTerm] = useState(""); // Giá trị tìm kiếm
-  const [searchField, setSearchField] = useState("full_name"); // Trường tìm kiếm (mặc định là tên)
+  const [searchTerm, setSearchTerm] = useState(""); 
+  const [searchField, setSearchField] = useState("full_name"); 
 
-  // Fetch dữ liệu từ API
+ 
   useEffect(() => {
     fetch("http://127.0.0.1:8000/user/get_SysUser/2")
       .then((response) => {
@@ -20,12 +20,12 @@ const QLNhanVien = ({ onSelectId = () => {} }) => {
       })
       .then((data) => {
         setNhanVienList(data);
-        setFilteredNhanVienList(data); // Hiển thị danh sách gốc ban đầu
+        setFilteredNhanVienList(data); 
       })
       .catch((error) => console.error("Có lỗi xảy ra:", error));
   }, []);
 
-  // Xử lý tìm kiếm
+ 
   useEffect(() => {
     const filteredList = nhanVienList.filter((nhanVien) =>
       nhanVien[searchField]
@@ -38,14 +38,14 @@ const QLNhanVien = ({ onSelectId = () => {} }) => {
 
   const handleCheckboxChange = (id) => {
     setSelectedId(id);
-    onSelectId(id); // Gọi callback để truyền ID
+    onSelectId(id); 
   };
 
   return (
     <div>
       <h4>Quản lý nhân viên</h4>
 
-      {/* Thanh tìm kiếm */}
+     
       <SearchBar
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
@@ -60,7 +60,7 @@ const QLNhanVien = ({ onSelectId = () => {} }) => {
         ]}
       />
 
-      {/* Bảng danh sách nhân viên */}
+      
       <table>
         <thead>
           <tr>

@@ -1,7 +1,7 @@
 import React from 'react';
 import Navbar from '../../component/Navbar/Navbar';
 import Footer from '../../component/Footer/Footer';
-import './LienHe.scss'; // Thêm file SCSS nếu cần
+import './LienHe.scss';
 
 const LienHe = () => {
   return (

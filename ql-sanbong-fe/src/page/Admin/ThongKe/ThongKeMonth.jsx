@@ -11,12 +11,12 @@ import {
 import "./ThongKe.scss";
 
 const ThongKe = () => {
-  const [monthlyData, setMonthlyData] = useState([]); // Dữ liệu theo tháng
-  const [loading, setLoading] = useState(false); // Trạng thái loading
-  const [error, setError] = useState(null); // Trạng thái lỗi
+  const [monthlyData, setMonthlyData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null); 
 
-  const [startMonth, setStartMonth] = useState(""); // Tháng bắt đầu
-  const [endMonth, setEndMonth] = useState(""); // Tháng kết thúc
+  const [startMonth, setStartMonth] = useState(""); 
+  const [endMonth, setEndMonth] = useState(""); 
 
   // Hàm định dạng số tiền
   const formatCurrency = (value) => {

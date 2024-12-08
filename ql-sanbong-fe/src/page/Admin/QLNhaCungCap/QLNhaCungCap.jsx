@@ -1,29 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './QLNhaCungCap.scss';
-import SearchBar from '../SearchBar/SearchBar'; // Nếu bạn muốn sử dụng SearchBar như trong QLNhanVien
+import SearchBar from '../SearchBar/SearchBar'; 
 
 const QLNhaCungCap = ({ onSelectId = () => {} }) => {
   const [nhaCungCap, setNhaCungCap] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchType, setSearchField] = useState('ten_ncc'); // Mặc định tìm kiếm theo tên
+  const [searchType, setSearchField] = useState('ten_ncc'); 
   const [filteredData, setFilteredData] = useState([]);
-  const [selectedId, setSelectedId] = useState(null); // Theo dõi NCC được chọn
+  const [selectedId, setSelectedId] = useState(null); 
 
   useEffect(() => {
-    // Gọi API để lấy dữ liệu
+    
     axios
-      .get('http://localhost:8000/Ncc/Ncc')
+      .get('http:/*localhost:8000/Ncc/Ncc')
       .then((response) => {
         setNhaCungCap(response.data);
-        setFilteredData(response.data); // Ban đầu, hiển thị toàn bộ dữ liệu
+        setFilteredData(response.data);
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
       });
   }, []);
 
-  // Xử lý tìm kiếm
+ 
   useEffect(() => {
     const lowercasedSearchTerm = searchTerm.toLowerCase();
     const filtered = nhaCungCap.filter((ncc) => {
@@ -41,17 +41,16 @@ const QLNhaCungCap = ({ onSelectId = () => {} }) => {
     setFilteredData(filtered);
   }, [searchTerm, searchType, nhaCungCap]);
 
-  // Hàm xử lý khi chọn nhà cung cấp
+  
   const handleCheckboxChange = (id) => {
     setSelectedId(id);
-    onSelectId(id); // Gọi callback từ cha (nếu cần)
+    onSelectId(id); 
   };
 
   return (
     <div className="ql-nha-cung-cap">
       <h4>Quản lý nhà cung cấp</h4>
 
-      {/* Thanh tìm kiếm */}
       <SearchBar
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
@@ -68,7 +67,7 @@ const QLNhaCungCap = ({ onSelectId = () => {} }) => {
       <table>
         <thead>
           <tr>
-            <th>STT</th> {/* Thay "Mã NCC" bằng "STT" */}
+            <th>STT</th>
             <th>Tên NCC</th>
             <th>Địa Chỉ</th>
             <th>Email</th>
@@ -81,7 +80,7 @@ const QLNhaCungCap = ({ onSelectId = () => {} }) => {
                 key={ncc.id} 
                 onClick={() => handleCheckboxChange(ncc.id)}
               >
-                {/* Gộp số thứ tự và nút radio */}
+               
                 <td>
                   <input
                     type="radio"
