@@ -151,7 +151,7 @@ const LichSuDonDat = () => {
   useEffect(() => {
     const updateLichSuDonDat = async () => {
       if (!isLoading) {
-        await renderLichSuDonDat();
+        renderLichSuDonDat();
       }
     };
     updateLichSuDonDat();
