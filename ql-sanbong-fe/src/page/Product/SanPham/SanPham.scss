@@ -33,6 +33,7 @@ body {
     align-self: flex-end;
     margin-bottom: 20px;
     margin-right: 20px;
+    position: relative;
 
     .sort-label-button {
       display: flex;
@@ -47,14 +48,14 @@ body {
       .sort-dropdown-button {
         background-color: #fff;
         border: 1px solid #ddd;
-        padding: 8px 12px;
+        padding: 0.5rem 1rem;
         cursor: pointer;
-        font-size: 16px;
-        width: 150px;
-        height: 40px;
+        font-size: 1rem;
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: space-between; 
+        min-width: 200px;
+        border-radius: 5px;
       }
 
       .arrow {
@@ -64,15 +65,16 @@ body {
 
     .sort-dropdown-menu {
       position: absolute;
-      top: 57%;
-      left: 1343px;
-      min-width: 150px;
+      top: 100%;
+      left: 0;
+      min-width: 100%;
       border: 1px solid #ddd;
       background-color: #fff;
       list-style-type: none;
       padding: 0;
-      margin: 5px 0 0;
+      margin: 0.5rem 0; 
       z-index: 1000;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
       li {
         padding: 8px 12px;
@@ -131,22 +133,22 @@ body {
       }
       .add-to-cart {
         position: absolute;
-        top: 50%; /* Căn chỉnh theo chiều dọc */
-        left: 50%; /* Căn chỉnh theo chiều ngang */
-        transform: translate(-50%, -50%); /* Dịch chuyển để nút nằm chính giữa */
-        background-color: rgba(0, 123, 255, 0.9); /* Màu nền với độ trong suốt */
+        top: 50%; 
+        left: 50%; 
+        transform: translate(-50%, -50%); 
+        background-color: rgba(0, 123, 255, 0.9); 
         color: white;
         border: none;
         padding: 10px 20px;
         border-radius: 5px;
         cursor: pointer;
-        display: none; /* Ẩn mặc định */
+        display: none; 
         transition: all 0.3s;
         z-index: 10;
       }
     
       &:hover .add-to-cart {
-        display: block; /* Hiển thị khi di chuột vào sản phẩm */
+        display: block;
       }
     
     }
