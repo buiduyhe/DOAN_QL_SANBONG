@@ -78,6 +78,11 @@ const SidebarAdmin = ({ onMenuClick }) => {
                   Thống kê theo năm
                 </a>
               </li>
+              <li>
+                <a onClick={() => onMenuClick("statisticSan")}>
+                  Thống kê theo sân
+                </a>
+              </li>
             </ul>
           )}
         </li>
