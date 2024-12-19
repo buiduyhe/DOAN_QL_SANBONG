@@ -88,7 +88,7 @@ const ThanhToan = () => {
       const isExtraFee = startHour < 6 || (startHour === 6 && startMinute < 30) || startHour >= 18;
       setIsExtraFeeTime(isExtraFee); // Set the state for extra fee time
 
-      const adjustedPrice = isExtraFee ? gia_thue * 1.1 : gia_thue;
+      const adjustedPrice = isExtraFee ? Math.round(gia_thue * 1.1) : gia_thue;
       setAdjustedPrice(adjustedPrice); // Update the adjusted price state
     }
   }, [timeSlot, gia_thue]);

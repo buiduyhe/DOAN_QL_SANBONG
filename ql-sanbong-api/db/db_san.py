@@ -214,12 +214,9 @@ def in_hoadon_excel(db: Session, hoa_don_id: int):
     
 def ThongKe_30days(db: Session):
     now = datetime.now()
-    start_of_today = datetime.combine(now.date(), datetime.min.time())  # Bắt đầu ngày hôm nay
-    start_of_thirty_days_ago = start_of_today - timedelta(days=29)  # Bắt đầu cách đây 30 ngày
 
     # Lấy các hóa đơn trong khoảng thời gian và đã thanh toán
     hoadon_list = db.query(HoaDon).filter(
-        HoaDon.ngay_tao >= start_of_thirty_days_ago,
         HoaDon.ngay_tao <= now,
         HoaDon.trang_thai == 1  # Chỉ tính hóa đơn đã thanh toán
     ).all()
@@ -381,4 +378,33 @@ def ThongKe_year(db: Session):
 
     thong_ke_list = [{"nam": year, "tong_tien": thong_ke[year]} for year in years]
 
+    return thong_ke_list
+
+
+#tôi muốn thống kê lượt đặt sân theo ngày
+def ThongKe_San(db: Session):
+    now = datetime.now()
+
+    # Lấy các đặt sân trong khoảng thời gian và đã được duyệt
+    dat_san_list = db.query(DatSan).filter(
+        DatSan.created_at <= now,
+        DatSan.status == 1  # Chỉ tính đặt sân đã được duyệt
+    ).all()
+
+    if not dat_san_list:
+        raise HTTPException(status_code=404, detail="Không tìm thấy đặt sân nào.")
+
+    thong_ke = defaultdict(lambda: defaultdict(int))
+    for ds in dat_san_list:
+        # Chỉ lấy phần ngày
+        ngay_tao = ds.created_at.date()
+        thong_ke[ngay_tao][ds.id_san] += 1
+
+    # Chuyển đổi thành danh sách và sắp xếp theo ngày
+    thong_ke_list = []
+    for ngay, san_dict in thong_ke.items():
+        for san_id, tong_so_lan in san_dict.items():
+            thong_ke_list.append({"ngay": ngay, "san_id": san_id, "tong_so_lan": tong_so_lan})
+    
+    thong_ke_list.sort(key=lambda x: x["ngay"])
     return thong_ke_list

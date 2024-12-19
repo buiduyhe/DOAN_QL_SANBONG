@@ -92,7 +92,6 @@ const ThongKe = () => {
   // Tính toán ngày tối đa và tối thiểu cho input date
   const today = new Date();
   const maxDate = today.toISOString().split("T")[0];
-  const minDate = new Date(today.setDate(today.getDate() - 29)).toISOString().split("T")[0];
 
   return (
     <div className="thong-ke">
@@ -106,7 +105,6 @@ const ThongKe = () => {
             type="date"
             id="start-date"
             value={startDate}
-            min={minDate}
             max={maxDate}
             onChange={handleStartDateChange}
           />
@@ -117,7 +115,7 @@ const ThongKe = () => {
             type="date"
             id="end-date"
             value={endDate}
-            min={startDate || minDate}
+            min={startDate}
             max={maxDate}
             onChange={handleEndDateChange}
           />

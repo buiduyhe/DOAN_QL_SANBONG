@@ -102,3 +102,7 @@ def get_ds_hoa_don_by_user(db: Session = Depends(get_db),current_user: SysUser =
 @router.get('/ThongKe_year')
 def ThongKe_year(db: Session = Depends(get_db)):
     return db_san.ThongKe_year(db)
+
+@router.get('/ThongKe_San')
+def ThongKe_San(db: Session = Depends(get_db)):
+    return db_san.ThongKe_San(db)
