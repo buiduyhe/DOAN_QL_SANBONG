@@ -13,6 +13,7 @@ const SanPham = () => {
   const [productType, setProductType] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [hoveredProduct, setHoveredProduct] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchProductsAndTypes = async () => {
@@ -106,6 +107,17 @@ const SanPham = () => {
     setFilteredProducts(filtered);
   };
 
+  const handleSearch = (e) => {
+    const term = e.target.value.toLowerCase();
+    setSearchTerm(term);
+
+    const filtered = products.filter((product) =>
+      product.ten_dv.toLowerCase().includes(term)
+    );
+
+    setFilteredProducts(filtered);
+  };
+
   return (
     <div className="san-pham">
       <div className="DanhMuc">
@@ -135,6 +147,15 @@ const SanPham = () => {
             <p>Loading categories...</p>
           )}
         </div>
+      </div>
+
+      <div className="search-bar">
+        <input
+          type="text"
+          placeholder="Tìm kiếm sản phẩm..."
+          value={searchTerm}
+          onChange={handleSearch}
+        />
       </div>
 
       <div className="sort-dropdown">

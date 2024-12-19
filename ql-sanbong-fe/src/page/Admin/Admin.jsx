@@ -12,6 +12,7 @@ import Cookies from "js-cookie";
 import ThongKeDay from "./ThongKe/ThongKeDay";
 import ThongKeMonth from "./ThongKe/ThongKeMonth";
 import ThongKeYear from "./ThongKe/ThongKeYear";
+import ThongKeSan from "./ThongKe/ThongKeSan";
 import QLDuyeDat from "../NhanVienPage/QLDuyet/QLDuyetDat";
 import axios from "axios";
 import SaoLuu from "../NhanVienPage/BackUp&Restore/Bu&Rt";
@@ -397,13 +398,14 @@ const Admin = () => {
           {activeContent === "statisticsDay" && <ThongKeDay />}
           {activeContent === "statisticsMonth" && <ThongKeMonth />}
           {activeContent === "statisticsYear" && <ThongKeYear />}
+          {activeContent === "statisticSan" && <ThongKeSan />}
           {activeContent === "SaoLuu" && <SaoLuu />}
           {activeContent === "PhieuNhap" && <PhieuNhap />}
           
 
         </div>
 
-        {activeContent !== "order" && activeContent !== "orders" && activeContent !== "statistics" && activeContent !== "SaoLuu" &&activeContent !== "PhieuNhap" &&activeContent !== "statisticsDay" &&activeContent !== "statisticsMonth"  &&activeContent !== "statisticsYear"&& (
+        {activeContent !== "order" && activeContent !== "orders" && activeContent !== "statistics" && activeContent !== "SaoLuu" &&activeContent !== "PhieuNhap" &&activeContent !== "statisticsDay" &&activeContent !== "statisticsMonth"  &&activeContent !== "statisticsYear"&&  activeContent !== "statisticSan"&& (
           <div className="btn">
             {activeContent !== "courts" && <button onClick={handleAddClick}>Thêm</button>}
             {activeContent !== "courts" && <button onClick={handleFormDelete}>Xóa</button>}
