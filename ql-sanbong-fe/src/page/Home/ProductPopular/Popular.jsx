@@ -10,7 +10,7 @@ const Popular = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await fetch("http://localhost:8000/dichvu/dichvu"); // Thay bằng URL API của bạn
+        const response = await fetch("https://doan-ql-sanbong.onrender.com/dichvu/dichvu"); // Thay bằng URL API của bạn
         if (!response.ok) throw new Error("Failed to fetch services");
 
         const data = await response.json();
@@ -34,7 +34,7 @@ const Popular = () => {
         <div className="SP row">
           {services.slice(0, 8).map((service, index) => ( // Display only first 8 items
             <div className="col-md-3 image-container" key={index}>
-              <img src={`http://localhost:8000/${service.image_dv}`} alt={service.tendichvu} />
+              <img src={`https://doan-ql-sanbong.onrender.com/${service.image_dv}`} alt={service.tendichvu} />
               <button onClick={handleViewMore} className="view-button">Xem ngay</button>
             </div>
           ))}
