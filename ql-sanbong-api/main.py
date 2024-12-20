@@ -23,9 +23,9 @@ def root():
     return "Hello world"
 
 
-origins =[
-    'https://doan-ql-sanbong.vercel.app'
-]
+# origins =[
+#     'https://doan-ql-sanbong.vercel.app'
+# ]
 
 
 
@@ -35,7 +35,7 @@ models.Base.metadata.create_all(engine)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins = origins,
+    allow_origins = ['*'],
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*']
