@@ -2,12 +2,15 @@
     "version": 2,
     "builds": [
       {
-        "src": "ql-sanbong-api/main.py",
+        "src": "main.py",
         "use": "@vercel/python"
       }
     ],
     "routes": [
-      { "src": "/(.*)", "dest": "ql-sanbong-api/main.py" }
+      {
+        "src": "/(.*)",
+        "dest": "main.py"
+      }
     ]
   }
   
