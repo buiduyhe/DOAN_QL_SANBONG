@@ -24,7 +24,7 @@ def root():
 
 
 origins =[
-    'http://localhost:3000'
+    'https://doan-ql-sanbong.vercel.app'
 ]
 
 
