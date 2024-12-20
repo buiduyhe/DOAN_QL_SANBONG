@@ -1,4 +1,4 @@
-import locale
+# import locale
 import os
 import random
 import string
@@ -116,7 +116,7 @@ def get_ds_hoadon(db: Session):
         )
     return hoadon_display_list
 
-locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')  # Sử dụng locale tiếng Anh thay vì tiếng Việt
+# locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')  # Sử dụng locale tiếng Anh thay vì tiếng Việt
 
 
 def in_hoadon_excel(db: Session, hoa_don_id: int):
@@ -176,8 +176,8 @@ def in_hoadon_excel(db: Session, hoa_don_id: int):
             "STT": list(range(1, len(chi_tiet) + 1)),
             "Tên Sản phẩm": [item["ten_san_pham"] for item in chi_tiet],
             "Số lượng": [item["so_luong"] for item in chi_tiet],
-            "Đơn giá": [locale.format_string("%d", item["don_gia"], grouping=True) + " VND" for item in chi_tiet],
-            "Tổng Tiền": [locale.format_string("%d", item["tong_tien"], grouping=True) + " VND" for item in chi_tiet]
+            "Đơn giá": [f"{item['don_gia']:,} VND" for item in chi_tiet],
+            "Tổng Tiền": [f"{item['tong_tien']:,} VND" for item in chi_tiet]
         }
         items_df = pd.DataFrame(items_data)
 
@@ -202,7 +202,7 @@ def in_hoadon_excel(db: Session, hoa_don_id: int):
 
         total_format = workbook.add_format({'bold': True, 'font_size': 12, 'align': 'right'})
         worksheet.write(start_table_row + len(items_df) + 2, 3, "Tổng tiền hóa đơn:", total_format)
-        worksheet.write(start_table_row + len(items_df) + 2, 4, f"{locale.format_string('%d', hoadon.tong_tien, grouping=True)} VND", items_format)
+        worksheet.write(start_table_row + len(items_df) + 2, 4, f"{hoadon.tong_tien:,} VND", items_format)
     db.commit()
     return FileResponse(
         path=file_path, 
