@@ -21,7 +21,7 @@ const LichSuDonDat = () => {
       }
 
       try {
-        const responseDonDat = await axios.get('http://localhost:8000/san/get_ds_dat_san_by_user', {
+        const responseDonDat = await axios.get('https://doan-ql-sanbong.onrender.com/san/get_ds_dat_san_by_user', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -54,7 +54,7 @@ const LichSuDonDat = () => {
       }
 
       try {
-        const responseDonDat = await axios.get('http://127.0.0.1:8000/san/get_ds_hoa_don_by_user', {
+        const responseDonDat = await axios.get('https://doan-ql-sanbong.onrender.com/san/get_ds_hoa_don_by_user', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -106,7 +106,7 @@ const LichSuDonDat = () => {
     }
 
     try {
-      const response = await axios.get(`http://localhost:8000/san/get_timeslot_by_id/${timeslotId}`);
+      const response = await axios.get(`https://doan-ql-sanbong.onrender.com/san/get_timeslot_by_id/${timeslotId}`);
       const timeSlot = response.data;
 
       const { ngay, batdau, ketthuc } = timeSlot;
@@ -173,7 +173,7 @@ const LichSuDonDat = () => {
         if (hoaDon.id === hoaDonId) {
           if (!hoaDon.details) {
             try {
-              const response = await axios.get(`http://127.0.0.1:8000/dichvu/get_chi_tiet_hoadon/${hoaDonId}`);
+              const response = await axios.get(`https://doan-ql-sanbong.onrender.com/dichvu/get_chi_tiet_hoadon/${hoaDonId}`);
               hoaDon.details = response.data;
             } catch (error) {
               console.error('Lỗi khi lấy chi tiết hóa đơn:', error);

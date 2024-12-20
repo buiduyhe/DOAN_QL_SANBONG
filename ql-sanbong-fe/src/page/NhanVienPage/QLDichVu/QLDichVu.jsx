@@ -13,7 +13,7 @@ const QLDichVu = ({ onSelectIds }) => {
   const [searchField, setSearchField] = useState("id"); // Trường tìm kiếm (Mã Dịch Vụ, Tên Dịch Vụ, Loại Dịch Vụ)
 
   useEffect(() => {
-    fetch("http://localhost:8000/dichvu/dichvu_QL")
+    fetch("https://doan-ql-sanbong.onrender.com/dichvu/dichvu_QL")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -118,7 +118,7 @@ const QLDichVu = ({ onSelectIds }) => {
               <td>{dichVu.mota || "Không có mô tả"}</td>
               <td style={{ textAlign: "center" }}>
                 <img
-                  src={`http://localhost:8000/${dichVu.image_dv}`}
+                  src={`https://doan-ql-sanbong.onrender.com/${dichVu.image_dv}`}
                   alt={dichVu.ten_dv}
                   style={{
                     width: "50px",

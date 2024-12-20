@@ -12,17 +12,17 @@ const QLPhieuNhap = () => {
   const [showForm, setShowForm] = useState(false); 
 
   useEffect(() => {
-    fetch('http://localhost:8000/Ncc/Ncc')
+    fetch('https://doan-ql-sanbong.onrender.com/Ncc/Ncc')
       .then((response) => response.json())
       .then((data) => setSuppliers(data));
 
-    fetch('http://localhost:8000/dichvu/dichvu')
+    fetch('https://doan-ql-sanbong.onrender.com/dichvu/dichvu')
       .then((response) => response.json())
       .then((data) => setProducts(data));
   }, []);
 
   useEffect(() => {
-    fetch('http://localhost:8000/Ncc/get-all-nhap-hang')
+    fetch('https://doan-ql-sanbong.onrender.com/Ncc/get-all-nhap-hang')
       .then((response) => response.json())
       .then((data) => {
         setData(Array.isArray(data) ? data : []);
@@ -62,7 +62,7 @@ const QLPhieuNhap = () => {
   };
 
   const fetchReceiptDetails = (id) => {
-    fetch(`http://localhost:8000/Ncc/chi-tiet-nhap-hang/${id}`)
+    fetch(`https://doan-ql-sanbong.onrender.com/Ncc/chi-tiet-nhap-hang/${id}`)
       .then((response) => response.json())
       .then((data) => {
         setReceiptDetails(data.chi_tiet || []); // Save receipt details to state
@@ -91,7 +91,7 @@ const QLPhieuNhap = () => {
 
   const handleDuyet = () => {
     if (selectedRow !== null) {
-      fetch(`http://localhost:8000/Ncc/nhap-hang/${selectedRow}/duyet`, {
+      fetch(`https://doan-ql-sanbong.onrender.com/Ncc/nhap-hang/${selectedRow}/duyet`, {
         method: 'POST',
       })
         .then((response) => response.json())
@@ -109,7 +109,7 @@ const QLPhieuNhap = () => {
 
   const handleTuChoiDuyet = () => {
     if (selectedRow !== null) {
-      fetch(`http://localhost:8000/Ncc/nhap-hang/${selectedRow}/tuchoiduyet`, {
+      fetch(`https://doan-ql-sanbong.onrender.com/Ncc/nhap-hang/${selectedRow}/tuchoiduyet`, {
         method: 'POST',
       })
         .then((response) => response.json())
@@ -126,7 +126,7 @@ const QLPhieuNhap = () => {
   };
   const handleInPhieuNhap = () => {
     if (selectedRow !== null) {
-      fetch(`http://127.0.0.1:8000/Ncc/in_hoadon_nhap_excel?nhap_hang_id=${selectedRow}`, {
+      fetch(`https://doan-ql-sanbong.onrender.com/Ncc/in_hoadon_nhap_excel?nhap_hang_id=${selectedRow}`, {
         method: 'POST',
       })
         .then((response) => response.blob())
@@ -147,7 +147,7 @@ const QLPhieuNhap = () => {
     }
   };
   const fetchData = () => {
-    fetch('http://localhost:8000/Ncc/get-all-nhap-hang')
+    fetch('https://doan-ql-sanbong.onrender.com/Ncc/get-all-nhap-hang')
       .then((response) => response.json())
       .then((data) => {
         setData(Array.isArray(data) ? data : []);
@@ -182,7 +182,7 @@ const QLPhieuNhap = () => {
       don_gia: item.don_gia,
     }));
 
-    fetch(`http://localhost:8000/Ncc/nhap-hang?ncc_id=${Number(selectedSupplier)}`, {
+    fetch(`https://doan-ql-sanbong.onrender.com/Ncc/nhap-hang?ncc_id=${Number(selectedSupplier)}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -332,7 +332,7 @@ const QLPhieuNhap = () => {
                     <tr key={product.id}>
                       <td style={{ textAlign: "center" }}>
                         <img
-                          src={`http://localhost:8000/${product.image_dv}`}
+                          src={`https://doan-ql-sanbong.onrender.com/${product.image_dv}`}
                           alt={product.ten_dv}
                           style={{
                             width: "50px",

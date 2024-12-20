@@ -14,19 +14,19 @@ const QLDonDat = () => {
   const [selectedHoaDon, setSelectedHoaDon] = useState(null);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/san/get_ds_hoadon")
+    fetch("https://doan-ql-sanbong.onrender.com/san/get_ds_hoadon")
       .then((response) => response.json())
       .then((data) => setHoaDons(data))
       .catch((error) => console.error("Error fetching data:", error));
 
-    fetch("http://localhost:8000/dichvu/dichvu_QL")
+    fetch("https://doan-ql-sanbong.onrender.com/dichvu/dichvu_QL")
       .then((response) => response.json())
       .then((data) => setSanPhams(data))
       .catch((error) => console.error("Error fetching products:", error));
   }, []);
 
   const fetchChiTietHoaDon = (ma_hoa_don) => {
-    fetch(`http://localhost:8000/dichvu/get_chi_tiet_hoadon/${ma_hoa_don}`)
+    fetch(`https://doan-ql-sanbong.onrender.com/dichvu/get_chi_tiet_hoadon/${ma_hoa_don}`)
       .then((response) => response.json())
       .then((data) => setChiTietHoaDon(data))
       .catch((error) =>
@@ -35,7 +35,7 @@ const QLDonDat = () => {
   };
 
   const refreshData = () => {
-    fetch("http://127.0.0.1:8000/san/get_ds_hoadon")
+    fetch("https://doan-ql-sanbong.onrender.com/san/get_ds_hoadon")
       .then((response) => response.json())
       .then((data) => setHoaDons(data))
       .catch((error) => console.error("Error refreshing data:", error));
@@ -81,7 +81,7 @@ const QLDonDat = () => {
       soluong: quantity,
     };
 
-    fetch(`http://localhost:8000/dichvu/dat_dv_By_HoaDon/${selectedId}`, {
+    fetch(`https://doan-ql-sanbong.onrender.com/dichvu/dat_dv_By_HoaDon/${selectedId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -116,7 +116,7 @@ const QLDonDat = () => {
     }
 
     if (window.confirm("Bạn có chắc chắn muốn thanh toán hóa đơn này?")) {
-      fetch(`http://127.0.0.1:8000/san/in_hoadon_excel?hoa_don_id=${selectedId}`, {
+      fetch(`https://doan-ql-sanbong.onrender.com/san/in_hoadon_excel?hoa_don_id=${selectedId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -280,7 +280,7 @@ const QLDonDat = () => {
                 <tr key={product.id}>
                   <td style={{ textAlign: "center" }}>
                     <img
-                      src={`http://localhost:8000/${product.image_dv}`}
+                      src={`https://doan-ql-sanbong.onrender.com/${product.image_dv}`}
                       alt={product.ten_dv}
                       style={{
                         width: "50px",

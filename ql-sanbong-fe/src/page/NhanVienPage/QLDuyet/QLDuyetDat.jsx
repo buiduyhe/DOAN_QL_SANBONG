@@ -15,7 +15,7 @@ const QLDuyetDat = () => {
 
     useEffect(() => {
         setLoading(true);
-        fetch("http://127.0.0.1:8000/san/ds_dat_san")
+        fetch("https://doan-ql-sanbong.onrender.com/san/ds_dat_san")
             .then((response) => response.json())
             .then((data) => {
                 setData(data);
@@ -35,7 +35,7 @@ const QLDuyetDat = () => {
                 for (const san of data) {
                     const timeslotId = san.timeslot_id;
                     if (timeslotId && !timeslotData[timeslotId]) {
-                        const response = await fetch(`http://127.0.0.1:8000/san/get_timeslot_by_id/${timeslotId}`);
+                        const response = await fetch(`https://doan-ql-sanbong.onrender.com/san/get_timeslot_by_id/${timeslotId}`);
                         if (!response.ok) continue;
                         const timeslot = await response.json();
                         if (timeslot?.ngay && timeslot?.batdau && timeslot?.ketthuc) {
@@ -61,7 +61,7 @@ const QLDuyetDat = () => {
                 for (const san of data) {
                     const userId = san.user_id;
                     if (userId && !emailData[userId]) {
-                        const response = await fetch(`http://127.0.0.1:8000/user/get_user_by_id/${userId}`);
+                        const response = await fetch(`https://doan-ql-sanbong.onrender.com/user/get_user_by_id/${userId}`);
                         if (!response.ok) continue;
                         const user = await response.json();
                         if (user?.email) {
@@ -82,7 +82,7 @@ const QLDuyetDat = () => {
 
     const handleApprove = (id) => {
         if (window.confirm("Bạn có chắc chắn muốn duyệt đơn này không?")) {
-            fetch(`http://127.0.0.1:8000/san/approve_dat_san/${id}`, {
+            fetch(`https://doan-ql-sanbong.onrender.com/san/approve_dat_san/${id}`, {
                 method: "POST",
             })
                 .then((response) => response.json())
@@ -103,7 +103,7 @@ const QLDuyetDat = () => {
 
     const handleReject = (id) => {
         if (window.confirm("Bạn có chắc chắn muốn từ chối đơn này không?")) {
-            fetch(`http://127.0.0.1:8000/san/reject_dat_san/${id}`, {
+            fetch(`https://doan-ql-sanbong.onrender.com/san/reject_dat_san/${id}`, {
                 method: "POST",
             })
                 .then((response) => response.json())

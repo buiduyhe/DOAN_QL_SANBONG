@@ -51,7 +51,7 @@ const Admin = () => {
   useEffect(() => {
     const fetchServiceTypes = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8000/dichvu/loaidichvu');
+        const response = await fetch('https://doan-ql-sanbong.onrender.com/dichvu/loaidichvu');
         const data = await response.json();
         const serviceTypeNames = data.map((type) => ({ id: type.id, name: type.ten_loai_dv }));
         setServiceTypes(serviceTypeNames);
@@ -65,7 +65,7 @@ const Admin = () => {
 
   const fetchSupplierData = async (id) => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/Ncc/get-Ncc/${id}`);
+      const response = await axios.get(`https://doan-ql-sanbong.onrender.com/Ncc/get-Ncc/${id}`);
       const supplier = response.data;
   
       setFormData({
@@ -88,7 +88,7 @@ const Admin = () => {
     try {
       let response;
       if (activeContent === "courts") {
-        response = await axios.get(`http://127.0.0.1:8000/san/get_san_by_id/${selectedId}`);
+        response = await axios.get(`https://doan-ql-sanbong.onrender.com/san/get_san_by_id/${selectedId}`);
         const court = response.data;
         setFormData((prevData) => ({
           ...prevData,
@@ -96,7 +96,7 @@ const Admin = () => {
         }));
         
       } else {
-        response = await axios.get(`http://127.0.0.1:8000/user/get_user_by_id/${selectedId}`);
+        response = await axios.get(`https://doan-ql-sanbong.onrender.com/user/get_user_by_id/${selectedId}`);
         const user = response.data;
         setFormData({
           name: user.full_name || "",
@@ -201,13 +201,13 @@ const Admin = () => {
     let requestData = [];
     
     if (formType === 'services') {
-      apiUrl = 'http://127.0.0.1:8000/dichvu/delete_dv';
+      apiUrl = 'https://doan-ql-sanbong.onrender.com/dichvu/delete_dv';
       requestData = selectedIds.filter(id => id !== null); // Chỉ truyền mảng selectedIds
     } else if (formType === 'customers' || formType === 'employees') {
-      apiUrl = `http://127.0.0.1:8000/user/delete_SysUser/${selectedId}`;
+      apiUrl = `https://doan-ql-sanbong.onrender.com/user/delete_SysUser/${selectedId}`;
     } else if (formType === 'suppliers') {
       // Chắc chắn sử dụng đúng URL cho xóa NCC
-      apiUrl = `http://127.0.0.1:8000/Ncc/delete-Ncc/${selectedId}`; // Đảm bảo đây là URL đúng để xóa NCC
+      apiUrl = `https://doan-ql-sanbong.onrender.com/Ncc/delete-Ncc/${selectedId}`; // Đảm bảo đây là URL đúng để xóa NCC
     } else {
       console.error('Invalid form type:', formType); // Log chi tiết lỗi
       setError('Invalid form type. Please check your form configuration.');
@@ -251,7 +251,7 @@ const Admin = () => {
     let requestData = new FormData();
 
     if (formType === 'services') {
-      apiUrl = 'http://127.0.0.1:8000/dichvu/dichvu';
+      apiUrl = 'https://doan-ql-sanbong.onrender.com/dichvu/dichvu';
         requestData.append('ten_dv', formData.serviceName);
         requestData.append('loaidichvu_id', formData.serviceType);
         requestData.append('gia_dv', formData.price);
@@ -259,21 +259,21 @@ const Admin = () => {
         requestData.append('mota', formData.description);
         requestData.append('image', formData.image);
     } else if (formType === 'customers') {
-      apiUrl = 'http://127.0.0.1:8000/register';
+      apiUrl = 'https://doan-ql-sanbong.onrender.com/register';
         requestData.append('fullname', formData.name);
         requestData.append('email', formData.email);
         requestData.append('phone', formData.phone);
         requestData.append('password', formData.password);
         requestData.append('gender', formData.gender);
     } else if (formType === 'employees') {
-      apiUrl = 'http://127.0.0.1:8000/register-nhanvien';
+      apiUrl = 'https://doan-ql-sanbong.onrender.com/register-nhanvien';
         requestData.append('fullname', formData.name);
         requestData.append('email', formData.email);
         requestData.append('phone', formData.phone);
         requestData.append('password', formData.password);
         requestData.append('gender', formData.gender);
     } else if (formType === 'suppliers'){
-      apiUrl = 'http://localhost:8000/Ncc/create-Ncc';
+      apiUrl = 'https://doan-ql-sanbong.onrender.com/Ncc/create-Ncc';
         requestData.append('tenNcc', formData.name);
         requestData.append('diachi', formData.address);
         requestData.append('email', formData.email);
@@ -325,7 +325,7 @@ const Admin = () => {
     
     
     if (formType === 'employees' || formType === 'customers') {
-      apiUrl = `http://127.0.0.1:8000/user/update_SysUser/${selectedId}`;
+      apiUrl = `https://doan-ql-sanbong.onrender.com/user/update_SysUser/${selectedId}`;
       requestData = {
         hoten: formData.name,
         phone: formData.phone,
@@ -333,13 +333,13 @@ const Admin = () => {
         gender: formData.gender === "male" ? "Nam" : formData.gender === "female" ? "Nữ" : "Khác",
       };
     } else if (formType === 'courts') {
-      apiUrl = `http://127.0.0.1:8000/san/update_san/${selectedId}`;
+      apiUrl = `https://doan-ql-sanbong.onrender.com/san/update_san/${selectedId}`;
       requestData = {
         gia: formData.gia,
       };
     }
     else if (formType === 'suppliers') {
-      apiUrl = `http://127.0.0.1:8000/Ncc/update-Ncc/${selectedId}`;
+      apiUrl = `https://doan-ql-sanbong.onrender.com/Ncc/update-Ncc/${selectedId}`;
       requestData = {
         ten_ncc: formData.name,
         dia_chi: formData.address,

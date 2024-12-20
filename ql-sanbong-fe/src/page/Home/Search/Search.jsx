@@ -13,7 +13,7 @@ const Search = () => {
   useEffect(() => {
     const fetchTimeSlots = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:8000/san/time_slot");
+        const response = await fetch("https://doan-ql-sanbong.onrender.com/san/time_slot");
         const data = await response.json();
         const formattedTimeSlots = data.map(slot => `${slot.start_time} - ${slot.end_time}`);
         setTimeSlots(formattedTimeSlots);

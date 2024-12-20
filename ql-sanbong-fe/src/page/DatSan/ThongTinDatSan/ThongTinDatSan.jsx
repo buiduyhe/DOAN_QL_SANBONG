@@ -14,7 +14,7 @@ const ThongTinDatSan = ({ selectedField }) => {
   const defaultDate = selectedDate || new Date().toLocaleString('en-US', { timeZone: 'Asia/Ho_Chi_Minh' });
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/san/loai_san')
+    fetch('https://doan-ql-sanbong.onrender.com/san/loai_san')
       .then((response) => response.json())
       .then((data) => setLoaiSanData(data))
       .catch((error) => console.error("Error fetching data:", error));

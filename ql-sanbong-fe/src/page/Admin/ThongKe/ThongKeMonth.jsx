@@ -49,7 +49,7 @@ const ThongKe = () => {
       setError(null);
 
       const response = await fetch(
-        `http://localhost:8000/san/ThongKe_month?startMonth=${startMonth}&endMonth=${endMonth}`
+        `https://doan-ql-sanbong.onrender.com/san/ThongKe_month?startMonth=${startMonth}&endMonth=${endMonth}`
       );
 
       if (!response.ok) {

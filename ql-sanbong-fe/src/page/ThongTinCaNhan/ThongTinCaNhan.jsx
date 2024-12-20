@@ -23,7 +23,7 @@ const ThongTinCaNhan = () => {
       const fetchUserData = async () => {
         setLoading(true);
         try {
-          const response = await axios.get(`http://127.0.0.1:8000/user/get_user_by_id/${userId}`);
+          const response = await axios.get(`https://doan-ql-sanbong.onrender.com/user/get_user_by_id/${userId}`);
           console.log(response.data);  // Kiểm tra dữ liệu từ API
           setUserData(response.data);
           setFormData({
@@ -59,7 +59,7 @@ const ThongTinCaNhan = () => {
     if (confirmSave) {
       console.log('Dữ liệu gửi đi:', formData);  // Kiểm tra giá trị formData trước khi gửi
       try {
-        const response = await axios.put(`http://localhost:8000/user/update_SysUser/${userId}`, formData);
+        const response = await axios.put(`https://doan-ql-sanbong.onrender.com/user/update_SysUser/${userId}`, formData);
         console.log('Dữ liệu phản hồi từ API:', response.data);  // Kiểm tra phản hồi
         setUserData(response.data);
         setEditing(false);  // Thoát chế độ chỉnh sửa

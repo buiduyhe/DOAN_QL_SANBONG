@@ -20,7 +20,7 @@ const SoDoSan = () => {
 
   // Fetch field data from API
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/san/san')
+    fetch('https://doan-ql-sanbong.onrender.com/san/san')
       .then((response) => response.json())
       .then((data) => setFields(data))
       .catch((error) => console.error("Error fetching data:", error));
@@ -34,7 +34,7 @@ const SoDoSan = () => {
   
     // Fetch available fields based on selected date and timeslot
     if (selectedDate && timeSlot) {
-      fetch('http://127.0.0.1:8000/san/san_available', {
+      fetch('https://doan-ql-sanbong.onrender.com/san/san_available', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

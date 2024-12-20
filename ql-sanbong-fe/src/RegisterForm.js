@@ -29,7 +29,7 @@ function RegisterForm() {
     formData.append('gender',gender);
 
     try {
-      const response = await fetch('http://localhost:8000/register', {
+      const response = await fetch('https://doan-ql-sanbong.onrender.com/register', {
         method: 'POST',
         body: formData,
       });

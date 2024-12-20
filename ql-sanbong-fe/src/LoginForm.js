@@ -15,7 +15,7 @@ function LoginForm() {
     setSuccess('');
   
     try {
-      const response = await fetch('http://localhost:8000/login', {
+      const response = await fetch('https://doan-ql-sanbong.onrender.com/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -32,7 +32,7 @@ function LoginForm() {
   
       const data = await response.json();
       
-      const userResponse = await fetch('http://localhost:8000/user/my-profile', {
+      const userResponse = await fetch('https://doan-ql-sanbong.onrender.com/user/my-profile', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

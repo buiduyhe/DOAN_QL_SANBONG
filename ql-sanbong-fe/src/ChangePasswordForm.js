@@ -31,7 +31,7 @@ function ChangePasswordForm() {
       formData.append('password', currentPassword);
       formData.append('new_password', newPassword);
 
-      const response = await fetch('http://localhost:8000/change-password', {
+      const response = await fetch('https://doan-ql-sanbong.onrender.com/change-password', {
       method: 'PUT', // Đổi thành PUT
       headers: {
         'Authorization': `Bearer ${accessToken}`,

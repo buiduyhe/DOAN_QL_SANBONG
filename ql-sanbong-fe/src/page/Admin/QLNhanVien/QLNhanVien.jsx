@@ -11,7 +11,7 @@ const QLNhanVien = ({ onSelectId = () => {} }) => {
 
  
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/user/get_SysUser/2")
+    fetch("https://doan-ql-sanbong.onrender.com/user/get_SysUser/2")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");

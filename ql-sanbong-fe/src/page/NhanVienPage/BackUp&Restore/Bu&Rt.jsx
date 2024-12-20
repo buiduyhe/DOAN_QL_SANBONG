@@ -10,7 +10,7 @@ const SaoLuu = () => {
     useEffect(() => {
         const fetchBackupFiles = async () => {
             try {
-                const response = await fetch("http://127.0.0.1:8000/backup-files");
+                const response = await fetch("https://doan-ql-sanbong.onrender.com/backup-files");
                 const data = await response.json();
                 if (data.files) {
                     setBackupFiles(data.files);
@@ -27,7 +27,7 @@ const SaoLuu = () => {
         setLoading(true);
         setMessage("");
         try {
-            const response = await fetch("http://127.0.0.1:8000/backup", {
+            const response = await fetch("https://doan-ql-sanbong.onrender.com/backup", {
                 method: "POST",
             });
             const data = await response.json();
@@ -56,7 +56,7 @@ const SaoLuu = () => {
             const formData = new FormData();
             formData.append("filename", selectedFile);
 
-            const response = await fetch("http://127.0.0.1:8000/restore-by-filename", {
+            const response = await fetch("https://doan-ql-sanbong.onrender.com/restore-by-filename", {
                 method: "POST",
                 body: formData,
             });

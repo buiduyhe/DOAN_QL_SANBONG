@@ -56,7 +56,7 @@ const ThanhToan = () => {
     };
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/san/get_id_timeslot', {
+      const response = await fetch('https://doan-ql-sanbong.onrender.com/san/get_id_timeslot', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -113,7 +113,7 @@ const ThanhToan = () => {
     };
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/san/dat_san`, {
+      const response = await fetch(`https://doan-ql-sanbong.onrender.com/san/dat_san`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),

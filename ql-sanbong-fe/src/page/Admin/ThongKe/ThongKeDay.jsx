@@ -48,7 +48,7 @@ const ThongKe = () => {
       setError(null);
 
       const response = await fetch(
-        `http://localhost:8000/san/ThongKe_day?startDate=${startDate}&endDate=${endDate}`
+        `https://doan-ql-sanbong.onrender.com/san/ThongKe_day?startDate=${startDate}&endDate=${endDate}`
       );
 
       if (!response.ok) {

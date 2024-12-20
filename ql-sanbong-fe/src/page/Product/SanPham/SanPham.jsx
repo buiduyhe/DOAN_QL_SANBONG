@@ -18,8 +18,8 @@ const SanPham = () => {
   useEffect(() => {
     const fetchProductsAndTypes = async () => {
       try {
-        const typeResponse = await fetch("http://127.0.0.1:8000/dichvu/loaidichvu");
-        const productResponse = await fetch("http://127.0.0.1:8000/dichvu/dichvu");
+        const typeResponse = await fetch("https://doan-ql-sanbong.onrender.com/dichvu/loaidichvu");
+        const productResponse = await fetch("https://doan-ql-sanbong.onrender.com/dichvu/dichvu");
         if (!typeResponse.ok || !productResponse.ok) throw new Error("Failed to fetch data");
 
         const types = await typeResponse.json();
@@ -48,7 +48,7 @@ const SanPham = () => {
     setDisplayText(categoryName);
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/dichvu/dichvu/${categoryID}`);
+      const response = await fetch(`https://doan-ql-sanbong.onrender.com/dichvu/dichvu/${categoryID}`);
       if (!response.ok) throw new Error("Failed to fetch products for this category");
 
       const data = await response.json();
@@ -136,7 +136,7 @@ const SanPham = () => {
                 style={{ cursor: 'pointer' }}
               >
                 <img
-                  src={`http://127.0.0.1:8000/${type.image_dv}`}
+                  src={`https://doan-ql-sanbong.onrender.com/${type.image_dv}`}
                   alt={type.ten_loai_dv}
                   className="btn-img"
                 />
@@ -188,7 +188,7 @@ const SanPham = () => {
               onMouseEnter={() => setHoveredProduct(product.id)}
               onMouseLeave={() => setHoveredProduct(null)}
             >
-              <img src={`http://127.0.0.1:8000/${product.image_dv}`} alt={product.ten_dv} />
+              <img src={`https://doan-ql-sanbong.onrender.com/${product.image_dv}`} alt={product.ten_dv} />
               <h3>{product.ten_dv}</h3>
               <p>{product.mota || "Không có mô tả"}</p>
               <p style={{ color: "#007bff", fontWeight: "bold" }}>

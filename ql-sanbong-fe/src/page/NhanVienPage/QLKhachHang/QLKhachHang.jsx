@@ -17,7 +17,7 @@ const QLKhachHang = ({ onSelectId = () => {} }) => {
     const fetchCustomer = async () => {
       try {
         const response = await fetch(
-          "http://127.0.0.1:8000/user/get_SysUser/3",
+          "https://doan-ql-sanbong.onrender.com/user/get_SysUser/3",
           {
             method: "GET",
             headers: {

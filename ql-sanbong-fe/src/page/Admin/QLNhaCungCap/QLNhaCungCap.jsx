@@ -13,7 +13,7 @@ const QLNhaCungCap = ({ onSelectId = () => {} }) => {
   useEffect(() => {
     
     axios
-      .get('http://localhost:8000/Ncc/Ncc')
+      .get('https://doan-ql-sanbong.onrender.com/Ncc/Ncc')
       .then((response) => {
         setNhaCungCap(response.data);
         setFilteredData(response.data);

@@ -13,7 +13,7 @@ const ThongKeSan = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/san/ThongKe_San');
+        const response = await axios.get('https://doan-ql-sanbong.onrender.com/san/ThongKe_San');
         setThongKeData(response.data);
         setFilteredData(response.data);
       } catch (err) {

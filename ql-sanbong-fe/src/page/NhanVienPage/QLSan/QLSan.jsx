@@ -17,7 +17,7 @@ const QLSan = ({ onSelectId = () => {} }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8000/san/san");
+        const response = await fetch("https://doan-ql-sanbong.onrender.com/san/san");
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }

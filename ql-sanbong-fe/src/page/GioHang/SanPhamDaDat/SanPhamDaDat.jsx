@@ -42,7 +42,7 @@ const SanPhamDaDat = () => {
     const token = Cookies.get("access_token") || '';
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/dichvu/dat_dv', {
+      const response = await fetch('https://doan-ql-sanbong.onrender.com/dichvu/dat_dv', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -108,7 +108,7 @@ const SanPhamDaDat = () => {
                 onChange={() => handleSelectItem(item.id)} // Toggle trạng thái checkbox
                 className="item-checkbox"
               />
-              <img src={`http://127.0.0.1:8000/${item.image_dv}`} alt={item.ten_dv} />
+              <img src={`https://doan-ql-sanbong.onrender.com/${item.image_dv}`} alt={item.ten_dv} />
               <div className="item-details">
                 
                 <p><h3>{item.ten_dv}</h3></p>

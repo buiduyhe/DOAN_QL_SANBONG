@@ -34,7 +34,7 @@ const ThongKe = () => {
       setError(null);
   
       const response = await fetch(
-        `http://localhost:8000/san/ThongKe_year?startYear=${startYear}&endYear=${endYear}`
+        `https://doan-ql-sanbong.onrender.com/san/ThongKe_year?startYear=${startYear}&endYear=${endYear}`
       );
   
       if (!response.ok) {
