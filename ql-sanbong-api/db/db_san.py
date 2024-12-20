@@ -116,8 +116,8 @@ def get_ds_hoadon(db: Session):
         )
     return hoadon_display_list
 
+locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')  # Sử dụng locale tiếng Anh thay vì tiếng Việt
 
-locale.setlocale(locale.LC_ALL, 'vi_VN')  # Thiết lập locale để hỗ trợ định dạng tiền tệ
 
 def in_hoadon_excel(db: Session, hoa_don_id: int):
     hoadon = db.query(HoaDon).filter(HoaDon.id == hoa_don_id).first()
